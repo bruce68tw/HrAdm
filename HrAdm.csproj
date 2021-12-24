@@ -1,0 +1,153 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <UserSecretsId>3b0e1b5c-c583-43d6-a792-329458bf8dd9</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\css\lib\jsPlumb\**" />
+    <Compile Remove="wwwroot\css\lib\jsPlumb_old\**" />
+    <Compile Remove="wwwroot\css\lib\old\**" />
+    <Compile Remove="wwwroot_old2\**" />
+    <Compile Remove="wwwroot_old\**" />
+    <Compile Remove="_data\**" />
+    <Compile Remove="_log\**" />
+    <Compile Remove="_source_old\**" />
+    <Compile Remove="_sql\**" />
+    <Compile Remove="_temp\**" />
+    <Compile Remove="_upload\**" />
+    <Content Remove="wwwroot\css\lib\jsPlumb\**" />
+    <Content Remove="wwwroot\css\lib\jsPlumb_old\**" />
+    <Content Remove="wwwroot\css\lib\old\**" />
+    <Content Remove="wwwroot_old2\**" />
+    <Content Remove="wwwroot_old\**" />
+    <Content Remove="_data\**" />
+    <Content Remove="_log\**" />
+    <Content Remove="_source_old\**" />
+    <Content Remove="_sql\**" />
+    <Content Remove="_temp\**" />
+    <Content Remove="_upload\**" />
+    <EmbeddedResource Remove="wwwroot\css\lib\jsPlumb\**" />
+    <EmbeddedResource Remove="wwwroot\css\lib\jsPlumb_old\**" />
+    <EmbeddedResource Remove="wwwroot\css\lib\old\**" />
+    <EmbeddedResource Remove="wwwroot_old2\**" />
+    <EmbeddedResource Remove="wwwroot_old\**" />
+    <EmbeddedResource Remove="_data\**" />
+    <EmbeddedResource Remove="_log\**" />
+    <EmbeddedResource Remove="_source_old\**" />
+    <EmbeddedResource Remove="_sql\**" />
+    <EmbeddedResource Remove="_temp\**" />
+    <EmbeddedResource Remove="_upload\**" />
+    <None Remove="wwwroot\css\lib\jsPlumb\**" />
+    <None Remove="wwwroot\css\lib\jsPlumb_old\**" />
+    <None Remove="wwwroot\css\lib\old\**" />
+    <None Remove="wwwroot_old2\**" />
+    <None Remove="wwwroot_old\**" />
+    <None Remove="_data\**" />
+    <None Remove="_log\**" />
+    <None Remove="_source_old\**" />
+    <None Remove="_sql\**" />
+    <None Remove="_temp\**" />
+    <None Remove="_upload\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Services\UserEdit - 複製.cs" />
+    <Compile Remove="Services\UserRead - 複製.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\XpFlow\LineProp.cshtml" />
+    <Content Remove="Views\XpFlow\NodeProp.cshtml" />
+    <Content Remove="Views\XpFlow\Read_old.cshtml" />
+    <Content Remove="Views\XpFlow\zz_Edit.cshtml" />
+    <Content Remove="Views\XpFlow\zz_Test.cshtml" />
+    <Content Remove="Views\XpFlow\zz__LineCond.cshtml" />
+    <Content Remove="Views\User\Edit - 複製.cshtml" />
+    <Content Remove="Views\User\Read - 複製.cshtml" />
+    <Content Remove="wwwroot\css\base\fontAwesome.c_old" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Resources\R0 - 複製.resx" />
+    <EmbeddedResource Remove="Resources\R0.zh-CN - 複製.resx" />
+    <EmbeddedResource Remove="Resources\R0.zh-TW - 複製.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Controllers\CustInputController.cs%281%29" />
+    <None Remove="Controllers\CustInputController.cs%282%29" />
+    <None Remove="Controllers\MyController.cs_old" />
+    <None Remove="Controllers\UserController.cs%281%29" />
+    <None Remove="Controllers\UserController.cs%282%29" />
+    <None Remove="Views\CustInput\Edit.cshtml_old" />
+    <None Remove="Views\LeaveSign\Edit.cshtml_old" />
+    <None Remove="Views\Leave\Edit.cshtml_old" />
+    <None Remove="Views\UserExt\Edit.cshtml_old" />
+    <None Remove="Views\User\Edit.cshtml_old" />
+    <None Remove="Views\XpCms\Edit.cshtml_old" />
+    <None Remove="Views\XpEasyRpt\Edit.cshtml_old" />
+    <None Remove="Views\XpFlowSign\Edit.cshtml_old" />
+    <None Remove="Views\XpFlow\Edit.cshtml_old" />
+    <None Remove="Views\XpProg\Edit.cshtml_old" />
+    <None Remove="Views\XpRole\Edit.cshtml_old" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
+    <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Base\BaseWeb\BaseWeb.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Views\CustInput\Read.resx">
+      <Generator></Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\font\" />
+    <Folder Include="wwwroot\image\" />
+    <Folder Include="wwwroot\js\base\" />
+    <Folder Include="wwwroot\js\lib\" />
+    <Folder Include="wwwroot\js\view\" />
+    <Folder Include="wwwroot\locale\en-US\" />
+    <Folder Include="wwwroot\locale\zh-CN\" />
+    <Folder Include="wwwroot\locale\zh-TW\" />
+    <Folder Include="_template\en-US\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\bootstrap-datepicker.css.map" />
+    <None Include="wwwroot\css\fonts\icomoon.svg" />
+    <None Include="wwwroot\css\lib\font\summernote.woff2" />
+    <None Include="wwwroot\css\summernote-bs4.js.map" />
+    <None Include="wwwroot\css\summernote-bs4.min.js.map" />
+    <None Include="wwwroot\css\view\_xg_block.css_old" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\Home\Error.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties bundleconfig_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
+</Project>

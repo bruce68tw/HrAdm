@@ -1,0 +1,80 @@
+﻿@inject IHtmlLocalizer<HrAdm.R0> R0
+@inject IViewLocalizer R
+
+<script src="~/js/view/Leave.js"></script>
+<script type="text/javascript">
+    $(function () {
+        _me.init();
+    });
+</script>
+
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuLeave"].Value } })
+<div class="xp-prog">
+    <div id="divRead">
+        <form id='formRead' class='xg-form'>
+            <div class="row">
+                <div class="col-md-2 xg-label">@R["StartTime"]</div>
+                <div class="col-md-10 xg-input">
+                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "StartTime", InRow = true, BoxClass = "xg-inline" })
+                    <span>～</span>
+                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "StartTime2", InRow = true, BoxClass = "xg-inline" })
+                    @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
+                </div>
+            </div>
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["LeaveType"].Value, Fid = "LeaveType", Rows = (List<IdStrDto>)ViewBag.LeaveTypes, BoxClass = "xg-date-w" })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["FlowStatus"].Value, Fid = "FlowStatus", Rows = (List<IdStrDto>)ViewBag.SignStatuses, BoxClass = "xg-date-w" })
+        </form>
+
+        @if (_XpProg.CheckCreate("Leave"))
+        {
+            <div class='xg-btns-box'>
+                @await Component.InvokeAsync("XgCreate")
+            </div>
+        }
+        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>@R["Asker"]</th>
+                    <th>@R["Agent"]</th>
+                    <th>@R["LeaveType"]</th>
+                    <th>@R["StartTime"]</th>
+                    <th>@R["EndTime"]</th>
+                    <th>@R["Hours"]</th>
+                    <th>@R["FlowStatus"]</th>
+                    <th>@R0["Created"]</th>
+                    <th>@R0["Crud"]</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="divEdit" class="xg-hide">
+        <form id='eform' class='xg-form'>
+            @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Asker"].Value, Fid = "UserId", Rows = (List<IdStrDto>)ViewBag.Users, Required = true })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Agent"].Value, Fid = "AgentId", Rows = (List<IdStrDto>)ViewBag.Users, Required = true })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["LeaveType"].Value, Fid = "LeaveType", Rows = (List<IdStrDto>)ViewBag.LeaveTypes, Required = true })
+            @await Component.InvokeAsync("XiDt", new XiDtDto { Title = R["StartTime"].Value, Fid = "StartTime", Required = true, Cols = "2,8" })
+            @await Component.InvokeAsync("XiDt", new XiDtDto { Title = R["EndTime"].Value, Fid = "EndTime", Required = true, Cols = "2,8" })
+            @await Component.InvokeAsync("XiInt", new XiIntDto { Title = R["Hours"].Value, Fid = "Hours", Required = true, Cols = "2,1" })
+            @await Component.InvokeAsync("XiFile", new XiFileDto { Title = R0["UpdFile"].Value, Fid = "FileName" })
+            @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["FlowStatus"].Value, Fid = "FlowStatusName" })
+            @*await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R0["Status"].Value, Fid = "Status", label = R0["Active"].Value })*@
+            <div class="row">
+                @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R0["Creator"].Value, Fid = "CreatorName", InRow = true, Cols = "2,3" })
+                @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R0["Reviser"].Value, Fid = "ReviserName", InRow = true, Cols = "2,3" })
+            </div>
+            <div class="row">
+                @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R0["Created"].Value, Fid = "Created", Format = BrFormatEstr.Dt, InRow = true, Cols = "2,3" })
+                @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R0["Revised"].Value, Fid = "Revised", Format = BrFormatEstr.Dt, InRow = true, Cols = "2,3" })
+            </div>
+
+            <div class="row">
+                <div class="col-md-2 xg-label">@R["SignRows"]</div>
+                <div class="col-md-8 xg-input" id="divSignRows"></div>
+            </div>
+        </form>
+        @await Component.InvokeAsync("XgSaveBack")
+    </div>
+</div>

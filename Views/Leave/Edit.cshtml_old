@@ -1,0 +1,27 @@
+﻿@inject IHtmlLocalizer<HrAdm.R0> R0
+@inject IViewLocalizer R
+
+<form id='eform' class='xg-form'>
+    @await Component.InvokeAsync("XiHide", new { fid = "Id" })
+
+    @await Component.InvokeAsync("XiSelect", new { title = R["Asker"].Value, fid = "UserId", rows = (List<IdStrDto>)ViewBag.Users, required = true })
+    @await Component.InvokeAsync("XiSelect", new { title = R["Agent"].Value, fid = "AgentId", rows = (List<IdStrDto>)ViewBag.Users, required = true })
+    @await Component.InvokeAsync("XiSelect", new { title = R["LeaveType"].Value, fid = "LeaveType", rows = (List<IdStrDto>)ViewBag.LeaveTypes, required = true })
+    @await Component.InvokeAsync("XiDt", new { title = R["StartTime"].Value, fid = "StartTime", required = true, cols = "2,8" })
+    @await Component.InvokeAsync("XiDt", new { title = R["EndTime"].Value, fid = "EndTime", required = true, cols = "2,8" })
+    @await Component.InvokeAsync("XiNum", new { title = R["Hours"].Value, fid = "Hours", required = true, cols = "2,1" })
+    @await Component.InvokeAsync("XiFile", new { title = R["UpdFile"].Value, fid = "FileName" })
+    @await Component.InvokeAsync("XiRead", new { title = R["FlowStatus"].Value, fid = "FlowStatusName" })
+    @await Component.InvokeAsync("XiCheck", new { title = R0["Status"].Value, fid = "Status", label = R0["Active"].Value })
+    @await Component.InvokeAsync("XiRead", new { title = R0["Creator"].Value, fid = "CreatorName" })
+    @await Component.InvokeAsync("XiRead", new { title = R0["Created"].Value, fid = "Created", format = BrFormatEstr.Dt })
+    @await Component.InvokeAsync("XiRead", new { title = R0["Reviser"].Value, fid = "ReviserName" })
+    @await Component.InvokeAsync("XiRead", new { title = R0["Revised"].Value, fid = "Revised", format = BrFormatEstr.Dt })
+
+    <div class="row">
+        <div class="col-md-2 xg-label">@R["SignRows"]</div>
+        <div class="col-md-8 xg-input" id="divSignRows"></div>
+    </div>
+</form>
+@await Component.InvokeAsync("XgSaveBack")
+

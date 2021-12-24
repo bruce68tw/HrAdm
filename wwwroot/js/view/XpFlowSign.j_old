@@ -1,0 +1,56 @@
+﻿var _me = {
+    init: function () {        
+        //datatable config
+        var config = {
+            dom: _crud.dtDom,
+            columns: [
+                { data: 'UserName' },
+                { data: 'LeaveName' },
+                { data: 'StartTime' },
+                { data: 'EndTime' },
+                { data: 'Hours' },
+                { data: 'FlowStatusName' },
+                { data: 'Created' },
+                { data: '_Fun' },
+            ],
+            columnDefs: [
+                _crud.dtColConfig,
+				{ targets: [2], render: function (data, type, full, meta) {
+                    return _date.jsToUiDt2(data);
+                }},
+				{ targets: [3], render: function (data, type, full, meta) {
+                    return _date.jsToUiDt2(data);
+                }},
+				{ targets: [6], render: function (data, type, full, meta) {
+                    return _date.jsToUiDt(data);
+                }},
+				{ targets: [7], render: function (data, type, full, meta) {
+                    return _str.format('<button type="button" class="btn btn-outline-secondary btn-sm" onclick="_crud.onView(\'{0}\')">檢視</button>', full.Id);
+                }},
+            ],
+        };
+
+        //initial
+        _me.edit0 = new EditOne();
+        _me.edit0.fnAfterOpenEdit = _me.edit0_afterOpenEdit;
+        _crud.init(config, [_me.edit0]);
+
+        //other variables
+        _me.eform = $('#eform');
+        _me.divSignRows = $('#divSignRows');
+    },
+
+    //TODO: add your code
+    //onclick viewFile, called by XiFile component
+    onViewFile: function (fid, elm) {
+        _edit.viewImage('', fid, elm, _itext.get('Id', _me.eform));
+    },
+
+    edit0_afterOpenEdit: function (fun, json) {
+        var box = _me.divSignRows;
+        _ajax.getView('GetSignRows', { id: _me.edit0.getKey() }, function (html) {
+            box.html(html);
+        });
+    },
+
+}; //class

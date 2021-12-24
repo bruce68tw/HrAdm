@@ -1,0 +1,19 @@
+﻿
+<form id='eform' class='xg-form'>
+	@await Component.InvokeAsync("XiHide", new { fid = "Id" })
+	
+	@await Component.InvokeAsync("XiText", new { title = "文字", fid = "FldText", maxLen = 20, required = true })
+	@await Component.InvokeAsync("XiNum", new { title = "整數", fid = "FldNum", required = true, cols = "2,2" })
+	@await Component.InvokeAsync("XiNum", new { title = "小數", fid = "FldNum2", required = true, isDigit = false, cols = "2,2" })
+	@await Component.InvokeAsync("XiCheck", new { title = "CheckBox", fid = "FldCheck" })
+	@await Component.InvokeAsync("XiRadios", new { title = "Radio", fid = "FldRadio", rows = (List<IdStrDto>)ViewBag.Radios, label = "Radios" })
+	@await Component.InvokeAsync("XiSelect", new { title = "Select", fid = "FldSelect", rows = (List<IdStrDto>)ViewBag.Selects, required = true })
+	@await Component.InvokeAsync("XiDate", new { title = "日期", fid = "FldDate", required = true })
+	@await Component.InvokeAsync("XiDt", new { title = "日期時間", fid = "FldDatetime", required = true, cols = "2,8" })
+	@await Component.InvokeAsync("XiFile", new { title = "上傳檔案", fid = "FldFile", required = true })
+	@await Component.InvokeAsync("XiTextArea", new { title = "多行文字", fid = "FldTextarea", maxLen = 255, required = true, cols = "2,9" })
+	@await Component.InvokeAsync("XiHtml", new { title = "Html", fid = "FldHtml", required = true, cols = "2,9" })
+</form>
+
+@await Component.InvokeAsync("XgSaveBack")
+

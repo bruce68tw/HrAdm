@@ -1,0 +1,107 @@
+﻿@inject IHtmlLocalizer<HrAdm.R0> R0
+@inject IViewLocalizer R
+
+<script type="text/javascript">
+    $(function () {
+        _me.init();
+    });
+
+    var _me = {
+        init: function () {
+            //datatable config
+            var config = {
+                columns: [
+                    { data: 'UserName' },
+                    //{ data: 'AgentName' },
+                    { data: 'LeaveName' },
+                    { data: 'StartTime' },
+                    { data: 'EndTime' },
+                    { data: 'Hours' },
+                    { data: 'NodeName' },
+                    { data: 'Created' },
+                    { data: '_Fun' },
+                ],
+                columnDefs: [
+				    { targets: [2], render: function (data, type, full, meta) {
+                        return _date.mmToUiDt2(data);
+                    }},
+				    { targets: [3], render: function (data, type, full, meta) {
+                        return _date.mmToUiDt2(data);
+                    }},
+				    { targets: [6], render: function (data, type, full, meta) {
+                        return _date.mmToUiDt(data);
+                    }},
+				    { targets: [7], render: function (data, type, full, meta) {
+                        return _str.format('<button type="button" class="btn btn-outline-secondary btn-sm" onclick="_crud.onUpdate(\'{0}\')">@R["Audit"]</button>', full.Id);
+                    }},
+                ],
+            };
+
+            //initial
+            _crud.init(config, null, '@R["Audit"]');
+            _me.eform = $('#eform');
+        },
+
+        //TODO: add your code
+        //onclick viewFile, called by XiFile component
+        onViewFile: function (table, fid, elm) {
+            _edit.viewFile(table, fid, elm, _itext.get('LeaveId', _me.eform));
+        },
+
+        onSubmit: function () {
+            var form = _me.eform;
+            var data = {
+                id: _itext.get('SignId', form),
+                status: _iselect.get('SignStatus', form),
+                note: _itext.get('Note', form),
+            };
+            _ajax.getJson('SignRow', data, function (data) {
+                _crud.afterSave(data);
+            });
+        },
+
+    }; //class
+</script>
+
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuLeaveSign"].Value } })
+<div class="xp-prog">
+    <div id="divRead">
+        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>@R["Asker"]</th>
+                    <th>@R["LeaveType"]</th>
+                    <th>@R["StartTime"]</th>
+                    <th>@R["EndTime"]</th>
+                    <th>@R["Hours"]</th>
+                    <th>@R["NodeName"]</th>
+                    <th>@R0["Created"]</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="divEdit" class="xg-hide">
+        <form id='eform' class='xg-form'>
+            @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "SignId" })
+            @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "LeaveId" })
+            @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["Asker"].Value, Fid = "UserName" })
+            @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["Agent"].Value, Fid = "AgentName" })
+            @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["LeaveType"].Value, Fid = "LeaveName" })
+            @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["StartTime"].Value, Fid = "StartTime", Format = BrFormatEstr.Dt2 })
+            @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["EndTime"].Value, Fid = "EndTime", Format = BrFormatEstr.Dt2 })
+            @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["Hours"].Value, Fid = "Hours" })
+            @await Component.InvokeAsync("XiLink", new XiLinkDto { Title = R0["UpdFile"].Value, Fid = "FileName" })
+            @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R0["Created"].Value, Fid = "Created", Format = BrFormatEstr.Dt })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["SignStatus"].Value, Fid = "SignStatus", Required = true, Rows = (List<IdStrDto>)ViewBag.SignStatuses2 })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Note"].Value, Fid = "Note", MaxLen = 100, Cols = "2,8" })
+        </form>
+
+        <div class='xg-center' style="margin-top:10px">
+            <button type='button' class='btn xg-btn-size btn-success' onclick='_me.onSubmit()'>@R0["Submit"]</button>
+            <button type='button' class='btn xg-btn-size btn-primary' onclick='_crud.onToRead()'>@R0["ToRead"]<i class='ico-back'></i></button>
+        </div>
+    </div>
+</div>

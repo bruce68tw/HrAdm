@@ -1,0 +1,63 @@
+﻿<form id='eform' class='xg-form'>
+    @await Component.InvokeAsync("XiHide", new { fid = "Id" })
+    @await Component.InvokeAsync("XiText", new { title = "功能代碼", fid = "Code", maxLen = 30, required = true })
+    @await Component.InvokeAsync("XiText", new { title = "功能名稱", fid = "Name", maxLen = 30, required = true })
+    @*await Component.InvokeAsync("XiText", new { title = "圖示", fid = "Icon", maxLen = 20 })*@
+    @await Component.InvokeAsync("XiText", new { title = "Url", fid = "Url", maxLen = 100, required = true })
+    @await Component.InvokeAsync("XiNum", new { title = "排序", fid = "Sort", required = true, cols = "2,1" })
+
+    <div class="row">
+        <div class="col-md-2 xg-label">CRUD功能</div>
+        <div class="col-md-9 xg-input" style="padding-top:5px;">
+            @await Component.InvokeAsync("XiCheck", new { fid = "FunCreate", value = "9", label = "新增" })
+            @await Component.InvokeAsync("XiCheck", new { fid = "FunRead", value = "9", label = "查詢" })
+            @await Component.InvokeAsync("XiCheck", new { fid = "FunUpdate", value = "9", label = "修改" })
+            @await Component.InvokeAsync("XiCheck", new { fid = "FunDelete", value = "9", label = "刪除" })
+            @await Component.InvokeAsync("XiCheck", new { fid = "FunPrint", value = "9", label = "列印" })
+            @await Component.InvokeAsync("XiCheck", new { fid = "FunExport", value = "9", label = "匯出" })
+            @await Component.InvokeAsync("XiCheck", new { fid = "FunView", value = "9", label = "檢視" })
+        </div>
+    </div>
+
+</form>
+
+<div class='xg-btns-box'>
+	<span class="xg-block-label">角色功能</span>
+	@await Component.InvokeAsync("XgAddRow", "_me.mRoleProg.onAddRow()")
+</div>
+<form id='eformRoleProg' class='xg-form' style="border:none;">
+    <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+        <thead>
+            <tr>
+                @await Component.InvokeAsync("XgTh", new { title = "角色", required = true })
+                <th>新增</th>
+                <th>查詢</th>
+                <th>修改</th>
+                <th>刪除</th>
+                <th>列印</th>
+                <th>匯出</th>
+                <th>檢視</th>
+                <th>維護</th>
+            </tr>
+        </thead>
+        <tbody id="tbodyRoleProg"></tbody>
+    </table>
+</form>
+@await Component.InvokeAsync("XgSaveBack")
+
+<script id="tplRoleProg" type="text/template">
+    <tr>
+        @await Component.InvokeAsync("XiHide", new { fid = "Id" })
+        @await Component.InvokeAsync("XiHide", new { fid = "ProgId" })
+        <td>@await Component.InvokeAsync("XiSelect", new { fid = "RoleId", rows = (List<IdStrDto>)ViewBag.Roles, required = true })</td>
+        <td class="xg-center">@await Component.InvokeAsync("XiCheck", new { fid = "FunCreate", value = "9" })</td>
+        <td class="xg-center">@await Component.InvokeAsync("XiCheck", new { fid = "FunRead", value = "9" })</td>
+        <td class="xg-center">@await Component.InvokeAsync("XiCheck", new { fid = "FunUpdate", value = "9" })</td>
+        <td class="xg-center">@await Component.InvokeAsync("XiCheck", new { fid = "FunDelete", value = "9" })</td>
+        <td class="xg-center">@await Component.InvokeAsync("XiCheck", new { fid = "FunPrint", value = "9" })</td>
+        <td class="xg-center">@await Component.InvokeAsync("XiCheck", new { fid = "FunExport", value = "9" })</td>
+        <td class="xg-center">@await Component.InvokeAsync("XiCheck", new { fid = "FunView", value = "9" })</td>
+
+        <td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.mRoleProg.onDeleteRow(this)")</td>
+    </tr>
+</script>

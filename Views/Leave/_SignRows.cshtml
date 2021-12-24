@@ -1,0 +1,26 @@
+﻿@model List<SignRowDto>
+@inject IViewLocalizer R
+
+<table class="table table-bordered xg-table" cellspacing="0">
+    <thead>
+        <tr>
+            <th>@R["NodeName"]</th>
+            <th>@R["Signer"]</th>
+            <th>@R["SignStatus"]</th>
+            <th>@R["SignTime"]</th>
+            <th>@R["Note"]</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var row in Model)
+        {
+            <tr>
+                <td>@row.NodeName</td>
+                <td>@row.SignerName</td>
+                <td>@row.SignStatusName</td>
+                <td>@row.SignTime</td>
+                <td>@row.Note</td>
+            </tr>
+        }
+    </tbody>
+</table>

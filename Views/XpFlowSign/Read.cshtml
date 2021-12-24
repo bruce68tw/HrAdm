@@ -1,0 +1,115 @@
+﻿@inject IHtmlLocalizer<HrAdm.R0> R0
+@inject IViewLocalizer R
+
+<script type="text/javascript">
+    $(function () {
+        _me.init();
+    });
+
+    var _me = {
+        init: function () {        
+            //datatable config
+            var config = {
+                columns: [
+                    { data: 'FlowName' },
+                    { data: 'SignerName' },
+                    { data: 'SignTime' },
+                    { data: '_Fun' },
+                ],
+                columnDefs: [
+				    { targets: [2], render: function (data, type, full, meta) {
+                        return _date.mmToUiDt(data);
+                    }},
+				    { targets: [3], render: function (data, type, full, meta) {
+                        return _str.format('<button type="button" class="btn btn-outline-secondary btn-sm" onclick="_me.onView(\'{0}\', \'{1}\')">@R0["View"]</button>', full.FlowCode, full.SourceId);
+                    }},
+                ],
+            };
+
+            //initial
+            _me.edit0 = new EditOne();
+            _me.edit0.fnAfterOpenEdit = _me.edit0_afterOpenEdit;
+            _crud.init(config, [_me.edit0]);
+
+            //other variables
+            _me.eform = $('#eform');
+            _me.divSignRows = $('#divSignRows');
+        },
+
+        //on view row
+        onView: function (flowCode, key) {
+            _ajax.getJson('GetViewJson', { flowCode: flowCode, key: key }, function (data) {
+                //consider other flow types
+                _crud.toEditMode(_fun.FunV, data);
+            });
+        },
+
+        //onclick viewFile, called by XiFile component
+        onViewFile: function (table, fid, elm) {
+            _edit.viewFile(table, fid, elm, _itext.get('Id', _me.eform));
+        },
+
+        edit0_afterOpenEdit: function (fun, json) {
+            _btn.setEdit('btnToRead', true, _me.eform);
+            var box = _me.divSignRows;
+            _ajax.getView('GetSignRows', { id: _me.edit0.getKey() }, function (html) {
+                box.html(html);
+            });
+        },
+
+    }; //class
+</script>
+
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuXpFlowSign"].Value } })
+<div class="xp-prog">
+    <div id="divRead">
+        <form id='formRead' class='xg-form xg-mb10'>
+            <div class="row">
+                <div class="col-md-2 xg-label">@R["SignTime"]</div>
+                <div class="col-md-10 xg-input">
+                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "SignTime", InRow = true, BoxClass = "xg-inline" })
+                    <span>～</span>
+                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "SignTime2", InRow = true, BoxClass = "xg-inline" })
+                    @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
+                </div>
+            </div>
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Flow"].Value, Fid = "FlowId", Rows = (List<IdStrDto>)ViewBag.Flows, BoxClass = "xg-date-w" })
+            @*await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["FlowStatus"].Value, Fid = "FlowStatus", rows = (List<IdStrDto>)ViewBag.SignStatuses })*@
+        </form>
+
+        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>@R["Flow"]</th>
+                    <th>@R["Asker"]</th>
+                    <th>@R["SignTime"]</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="divEdit" class="xg-hide">
+        <form id='eform' class='xg-form'>
+            @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
+            @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["Asker"].Value + " :", Fid = "UserName" })
+            @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["Agent"].Value + " :", Fid = "AgentName" })
+            @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["LeaveType"].Value + " :", Fid = "LeaveName" })
+            @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["StartTime"].Value + " :", Fid = "StartTime", Format = BrFormatEstr.Dt2 })
+            @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["EndTime"].Value + " :", Fid = "EndTime", Format = BrFormatEstr.Dt2 })
+            @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["Hours"].Value + " :", Fid = "Hours" })
+            @await Component.InvokeAsync("XiLink", new XiLinkDto { Title = R0["UpdFile"].Value + " :", Fid = "FileName" })
+            @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R0["Created"].Value + " :", Fid = "Created", Format = BrFormatEstr.Dt })
+
+            <div class="row">
+                <div class="col-md-2 xg-label">@R["SignRows"] :</div>
+                <div class="col-md-8 xg-input" id="divSignRows"></div>
+            </div>
+        </form>
+
+        <div class='xg-center'>
+            <button id='btnToRead' type='button' class='btn xg-btn-size btn-primary' onclick='_crud.onToRead()'>@R0["ToRead"]<i class='ico-back'></i></button>
+        </div>
+    </div>
+</div>

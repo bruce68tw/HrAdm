@@ -1,0 +1,266 @@
+﻿@inject IHtmlLocalizer<HrAdm.R0> R0
+@inject IViewLocalizer R
+
+<script type="text/javascript">
+    $(function () {
+        _me.init();
+    });
+
+    var _me = {
+        init: function () {
+            //datatable config
+            var config = {
+                columns: [
+                    { data: 'Account' },
+                    { data: 'Name' },
+                    { data: 'DeptName' },
+                    { data: 'Status' },
+                    { data: '_F1' },
+                    { data: '_F2' },
+                ],
+                columnDefs: [
+                    { targets: [3], render: function (data, type, full, meta) {
+                         return _crud.dtStatusName(data);
+                    }},
+                    { targets: [4], render: function (data, type, full, meta) {
+                        var html = '<a href="javascript:_me.onGenWord(\'{0}\')">{1}</a>';
+                        return _str.format(html, full.Id, '@R["GenResume"]');
+                    }},
+                    { targets: [5], render: function (data, type, full, meta) {
+                        return _crud.dtCrudFun(full.Id, full.Name, true, false, true);
+                    }},
+                ],
+            };
+
+            //initial
+            _me.mUserJob = new EditMany('Id', 'eformUserJob', 'tplUserJob', 'tr');
+            _me.mUserSchool = new EditMany('Id', 'eformUserSchool', 'tplUserSchool', 'tr');
+            _me.mUserLang = new EditMany('Id', 'eformUserLang', 'tplUserLang', 'tr', 'Sort');
+            _me.mUserLicense = new EditMany('Id', 'eformUserLicense', 'tplUserLicense', 'tr');
+            _me.mUserSkill = new EditMany('Id', 'eformUserSkill', 'tplUserSkill', 'tr', 'Sort');
+            _crud.init(config, [null, _me.mUserJob, _me.mUserSchool, _me.mUserLang, _me.mUserLicense, _me.mUserSkill]);
+        },
+
+        //onclick viewFile, called by XiFile component
+        onViewFile: function (table, fid, elm) {
+            if (fid == 'PhotoFile')
+                _me.edit0.onViewFile(table, fid, elm);
+            else if (fid == 'FileName')
+                _me.mUserLicense.onViewFile(table, fid, elm);
+        },
+
+        //generate docx file
+        onGenWord: function (id) {
+            _tool.ans('@R["SureGenResume"]', function () {
+                window.location = 'GenWord?id=' + id;
+            });
+        },
+
+    }; //class
+</script>
+
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuUserExt"].Value } })
+<div class="xp-prog">
+    <div id="divRead">
+        <form id='formRead' class='xg-form'>
+            <div class="row">
+                <vc:xi-text dto="@(new XiTextDto { Title = R["Account"].Value, Fid = "Account", MaxLen = 20, InRow = true })"></vc:xi-text>
+                @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
+            </div>
+            <vc:xi-text dto="@(new XiTextDto { Title = R["UserName"].Value, Fid = "Name", MaxLen = 20 })"></vc:xi-text>
+            <vc:xi-select dto="@(new XiSelectDto { Title = R["Dept"].Value, Fid = "DeptId", Rows = (List<IdStrDto>)ViewBag.Depts })"></vc:xi-select>
+        </form>
+
+        <div class='xg-btns-box'>
+        </div>
+        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>@R["Account"]</th>
+                    <th>@R["UserName"]</th>
+                    <th>@R["Dept"]</th>
+                    <th>@R0["Status"]</th>
+                    <th>@R0["Fun"]</th>
+                    <th width='80px'>@R0["Crud"]</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="divEdit" class="xg-hide">
+        <form id='eform' class='xg-form'>
+            <vc:xi-hide dto="@(new XiHideDto { Fid = "Id" })"></vc:xi-hide>
+            <vc:xi-text dto="@(new XiTextDto { Title = R["Account"].Value, Fid = "Account", MaxLen = 20 })"></vc:xi-text>
+            <vc:xi-text dto="@(new XiTextDto { Title = R["UserName"].Value, Fid = "Name", MaxLen = 20 })"></vc:xi-text>
+            <vc:xi-text dto="@(new XiTextDto { Title = R["Dept"].Value, Fid = "DeptId", MaxLen = 10 })"></vc:xi-text>
+            <vc:xi-file dto="@(new XiFileDto { Title = R0["UpdImage"].Value, Fid = "PhotoFile", LabelTip = R["TipUpdImage"].Value })"></vc:xi-file>
+            <vc:xi-check dto="@(new XiCheckDto { Title = R0["Status"].Value, Fid = "Status" })"></vc:xi-check>
+        </form>
+
+        <div class='xg-btns-box'>
+            <span class="xg-block-label">@R["JobExpr"]</span>
+            @await Component.InvokeAsync("XgAddRow", "_me.mUserJob.onAddRow()")
+        </div>
+        <form id='eformUserJob' class='xg-form' style="border:none">
+            <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+                <thead>
+                    <tr>
+                        @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["JobName"].Value, Required = true })
+                        <th>@R["JobType"]</th>
+                        <th>@R["JobPlace"]</th>
+                        @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["StartEnd"].Value, Required = true })
+                        @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["CorpName"].Value, Required = true })
+                        <th>@R["Corpation"]</th>
+                        <th>@R["IsManaged"]</th>
+                        <th>@R["JobNote"]</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyUserJob"></tbody>
+            </table>
+        </form>
+
+        <div class='xg-btns-box'>
+            <span class="xg-block-label">@R["SchoolData"]</span>
+            @await Component.InvokeAsync("XgAddRow", "_me.mUserSchool.onAddRow()")
+        </div>
+        <form id='eformUserSchool' class='xg-form' style="border:none">
+            <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+                <thead>
+                    <tr>
+                        @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["SchoolName"].Value, Required = true })
+                        @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["SchoolDept"].Value, Required = true })
+                        <th>@R["EducType"]</th>
+                        @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["StartEnd"].Value, Required = true })
+                        <th>@R["IsGrad"]</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyUserSchool"></tbody>
+            </table>
+        </form>
+
+        <div class='xg-btns-box'>
+            <span class="xg-block-label">@R["LangAbility"]</span>
+            @await Component.InvokeAsync("XgAddRow", "_me.mUserLang.onAddRow()")
+        </div>
+        <form id='eformUserLang' class='xg-form' style="border:none">
+            <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+                <thead>
+                    <tr>
+                        @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["LangName"].Value, Required = true })
+                        <th>@R["Listen"]</th>
+                        <th>@R["Speak"]</th>
+                        <th>@R["ReadAbility"]</th>
+                        <th>@R["Write"]</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyUserLang"></tbody>
+            </table>
+        </form>
+
+        <div class='xg-btns-box'>
+            <span class="xg-block-label">@R["License"]</span>
+            @await Component.InvokeAsync("XgAddRow", "_me.mUserLicense.onAddRow()")
+        </div>
+        <form id='eformUserLicense' class='xg-form' style="border:none">
+            <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+                <thead>
+                    <tr>
+                        @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["LicName"].Value, Required = true })
+                        @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["StartEnd"].Value, Required = true })
+                        <th>@R0["UpdFileName"]</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyUserLicense"></tbody>
+            </table>
+        </form>
+
+        <div class='xg-btns-box'>
+            <span class="xg-block-label">@R["Skill"]</span>
+            @await Component.InvokeAsync("XgAddRow", "_me.mUserSkill.onAddRow()")
+        </div>
+        <form id='eformUserSkill' class='xg-form' style="border:none">
+            <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+                <thead>
+                    <tr>
+                        @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["SkillName"].Value, Required = true })
+                        <th>@R["SkillNote"]</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyUserSkill"></tbody>
+            </table>
+        </form>
+        @await Component.InvokeAsync("XgSaveBack")
+    </div>
+</div>
+
+<script id="tplUserJob" type="text/template">
+    <tr>
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "UserId" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "JobDesc" })
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "JobName", MaxLen = 30, Required = true })</td>
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "JobType", MaxLen = 30 })</td>
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "JobPlace", MaxLen = 30 })</td>
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "StartEnd", MaxLen = 30, Required = true })</td>
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "CorpName", MaxLen = 30, Required = true })</td>
+        <td>@await Component.InvokeAsync("XiInt", new XiIntDto { Fid = "CorpUsers" })</td>
+        <td class='text-center'>@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "IsManaged" })</td>
+        <td width='85px' class='text-center'>@await Component.InvokeAsync("XgOpenModal", new { title = R["JobNote"].Value, Fid = "JobDesc" })</td>
+        <td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.mUserJob.onDeleteRow(this)")</td>
+    </tr>
+</script>
+
+<script id="tplUserSchool" type="text/template">
+    <tr>
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "UserId" })
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "SchoolName", MaxLen = 30, Required = true })</td>
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "SchoolDept", MaxLen = 20, Required = true })</td>
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "SchoolType", MaxLen = 20 })</td>
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "StartEnd", MaxLen = 30, Required = true })</td>
+        <td class='text-center'>@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "Graduated" })</td>
+        <td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.mUserSchool.onDeleteRow(this)")</td>
+    </tr>
+</script>
+
+<script id="tplUserLang" type="text/template">
+    <tr>
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "UserId" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Sort" })
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "LangName", MaxLen = 30, Required = true })</td>
+        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "ListenLevel", Rows = (List<IdStrDto>)ViewBag.LangLevels })</td>
+        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "SpeakLevel", Rows = (List<IdStrDto>)ViewBag.LangLevels })</td>
+        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "ReadLevel", Rows = (List<IdStrDto>)ViewBag.LangLevels })</td>
+        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "WriteLevel", Rows = (List<IdStrDto>)ViewBag.LangLevels })</td>
+        <td width='100px' class='text-center'>@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mUserLang" })</td>
+    </tr>
+</script>
+
+<script id="tplUserLicense" type="text/template">
+    <tr>
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "UserId" })
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "LicenseName", MaxLen = 30, Required = true })</td>
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "StartEnd", MaxLen = 30, Required = true })</td>
+        <td>@await Component.InvokeAsync("XiFile", new XiFileDto { Fid = "FileName" })</td>
+        <td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.mUserLicense.onDeleteRow(this)")</td>
+    </tr>
+</script>
+
+<script id="tplUserSkill" type="text/template">
+    <tr>
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "UserId" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Sort" })
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "SkillName", MaxLen = 30, Required = true })</td>
+        <td>@await Component.InvokeAsync("XiTextarea", new XiTextareaDto { Fid = "SkillDesc", MaxLen = 500 })</td>
+        <td width='100px' class='text-center'>@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mUserSkill" })</td>
+    </tr>
+</script>

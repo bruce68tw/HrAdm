@@ -1,0 +1,89 @@
+﻿using Base.Services;
+
+namespace HrAdm.Services
+{
+    //project service
+    public static class _Xp
+    {
+        //public const string MyVer = "20201228f";     //for my.js/css
+        public static string MyVer = _Date.NowSecStr();
+        public const string LibVer = "20201228b";    //for lib.js/css
+
+        public static string NoImagePath = _Fun.DirRoot + "/wwwroot/images/noImage.jpg";
+        //public static string Locale;
+        //public static string LocaleNoDash;
+
+        //view columns 
+        //public static int[] ViewCols = new int[] { 12, 2, 3 };
+
+        public static string GetUploadDir()
+        {
+            return _Fun.DirRoot + "_upload/";
+        }
+
+        //get upload dir of UserLicence
+        public static string GetDirUserLicence()
+        {
+            return GetUploadDir() + "UserLicence";
+        }
+        
+        /*
+        //constructor
+        static _Xp()
+        {
+            Locale = _Config.GetStr("Locale", "zh-TW");
+            LocaleNoDash = Locale.Replace("-", "");
+        }
+        */
+
+        /*
+        //constant
+        //上傳檔案最大限制, 單位MB
+        public const int UploadFileMax = 5;
+
+        //檢查上傳檔案
+        //後端程式不顯示詳細錯誤訊息到前端
+        public static ErrorModel CheckUploadFile(HttpPostedFileBase file, int size, string exts)
+        {
+            var error = new ErrorModel();
+            if (!_WebFile.CheckFileSize(file, size))
+                error.ErrorMsg = "上傳檔案大小有誤。";
+            else if(!_WebFile.CheckFileExt(file, exts))
+                error.ErrorMsg = "上傳檔案種類有誤。";
+
+            return error;
+        }
+
+        //儲存上傳檔案, 傳回路徑, 如果失敗則傳回空白
+        public static string SaveUploadFile(HttpPostedFileBase file)
+        {
+            //rename existed file if any
+            var dir = _Fun.DirRoot + "ImportFiles\\";
+            var name = file.FileName;
+            var path = dir + Path.GetFileName(name);
+            if (File.Exists(path))
+            {
+                var path2 = dir + Path.GetFileNameWithoutExtension(name) + "_" + _Date.NowSecStr() + Path.GetExtension(name);
+                File.Move(path, path2);
+            }
+            return _WebFile.SaveUploadFile(file, path) ? path : "";
+        }
+
+        //切換語系
+        public static void SetLocale(string locale)
+        {
+            _Locale.SetCulture(locale);
+        }
+
+        //??
+        //功能清單(名稱)設定多國語內容(recursive)
+        public static void MenuSetLocale(List<MenuModel> menus)
+        {
+            //??
+            var rm = _Locale.GetResourceFile("");
+            rm.GetString("");
+        }
+        */
+
+    }//class
+}

@@ -1,0 +1,31 @@
+﻿<form id='eform' class='xg-form' style='margin-bottom:0;'>
+    @await Component.InvokeAsync("XiHide", new { fid = "Id" })
+
+    @await Component.InvokeAsync("XiText", new { title = "帳號", fid = "Account", required = true, maxLen = 20 })
+    @await Component.InvokeAsync("XiText", new { title = "使用者名稱", fid = "Name", required = true, maxLen = 20 })
+    @await Component.InvokeAsync("XiText", new { title = "密碼", fid = "Pwd", type = "password", maxLen = 32 })
+    @await Component.InvokeAsync("XiSelect", new { title = "部門", fid = "DeptId", rows = (List<IdStrDto>)ViewBag.Depts })
+    @await Component.InvokeAsync("XiCheck", new { title = "資料狀態", fid = "Status", label = "啟用" })
+</form>
+
+<form class='xg-form'>
+    <div class='row'>
+        <div class='col-md-2 xg-label'>角色清單</div>
+        <div class='col-md-8 xg-input'>
+            <!-- table for control rows column has same width -->
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tbody>
+                    <tr>
+                        <td id="divRoles">
+                            @foreach (var row in (List<IdStrDto>)ViewBag.Roles)
+                            {
+                                @await Component.InvokeAsync("XiCheck", new { fid = row.Id, value = row.Id, label = row.Str })
+                            }
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+@await Component.InvokeAsync("XgSaveBack")

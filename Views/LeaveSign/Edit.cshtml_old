@@ -1,0 +1,20 @@
+﻿<form id='eform' class='xg-form'>
+    @await Component.InvokeAsync("XiHide", new { fid = "SignId" })
+    @await Component.InvokeAsync("XiHide", new { fid = "LeaveId" })
+    @await Component.InvokeAsync("XiRead", new { title = "請假人", fid = "UserName" })
+    @await Component.InvokeAsync("XiRead", new { title = "代理人", fid = "AgentName" })
+    @await Component.InvokeAsync("XiRead", new { title = "假別", fid = "LeaveName" })
+    @await Component.InvokeAsync("XiRead", new { title = "開始時間", fid = "StartTime", format = BrFormatEstr.Dt2 })
+    @await Component.InvokeAsync("XiRead", new { title = "結束時間", fid = "EndTime", format = BrFormatEstr.Dt2 })
+    @await Component.InvokeAsync("XiRead", new { title = "請假時數", fid = "Hours" })
+    @await Component.InvokeAsync("XiLinkFile", new { title = "上傳檔案", fid = "FileName" })
+    @await Component.InvokeAsync("XiRead", new { title = "建檔日期", fid = "Created", format = BrFormatEstr.Dt })
+    @await Component.InvokeAsync("XiSelect", new { title = "審核結果", fid = "SignStatus", rows = _XpCode.GetSignTypes() })
+    @await Component.InvokeAsync("XiText", new { title = "審核意見", fid = "Note", maxLen = 100, cols = "2,8" })
+</form>
+
+<div class='xg-center'>
+    <button type='button' class='btn xg-btn-size btn-success' onclick='_me.onSubmit()'>送出</button>
+    <button type='button' class='btn xg-btn-size btn-primary' onclick='_crud.onToRead()'>回上一頁<i class='ico-back'></i></button>
+</div>
+

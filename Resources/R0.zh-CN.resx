@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Crud" xml:space="preserve">
+    <value>维护</value>
+  </data>
+  <data name="MenuCustInput" xml:space="preserve">
+    <value>9.自订输入栏位</value>
+  </data>
+  <data name="MenuUserImport" xml:space="preserve">
+    <value>10.汇入用户资料</value>
+  </data>
+  <data name="MenuCmsMsg" xml:space="preserve">
+    <value>11.最新消息维护</value>
+  </data>
+  <data name="MenuXpEasyRpt" xml:space="preserve">
+    <value>12.简单报表维护</value>
+  </data>
+  <data name="MenuLeave" xml:space="preserve">
+    <value>1.请假作业</value>
+  </data>
+  <data name="MenuLeaveSign" xml:space="preserve">
+    <value>2.待签核假单</value>
+  </data>
+  <data name="MenuXpFlow" xml:space="preserve">
+    <value>3.流程维护</value>
+  </data>
+  <data name="MenuXpFlowSign" xml:space="preserve">
+    <value>4.签核资料查询</value>
+  </data>
+  <data name="MenuUser" xml:space="preserve">
+    <value>5.用户管理</value>
+  </data>
+  <data name="MenuXpRole" xml:space="preserve">
+    <value>6.角色维护</value>
+  </data>
+  <data name="MenuXpProg" xml:space="preserve">
+    <value>7.功能维护</value>
+  </data>
+  <data name="MenuUserExt" xml:space="preserve">
+    <value>8.用户经历维护</value>
+  </data>
+  <data name="MenuXpTranLog" xml:space="preserve">
+    <value>13.异动记录查询</value>
+  </data>
+  <data name="SystemName" xml:space="preserve">
+    <value>人事管理系统</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>建档时间</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>建档人员</value>
+  </data>
+  <data name="Reviser" xml:space="preserve">
+    <value>修改人员</value>
+  </data>
+  <data name="Revised" xml:space="preserve">
+    <value>修改日期</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>资料状态</value>
+  </data>
+  <data name="UpdFile" xml:space="preserve">
+    <value>上传档案</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>启用</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>送出</value>
+  </data>
+  <data name="ToRead" xml:space="preserve">
+    <value>回上一页</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>检视</value>
+  </data>
+  <data name="Fun" xml:space="preserve">
+    <value>功能</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>修改</value>
+  </data>
+  <data name="Read" xml:space="preserve">
+    <value>查询</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>列印</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>汇出</value>
+  </data>
+  <data name="Sort" xml:space="preserve">
+    <value>排序</value>
+  </data>
+  <data name="UpdImage" xml:space="preserve">
+    <value>上传图片</value>
+  </data>
+  <data name="UpdFileName" xml:space="preserve">
+    <value>上传档名</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>汇入</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>是</value>
+  </data>
+</root>

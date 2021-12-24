@@ -1,0 +1,9 @@
+.vs/
+bin/
+obj/
+_log/
+_upload/
+packages/
+*.rar
+old/
+.config/

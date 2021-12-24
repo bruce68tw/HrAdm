@@ -1,0 +1,175 @@
+﻿<form id='eform' class='xg-form'>
+    @await Component.InvokeAsync("XiHide", new { fid = "Id" })
+
+    @await Component.InvokeAsync("XiText", new { title = "帳號", fid = "Account", maxLen = 20 })
+    @await Component.InvokeAsync("XiText", new { title = "使用者名稱", fid = "Name", maxLen = 20 })
+    @await Component.InvokeAsync("XiText", new { title = "部門", fid = "DeptId", maxLen = 10 })
+    @await Component.InvokeAsync("XiFile", new { title = "上傳照片", fid = "PhotoFile", labelTip = "請上傳 9:7 左右直立照片" })
+    @await Component.InvokeAsync("XiCheck", new { title = "資料狀態", fid = "Status" })
+</form>
+
+<div class='xg-btns-box'>
+	<span class="xg-block-label">工作經驗</span>
+	@await Component.InvokeAsync("XgAddRow", "_me.mUserJob.onAddRow()")
+</div>
+<form id='eformUserJob' class='xg-form' style="border:none">
+    <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+        <thead>
+            <tr>
+				@await Component.InvokeAsync("XgTh", new { title = "工作名稱", required = true })
+				<th>工作類型</th>
+				<th>工作地點</th>
+				@await Component.InvokeAsync("XgTh", new { title = "起迄時間", required = true })
+				@await Component.InvokeAsync("XgTh", new { title = "公司名稱", required = true })
+				<th>公司人數</th>
+				<th>管理職</th>
+				<th>工作說明</th>
+				<th></th>
+            </tr>
+        </thead>
+        <tbody id="tbodyUserJob"></tbody>
+    </table>
+</form>
+
+<div class='xg-btns-box'>
+	<span class="xg-block-label">學歷資料</span>
+	@await Component.InvokeAsync("XgAddRow", "_me.mUserSchool.onAddRow()")
+</div>
+<form id='eformUserSchool' class='xg-form' style="border:none">
+    <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+        <thead>
+            <tr>
+				@await Component.InvokeAsync("XgTh", new { title = "學校名稱", required = true })
+				@await Component.InvokeAsync("XgTh", new { title = "科系", required = true })
+				<th>學歷種類</th>
+				@await Component.InvokeAsync("XgTh", new { title = "起迄時間", required = true })
+				<th>是否畢業</th>
+				<th></th>
+            </tr>
+        </thead>
+        <tbody id="tbodyUserSchool"></tbody>
+    </table>
+</form>
+
+<div class='xg-btns-box'>
+	<span class="xg-block-label">語言能力</span>
+	@await Component.InvokeAsync("XgAddRow", "_me.mUserLang.onAddRow()")
+</div>
+<form id='eformUserLang' class='xg-form' style="border:none">
+    <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+        <thead>
+            <tr>
+				@await Component.InvokeAsync("XgTh", new { title = "語言名稱", required = true })
+				<th>聴力</th>
+				<th>說</th>
+				<th>閱讀</th>
+				<th>書寫</th>
+				<th></th>
+            </tr>
+        </thead>
+        <tbody id="tbodyUserLang"></tbody>
+    </table>
+</form>
+
+<div class='xg-btns-box'>
+	<span class="xg-block-label">用戶證照</span>
+	@await Component.InvokeAsync("XgAddRow", "_me.mUserLicense.onAddRow()")
+</div>
+<form id='eformUserLicense' class='xg-form' style="border:none">
+    <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+        <thead>
+            <tr>
+				@await Component.InvokeAsync("XgTh", new { title = "證照名稱", required = true })
+				@await Component.InvokeAsync("XgTh", new { title = "起迄時間", required = true })
+				<th>上傳檔名</th>
+				<th></th>
+            </tr>
+        </thead>
+        <tbody id="tbodyUserLicense"></tbody>
+    </table>
+</form>
+
+<div class='xg-btns-box'>
+	<span class="xg-block-label">專業技能</span>
+	@await Component.InvokeAsync("XgAddRow", "_me.mUserSkill.onAddRow()")
+</div>
+<form id='eformUserSkill' class='xg-form' style="border:none">
+    <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+        <thead>
+            <tr>
+				@await Component.InvokeAsync("XgTh", new { title = "技能名稱", required = true })
+				<th>技能說明</th>
+				<th></th>
+            </tr>
+        </thead>
+        <tbody id="tbodyUserSkill"></tbody>
+    </table>
+</form>
+@await Component.InvokeAsync("XgSaveBack")
+
+<script id="tplUserJob" type="text/template">
+    <tr>
+		@await Component.InvokeAsync("XiHide", new { fid = "Id" })
+		@await Component.InvokeAsync("XiHide", new { fid = "UserId" })
+		@await Component.InvokeAsync("XiHide", new { fid = "JobDesc" })
+		<td>@await Component.InvokeAsync("XiText", new { fid = "JobName", maxLen = 30, required = true })</td>
+		<td>@await Component.InvokeAsync("XiText", new { fid = "JobType", maxLen = 30 })</td>
+		<td>@await Component.InvokeAsync("XiText", new { fid = "JobPlace", maxLen = 30 })</td>
+		<td>@await Component.InvokeAsync("XiText", new { fid = "StartEnd", maxLen = 30, required = true })</td>
+		<td>@await Component.InvokeAsync("XiText", new { fid = "CorpName", maxLen = 30, required = true })</td>
+		<td>@await Component.InvokeAsync("XiNum", new { fid = "CorpUsers" })</td>
+		<td class='text-center'>@await Component.InvokeAsync("XiCheck", new { fid = "IsManaged" })</td>
+		<td width='85px' class='text-center'>@await Component.InvokeAsync("XgOpenModal", new { title = "工作說明", fid = "JobDesc", maxLen = -1 })</td>
+		<td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.mUserJob.onDeleteRow(this)")</td>
+    </tr>
+</script>
+
+<script id="tplUserSchool" type="text/template">
+    <tr>
+		@await Component.InvokeAsync("XiHide", new { fid = "Id" })
+		@await Component.InvokeAsync("XiHide", new { fid = "UserId" })
+		<td>@await Component.InvokeAsync("XiText", new { fid = "SchoolName", maxLen = 30, required = true })</td>
+		<td>@await Component.InvokeAsync("XiText", new { fid = "SchoolDept", maxLen = 20, required = true })</td>
+		<td>@await Component.InvokeAsync("XiText", new { fid = "SchoolType", maxLen = 20 })</td>
+		<td>@await Component.InvokeAsync("XiText", new { fid = "StartEnd", maxLen = 30, required = true })</td>
+		<td class='text-center'>@await Component.InvokeAsync("XiCheck", new { fid = "Graduated" })</td>
+		<td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.mUserSchool.onDeleteRow(this)")</td>
+    </tr>
+</script>
+
+<script id="tplUserLang" type="text/template">
+    <tr>
+		@await Component.InvokeAsync("XiHide", new { fid = "Id" })
+		@await Component.InvokeAsync("XiHide", new { fid = "UserId" })
+		@await Component.InvokeAsync("XiHide", new { fid = "Sort" })
+		<td>@await Component.InvokeAsync("XiText", new { fid = "LangName", maxLen = 30, required = true })</td>
+		<td>@await Component.InvokeAsync("XiSelect", new { fid = "ListenLevel", rows = (List<IdStrDto>)ViewBag.LangLevels })</td>
+		<td>@await Component.InvokeAsync("XiSelect", new { fid = "SpeakLevel", rows = (List<IdStrDto>)ViewBag.LangLevels })</td>
+		<td>@await Component.InvokeAsync("XiSelect", new { fid = "ReadLevel", rows = (List<IdStrDto>)ViewBag.LangLevels })</td>
+		<td>@await Component.InvokeAsync("XiSelect", new { fid = "WriteLevel", rows = (List<IdStrDto>)ViewBag.LangLevels })</td>
+		<td width='100px' class='text-center'>@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mUserLang" })</td>
+    </tr>
+</script>
+
+<script id="tplUserLicense" type="text/template">
+    <tr>
+		@await Component.InvokeAsync("XiHide", new { fid = "Id" })
+		@await Component.InvokeAsync("XiHide", new { fid = "UserId" })
+		<td>@await Component.InvokeAsync("XiText", new { fid = "LicenseName", maxLen = 30, required = true })</td>
+		<td>@await Component.InvokeAsync("XiText", new { fid = "StartEnd", maxLen = 30, required = true })</td>
+		<td>@await Component.InvokeAsync("XiFile", new { fid = "FileName" })</td>
+		<td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.mUserLicense.onDeleteRow(this)")</td>
+    </tr>
+</script>
+
+<script id="tplUserSkill" type="text/template">
+    <tr>
+		@await Component.InvokeAsync("XiHide", new { fid = "Id" })
+		@await Component.InvokeAsync("XiHide", new { fid = "UserId" })
+		@await Component.InvokeAsync("XiHide", new { fid = "Sort" })
+		<td>@await Component.InvokeAsync("XiText", new { fid = "SkillName", maxLen = 30, required = true })</td>
+		<td>@await Component.InvokeAsync("XiTextArea", new { fid = "SkillDesc", maxLen = 500 })</td>
+		<td width='100px' class='text-center'>@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mUserSkill" })</td>
+    </tr>
+</script>
+

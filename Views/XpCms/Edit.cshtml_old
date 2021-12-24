@@ -1,0 +1,46 @@
+﻿@model CmsEditDto
+@{ 
+    var cols = "2,9";
+}
+
+<form id='eform' class='xg-form'>
+    @await Component.InvokeAsync("XiHide", new { fid = "Id" })
+
+    @if (Model.Title != null)
+    {
+        @await Component.InvokeAsync("XiText", new { title = Model.Title, fid = "Title", maxLen = 255, required = true, cols = cols })
+    }
+    @if (Model.Text != null)
+    {
+        @await Component.InvokeAsync("XiTextArea", new { title = Model.Text, fid = "Text", required = true, cols = cols })
+    }
+    @if (Model.Html != null)
+    {
+        @await Component.InvokeAsync("XiHtml", new { title = Model.Html, fid = "Html", required = true, cols = cols })
+    }
+    @if (Model.Note != null)
+    {
+        @await Component.InvokeAsync("XiTextArea", new { title = Model.Note, fid = "Note", cols = cols })
+    }
+    @if (Model.FileName != null)
+    {
+        @await Component.InvokeAsync("XiFile", new { title = Model.FileName, fid = "FileName", required = true })
+    }
+    @if (Model.StartTime != null)
+    {
+        @await Component.InvokeAsync("XiDt", new { title = Model.StartTime, fid = "StartTime", required = true, cols = cols })
+    }
+    @if (Model.EndTime != null)
+    {
+        @await Component.InvokeAsync("XiDt", new { title = Model.EndTime, fid = "EndTime", required = true, cols = cols })
+    }
+
+    @await Component.InvokeAsync("XiCheck", new { title = "狀態", fid = "Status", label = "啟用" })
+    @await Component.InvokeAsync("XiRead", new { title = "建檔人員", fid = "CreatorName" })
+    @await Component.InvokeAsync("XiRead", new { title = "建檔日期", fid = "Created", format = BrFormatEstr.Dt })
+    @await Component.InvokeAsync("XiRead", new { title = "修改人員", fid = "ReviserName" })
+    @await Component.InvokeAsync("XiRead", new { title = "修改日期", fid = "Revised", format = BrFormatEstr.Dt })
+</form>
+
+@await Component.InvokeAsync("XgSaveBack")
+

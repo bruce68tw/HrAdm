@@ -1,0 +1,1 @@
+Scaffold-DbContext "Name=FunConfig:Db" Microsoft.EntityFrameworkCore.SqlServer -Project HrAdm -context MyContext -OutputDir Tables -Force -NoPluralize

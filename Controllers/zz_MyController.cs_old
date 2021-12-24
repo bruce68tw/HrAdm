@@ -1,0 +1,23 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+
+namespace HrAdm.Controllers
+{
+    public class MyController : Controller
+    {
+        //controller name
+        public string Ctrl;
+
+        //constructor
+        public MyController()
+        {
+            //Ctrl = ControllerContext.ActionDescriptor.ControllerName;
+        }
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            Ctrl = ControllerContext.ActionDescriptor.ControllerName;
+            base.OnActionExecuting(context);
+        }
+    }
+}

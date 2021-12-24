@@ -1,0 +1,14 @@
+﻿
+<form id='eform' class='xg-form'>
+    @await Component.InvokeAsync("XiHide", new { fid = "Id" })
+
+    @await Component.InvokeAsync("XiText", new { title = "報表名稱", fid = "Name", maxLen = 100, required = true, cols = "2,4" })
+    @await Component.InvokeAsync("XiText", new { title = "Excel範本檔", fid = "TplFile", maxLen = 30, required = true, cols = "2,4" })
+    @await Component.InvokeAsync("XiText", new { title = "收件者Email", fid = "ToEmails", labelTip = "逗號分隔", cols = "2,9" })
+    @*await Component.InvokeAsync("XiText", new { title = "收件者角色", fid = "ToRoles", labelTip = "逗號分隔", cols = "2,9" })*@
+    @await Component.InvokeAsync("XiTextArea", new { title = "Sql", fid = "Sql", maxLen = 255, required = true, cols = "2,6" })
+    @await Component.InvokeAsync("XiCheck", new { title = "啟用", fid = "Status", label = "是" })
+</form>
+
+@await Component.InvokeAsync("XgSaveBack")
+

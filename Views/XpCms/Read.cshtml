@@ -1,0 +1,92 @@
+﻿@model CmsEditDto
+@inject IHtmlLocalizer<HrAdm.R0> R0
+@inject IViewLocalizer R
+@{
+    var cols = "2,9";
+    var cmsType = ViewBag.CmsType;
+    var progName = (cmsType == CmsTypeEstr.Msg) ? R0["MenuCmsMsg"].Value
+        : "??";
+}
+
+<script src="~/js/view/XpCms.js"></script>
+<script type="text/javascript">
+    $(function () {
+        _me.init();
+    });
+</script>
+
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { progName } })
+<div class="xp-prog">
+    <div id="divRead">
+        <form id='formRead' class='xg-form'>
+            <div class="row">
+                @await Component.InvokeAsync("XiText", new XiTextDto { Title = Model.Title, Fid = "Title", InRow = true })
+                @await Component.InvokeAsync("XgFindTbar")
+            </div>
+        </form>
+
+        <div class='xg-btns-box'>
+            @await Component.InvokeAsync("XgCreate")
+        </div>
+        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>@Model.Title</th>
+                    <th>@Model.StartTime</th>
+                    <th>@Model.EndTime</th>
+                    <th>@R0["Status"]</th>
+                    <th>@R0["Created"]</th>
+                    <th>@R0["Crud"]</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="divEdit" class="xg-hide">
+        <form id='eform' class='xg-form'>
+            @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
+
+            @if (Model.Title != null)
+            {
+                @await Component.InvokeAsync("XiText", new XiTextDto { Title = Model.Title, Fid = "Title", MaxLen = 255, Required = true, Cols = cols })
+            }
+            @if (Model.Text != null)
+            {
+                @await Component.InvokeAsync("XiTextarea", new XiTextareaDto { Title = Model.Text, Fid = "Text", Required = true, Cols = cols })
+            }
+            @if (Model.Html != null)
+            {
+                @await Component.InvokeAsync("XiHtml", new XiHtmlDto { Title = Model.Html, Fid = "Html", Required = true, Cols = cols })
+            }
+            @if (Model.Note != null)
+            {
+                @await Component.InvokeAsync("XiTextarea", new XiTextareaDto { Title = Model.Note, Fid = "Note", Cols = cols })
+            }
+            @if (Model.FileName != null)
+            {
+                @await Component.InvokeAsync("XiFile", new XiFileDto { Title = Model.FileName, Fid = "FileName", Required = true })
+            }
+            @if (Model.StartTime != null)
+            {
+                @await Component.InvokeAsync("XiDt", new XiDtDto { Title = Model.StartTime, Fid = "StartTime", Required = true, Cols = cols })
+            }
+            @if (Model.EndTime != null)
+            {
+                @await Component.InvokeAsync("XiDt", new XiDtDto { Title = Model.EndTime, Fid = "EndTime", Required = true, Cols = cols })
+            }
+
+            @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R0["Status"].Value, Fid = "Status", Label = R0["Active"].Value })
+            <div class="row">
+                @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R0["Creator"].Value, Fid = "CreatorName", InRow = true, Cols = "2,3" })
+                @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R0["Reviser"].Value, Fid = "ReviserName", InRow = true, Cols = "2,3" })
+            </div>
+            <div class="row">
+                @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R0["Created"].Value, Fid = "Created", Format = BrFormatEstr.Dt, InRow = true, Cols = "2,3" })
+                @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R0["Revised"].Value, Fid = "Revised", Format = BrFormatEstr.Dt, InRow = true, Cols = "2,3" })
+            </div>
+        </form>
+
+        @await Component.InvokeAsync("XgSaveBack")
+    </div>
+</div>

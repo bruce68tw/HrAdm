@@ -1,0 +1,49 @@
+﻿@inject IHtmlLocalizer<HrAdm.R0> R0
+@inject IViewLocalizer R
+
+<script src="~/js/view/XpEasyRpt.js"></script>
+<script type="text/javascript">
+    $(function () {
+        _me.init();
+    });
+</script>
+
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuXpEasyRpt"].Value } })
+<div class="xp-prog">
+    <div id="divRead">
+        <form id='formRead' class='xg-form'>
+            <div class="row">
+                @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["RptName"].Value, Fid = "Name", InRow = true })
+                @await Component.InvokeAsync("XgFindTbar")
+            </div>
+        </form>
+
+        <div class='xg-btns-box'>
+            @await Component.InvokeAsync("XgCreate")
+        </div>
+        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>@R["RptName"]</th>
+                    <th>@R0["Status"]</th>
+                    <th>@R["ExcelTpl"]</th>
+                    <th>@R0["Crud"]</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="divEdit" class="xg-hide">
+        <form id='eform' class='xg-form'>
+            @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["RptName"].Value, Fid = "Name", MaxLen = 100, Required = true, Cols = "2,4" })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ExcelTpl"].Value, Fid = "TplFile", MaxLen = 30, Required = true, Cols = "2,4" })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ToEmail"].Value, Fid = "ToEmails", LabelTip = R["TipToEmail"].Value, Cols = "2,9" })
+            @await Component.InvokeAsync("XiTextarea", new XiTextareaDto { Title = "Sql", Fid = "Sql", MaxLen = 255, Required = true, Cols = "2,6" })
+            @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R0["Status"].Value, Fid = "Status", Label = R0["Active"].Value })
+        </form>
+
+        @await Component.InvokeAsync("XgSaveBack")
+    </div>
+</div>
