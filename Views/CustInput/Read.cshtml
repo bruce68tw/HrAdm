@@ -44,20 +44,20 @@
 
     <div id="divEdit" class="xg-hide">
         <form id='eform' class='xg-form'>
-            <vc:xi-check dto="@(new XiCheckDto { Title = "XiCheck", Fid = "FldCheck", Edit = "U", LabelTip = "CheckBox Input" })"></vc:xi-check>
-            <vc:xi-date dto="@(new XiDateDto { Title = "XiDate", Fid = "FldDate", Required = true, LabelTip = "Date Input" })"></vc:xi-date>
-            <vc:xi-dt dto="@(new XiDtDto { Title = "XiDt", Fid = "FldDt", Required = true, Cols = "2,8" })"></vc:xi-dt>
-            <vc:xi-dec dto="@(new XiDecDto { Title = "XiDec", Fid = "FldDec", Required = true, Cols = "2,6", Width = "100px" })"></vc:xi-dec>
-            <vc:xi-int dto="@(new XiIntDto { Title = "XiInt", Fid = "FldInt", Required = true, Cols = "2,6", Width = "100px", Min = 2, Max = 10 })"></vc:xi-int>
-            <vc:xi-file dto="@(new XiFileDto { Title = "XiFile", Fid = "FldFile", Required = true, MaxSize = 1, FileType = "*" })"></vc:xi-file>
-            @*<vc:xi-link dto="@(new XiLinkDto { Title = "XiLink", Fid = "FldFile" })"></vc:xi-link>*@
-            <vc:xi-hide dto="@(new XiHideDto { Fid = "Id" })"></vc:xi-hide>
-            <vc:xi-html dto="@(new XiHtmlDto { Title = "XiHtml", Fid = "FldHtml", Cols = "2,9" })"></vc:xi-html>
-            <vc:xi-radio dto="@(new XiRadioDto { Title = "XiRadio", Fid = "FldRadio", Rows = (List<IdStrDto>)ViewBag.Radios })"></vc:xi-radio>
-            <vc:xi-read dto="@(new XiReadDto { Title = "XiRead", Fid = "FldRead", Value = "label" })"></vc:xi-read>
-            <vc:xi-select dto="@(new XiSelectDto { Title = "XiSelect", Fid = "FldSelect", Rows = (List<IdStrDto>)ViewBag.Selects, Required = true })"></vc:xi-select>
-            <vc:xi-textarea dto="@(new XiTextareaDto { Title = "XiTextarea", Fid = "FldTextarea", MaxLen = 255, Required = true, Cols = "2,9" })"></vc:xi-textarea>
-            <vc:xi-text dto="@(new XiTextDto { Title = "XiText", Fid = "FldText", MaxLen = 20, Required = true })"></vc:xi-text>
+            <vc:xi-check dto="@(new(){ Title = "XiCheck", Fid = "FldCheck", Edit = "U", LabelTip = "CheckBox Input" })"></vc:xi-check>
+            <vc:xi-date dto="@(new(){ Title = "XiDate", Fid = "FldDate", Required = true, LabelTip = "Date Input" })"></vc:xi-date>
+            <vc:xi-dt dto="@(new(){ Title = "XiDt", Fid = "FldDt", Required = true, Cols = "2,8" })"></vc:xi-dt>
+            <vc:xi-dec dto="@(new(){ Title = "XiDec", Fid = "FldDec", Required = true, Cols = "2,6", Width = "100px" })"></vc:xi-dec>
+            <vc:xi-int dto="@(new(){ Title = "XiInt", Fid = "FldInt", Required = true, Cols = "2,6", Width = "100px", Min = 2, Max = 10 })"></vc:xi-int>
+            <vc:xi-file dto="@(new(){ Title = "XiFile", Fid = "FldFile", Required = true, MaxSize = 1, FileType = "*" })"></vc:xi-file>
+            @*<vc:xi-link dto="@(new(){ Title = "XiLink", Fid = "FldFile" })"></vc:xi-link>*@
+            <vc:xi-hide dto="@(new(){ Fid = "Id" })"></vc:xi-hide>
+            <vc:xi-html dto="@(new(){ Title = "XiHtml", Fid = "FldHtml", Cols = "2,9" })"></vc:xi-html>
+            <vc:xi-radio dto="@(new(){ Title = "XiRadio", Fid = "FldRadio", Rows = ViewBag.Radios })"></vc:xi-radio>
+            <vc:xi-read dto="@(new(){ Title = "XiRead", Fid = "FldRead", Value = "label" })"></vc:xi-read>
+            <vc:xi-select dto="@(new(){ Title = "XiSelect", Fid = "FldSelect", Rows = ViewBag.Selects, Required = true })"></vc:xi-select>
+            <vc:xi-textarea dto="@(new(){ Title = "XiTextarea", Fid = "FldTextarea", MaxLen = 255, Required = true, Cols = "2,9" })"></vc:xi-textarea>
+            <vc:xi-text dto="@(new(){ Title = "XiText", Fid = "FldText", MaxLen = 20, Required = true })"></vc:xi-text>
         </form>
         @await Component.InvokeAsync("XgSaveBack")
     </div>
