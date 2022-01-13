@@ -14,11 +14,11 @@ namespace HrAdm.Services
             return new ReadDto()
             {
                 ReadSql = $@"
-select l.*,
-    UserName=u.Name,
-    AgentName=u2.Name,
-    LeaveName=c.Name_{locale0},
-    SignStatusName=c2.Name_{locale0}
+select 
+    u.Name as UserName, u2.Name as AgentName,
+    c.Name_{locale0} as LeaveName, l.StartTime,
+    l.EndTime, l.Hours,
+    c2.Name_{locale0} as SignStatusName, l.Created
 from dbo.Leave l
 join dbo.[User] u on l.UserId=u.Id
 join dbo.[User] u2 on l.AgentId=u2.Id

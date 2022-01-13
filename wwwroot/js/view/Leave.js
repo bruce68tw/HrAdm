@@ -4,13 +4,13 @@
         //datatable config
         var config = {
             columns: [
-                { data: 'UserName' },
+                { data: 'UserName', sortable: true },
                 { data: 'AgentName' },
-                { data: 'LeaveName' },
-                { data: 'StartTime' },
+                { data: 'LeaveName', sortable: true },
+                { data: 'StartTime', sortable: true },
                 { data: 'EndTime' },
                 { data: 'Hours' },
-                { data: 'SignStatusName' },
+                { data: 'SignStatusName', sortable: true },
                 { data: 'Created' },
                 { data: '_Fun' },
             ],
