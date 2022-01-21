@@ -130,7 +130,7 @@ order by Sort";
         {
             var sql = string.Format(@"
 select 
-    Id, Name as Str
+    Id, [Name] as Str
 from dbo.[{0}]
 order by Id
 ", table);
