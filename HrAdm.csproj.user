@@ -2,6 +2,6 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ShowAllFiles>false</ShowAllFiles>
-    <NameOfLastUsedPublishProfile>FolderProfile</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>D:\_project2\HrAdm\Properties\PublishProfiles\FolderProfile.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>

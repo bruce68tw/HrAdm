@@ -133,19 +133,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\Home\Error.cshtml" />
+    <None Include="Views\Home\Index.cshtml" />
+    <None Include="Views\Home\Login.cshtml" />
     <None Include="wwwroot\css\bootstrap-datepicker.css.map" />
     <None Include="wwwroot\css\fonts\icomoon.svg" />
     <None Include="wwwroot\css\lib\font\summernote.woff2" />
     <None Include="wwwroot\css\summernote-bs4.js.map" />
     <None Include="wwwroot\css\summernote-bs4.min.js.map" />
     <None Include="wwwroot\css\view\_xg_block.css_old" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="Views\Home\Error.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties bundleconfig_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
