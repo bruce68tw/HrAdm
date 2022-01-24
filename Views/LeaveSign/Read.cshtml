@@ -95,7 +95,7 @@
             @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["Hours"].Value, Fid = "Hours" })
             @await Component.InvokeAsync("XiLink", new XiLinkDto { Title = R0["UpdFile"].Value, Fid = "FileName" })
             @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R0["Created"].Value, Fid = "Created", Format = BrFormatEstr.Dt })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["SignStatus"].Value, Fid = "SignStatus", Required = true, Rows = (List<IdStrDto>)ViewBag.SignStatuses2 })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["SignStatus"].Value, Fid = "SignStatus", Required = true, Rows = ViewBag.SignStatuses2 })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Note"].Value, Fid = "Note", MaxLen = 100, Cols = "2,8" })
         </form>
 

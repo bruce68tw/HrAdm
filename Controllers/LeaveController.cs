@@ -84,7 +84,7 @@ namespace HrAdm.Controllers
         /// <returns></returns>
         public ActionResult GetSignRows(string id)
         {
-            return PartialView("_SignRows", new LeaveService().GetSignRows(id));
+            return PartialView(_Xp.SignRowsView, new LeaveService().GetSignRows(id));
         }
 
     }//class

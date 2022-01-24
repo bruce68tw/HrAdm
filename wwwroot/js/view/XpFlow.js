@@ -8,12 +8,17 @@
                 { data: 'Name' },
                 { data: 'Status' },
                 { data: '_Fun' },
+                { data: '_Crud' },
             ],
             columnDefs: [
 				{ targets: [2], render: function (data, type, full, meta) {
                     return _crud.dtStatusName(data);                    
                 }},
 				{ targets: [3], render: function (data, type, full, meta) {
+                    var html = '<a href="javascript:_me.onOpenTest(\'{0}\');">{1}</a>';
+                    return _str.format(html, full.Code, '測試流程');
+                }},
+				{ targets: [4], render: function (data, type, full, meta) {
                     return _crud.dtCrudFun(full.Id, full.Name, true, true, true);
                 }},
             ],
@@ -41,6 +46,10 @@
         _me.mLine.fnLoadJson = _me.mLine_loadJson;
         _me.mLine.fnGetUpdJson = _me.mLine_getUpdJson;
         _me.mLine.fnValid = _me.mLine_valid;
+
+        //flow test
+        _me.divFlowTest = $('#divFlowTest');
+        _me.nowFlowCode = '';
     },
 
     edit0_afterSwap: function (toRead) {
@@ -88,5 +97,35 @@
         return true;
     },
     //#endregion
+
+    //測試流程
+    onOpenTest: function (code) {
+        //read old row if need
+        _me.nowFlowCode = code;
+
+        //show div
+        _me.testToRead(false)
+    },
+
+    onSaveTest: function () {
+        //check & save
+        var data = {
+            code: _me.nowFlowCode,
+            data: _itextarea.get('Data', _me.divFlowTest),
+        };
+        _ajax.getStr('SaveFlowTest', data, function (error) {
+            if (_str.isEmpty(error)) {
+                _tool.msg('作業完成。');
+                _me.testToRead(true);
+            } else {
+                _tool.msg(error);
+            }
+        });
+    },
+
+    //show Read form or not
+    testToRead: function (toRead) {
+        _crud.swap(toRead, _me.divFlowTest);
+    },
 
 }; //class

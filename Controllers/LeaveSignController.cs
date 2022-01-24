@@ -51,7 +51,7 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<JsonResult> SignRow(string id, string status, string note)
         {
-            return Json(await _XpFlow.SignRowAsync(id, (status == "Y"), note, "Leave"));
+            return Json(await _XpFlow.SignRowAsync(id, (status == "Y"), note, "Leave", false));
         }
 
         //TODO: add your code

@@ -1,0 +1,20 @@
+﻿
+<form class='xg-form xg-mt10 xg-mb10'>
+    <div class='row'>
+        @await Component.InvokeAsync("XiTextarea", new XiTextareaDto { Title = "輸入流程資料", Fid = "Data", Required = true, RowsCount = 6, InRow = true, Cols = "2,4" })
+        <div class='col-md-3' style='padding:10px 0'>
+範例(JSON格式)，UserId必填：<br>
+UserId: "Alex",<br>
+AgentId: "Nick",<br>
+Hours: 8,<br>
+        </div>
+    </div>
+</form>
+
+<div class='row'>
+    <div class='col-md-2'></div>
+    <div class='col-md-4 xg-center'>
+        <button type='button' class='btn btn-primary xg-btn-size' onclick='_me.onSaveTest()'>產生流程資料</button>
+        <button type='button' class='btn btn-secondary xg-btn-size' onclick='_me.testToRead(true)'>取消</button>
+    </div>
+</div>

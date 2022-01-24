@@ -11,9 +11,12 @@ namespace HrAdm.Services
     {
         //public const string SiteVer = "20201228f";     //for my.js/css
         public static string MyVer = _Date.NowSecStr(); //for my.js/css
-        public const string LibVer = "20220101e";       //for lib.js/css
+        public const string LibVer = "20220101f";       //for lib.js/css
 
         public static string NoImagePath = _Fun.DirRoot + "/wwwroot/image/noImage.jpg";
+
+        //SignRows View
+        public static string SignRowsView = "~/Views/Leave/_SignRows.cshtml";
 
         //dir
         public static string DirTpl = _Fun.DirRoot + "_template/";

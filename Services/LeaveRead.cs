@@ -18,7 +18,8 @@ select
     u.Name as UserName, u2.Name as AgentName,
     c.Name_{locale0} as LeaveName, l.StartTime,
     l.EndTime, l.Hours,
-    c2.Name_{locale0} as SignStatusName, l.Created
+    c2.Name_{locale0} as SignStatusName, l.Created,
+    l.Id
 from dbo.Leave l
 join dbo.[User] u on l.UserId=u.Id
 join dbo.[User] u2 on l.AgentId=u2.Id

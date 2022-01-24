@@ -61,11 +61,15 @@ order by p.Sort";
             return await TypeToListAsync(locale0, "LeaveType", db);
         }
         //all xpCode rows
+        public static async Task<List<IdStrDto>> GetFlowStatusesAsync(string locale0, Db db = null)
+        {
+            return await TypeToListAsync(locale0, "FlowStatus", db);
+        }
         public static async Task<List<IdStrDto>> GetSignStatusesAsync(string locale0, Db db = null)
         {
             return await TypeToListAsync(locale0, "SignStatus", db);
         }
-        //ext=1 only for LeaveSign 
+        //ext=1 only for FlowSign Form
         public static async Task<List<IdStrDto>> GetSignStatuses2Async(string locale0, Db db = null)
         {
             var sql = $@"

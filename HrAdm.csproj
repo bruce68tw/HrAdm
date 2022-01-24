@@ -125,7 +125,6 @@
     <Folder Include="wwwroot\image\" />
     <Folder Include="wwwroot\js\base\" />
     <Folder Include="wwwroot\js\lib\" />
-    <Folder Include="wwwroot\js\view\" />
     <Folder Include="wwwroot\locale\en-US\" />
     <Folder Include="wwwroot\locale\zh-CN\" />
     <Folder Include="wwwroot\locale\zh-TW\" />

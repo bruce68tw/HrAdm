@@ -84,5 +84,14 @@ namespace HrAdm.Controllers
             return editService.SetChildFkey(inputJson, 1, "EndNode", "00");
         }
 
+        //test flow
+        //code: flow.Code
+        //json: flow data in json string
+        [HttpPost]
+        public async Task<string> SaveFlowTest(string code, string data)
+        {
+            return await new TestFlowService().StartFlow(code, data);
+        }
+
     } //class
 }
