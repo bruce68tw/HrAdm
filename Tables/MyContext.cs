@@ -1,9 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using Base.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-
-#nullable disable
 
 namespace HrAdm.Tables
 {
@@ -34,6 +33,8 @@ namespace HrAdm.Tables
         public virtual DbSet<XpFlowLine> XpFlowLine { get; set; }
         public virtual DbSet<XpFlowNode> XpFlowNode { get; set; }
         public virtual DbSet<XpFlowSign> XpFlowSign { get; set; }
+        public virtual DbSet<XpFlowSignTest> XpFlowSignTest { get; set; }
+        public virtual DbSet<XpFlowTest> XpFlowTest { get; set; }
         public virtual DbSet<XpImportLog> XpImportLog { get; set; }
         public virtual DbSet<XpProg> XpProg { get; set; }
         public virtual DbSet<XpRole> XpRole { get; set; }
@@ -51,8 +52,6 @@ namespace HrAdm.Tables
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
-
             modelBuilder.Entity<Cms>(entity =>
             {
                 entity.Property(e => e.Id)
@@ -61,7 +60,7 @@ namespace HrAdm.Tables
 
                 entity.Property(e => e.CmsType)
                     .IsRequired()
-                    .HasMaxLength(20)
+                    .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Created).HasColumnType("datetime");
@@ -72,15 +71,14 @@ namespace HrAdm.Tables
                     .IsUnicode(false);
 
                 entity.Property(e => e.DataType)
-                    .IsRequired()
-                    .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("資料種類");
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EndTime).HasColumnType("datetime");
 
                 entity.Property(e => e.FileName).HasMaxLength(100);
+
+                entity.Property(e => e.Note).HasMaxLength(255);
 
                 entity.Property(e => e.Revised).HasColumnType("datetime");
 
@@ -105,31 +103,17 @@ namespace HrAdm.Tables
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.FldDate).HasColumnType("datetime");
+                entity.Property(e => e.FldDate).HasColumnType("date");
 
-                entity.Property(e => e.FldDatetime).HasColumnType("datetime");
+                entity.Property(e => e.FldDt).HasColumnType("datetime");
 
-                entity.Property(e => e.FldFile)
-                    .IsRequired()
-                    .HasMaxLength(100);
-
-                entity.Property(e => e.FldHtml).IsRequired();
-
-                entity.Property(e => e.FldNum2).HasColumnType("decimal(5, 1)");
+                entity.Property(e => e.FldFile).HasMaxLength(100);
 
                 entity.Property(e => e.FldSelect)
-                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.FldText)
-                    .IsRequired()
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.FldTextarea)
-                    .IsRequired()
-                    .HasMaxLength(255);
+                entity.Property(e => e.FldText).HasMaxLength(10);
             });
 
             modelBuilder.Entity<Dept>(entity =>
@@ -174,7 +158,7 @@ namespace HrAdm.Tables
                     .IsRequired()
                     .HasMaxLength(1)
                     .IsUnicode(false)
-                    .IsFixedLength(true);
+                    .IsFixedLength();
 
                 entity.Property(e => e.Hours).HasColumnType("decimal(5, 1)");
 
@@ -182,7 +166,7 @@ namespace HrAdm.Tables
                     .IsRequired()
                     .HasMaxLength(1)
                     .IsUnicode(false)
-                    .IsFixedLength(true);
+                    .IsFixedLength();
 
                 entity.Property(e => e.Revised).HasColumnType("datetime");
 
@@ -200,9 +184,6 @@ namespace HrAdm.Tables
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.HasIndex(e => e.Account, "User_Account")
-                    .IsUnique();
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);
@@ -221,9 +202,7 @@ namespace HrAdm.Tables
                     .IsRequired()
                     .HasMaxLength(20);
 
-                entity.Property(e => e.PhotoFile)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.PhotoFile).HasMaxLength(100);
 
                 entity.Property(e => e.Pwd)
                     .IsRequired()
@@ -271,21 +250,21 @@ namespace HrAdm.Tables
 
                 entity.Property(e => e.ListenLevel)
                     .IsRequired()
-                    .HasMaxLength(1)
+                    .HasMaxLength(10)
                     .IsUnicode(false)
-                    .IsFixedLength(true);
+                    .IsFixedLength();
 
                 entity.Property(e => e.ReadLevel)
                     .IsRequired()
-                    .HasMaxLength(1)
+                    .HasMaxLength(10)
                     .IsUnicode(false)
-                    .IsFixedLength(true);
+                    .IsFixedLength();
 
                 entity.Property(e => e.SpeakLevel)
                     .IsRequired()
-                    .HasMaxLength(1)
+                    .HasMaxLength(10)
                     .IsUnicode(false)
-                    .IsFixedLength(true);
+                    .IsFixedLength();
 
                 entity.Property(e => e.UserId)
                     .IsRequired()
@@ -294,9 +273,9 @@ namespace HrAdm.Tables
 
                 entity.Property(e => e.WriteLevel)
                     .IsRequired()
-                    .HasMaxLength(1)
+                    .HasMaxLength(10)
                     .IsUnicode(false)
-                    .IsFixedLength(true);
+                    .IsFixedLength();
             });
 
             modelBuilder.Entity<UserLicense>(entity =>
@@ -379,7 +358,7 @@ namespace HrAdm.Tables
                     .HasMaxLength(30)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Name_enUS).HasMaxLength(50);
+                entity.Property(e => e.Name_enUS).HasMaxLength(30);
 
                 entity.Property(e => e.Name_zhCN).HasMaxLength(30);
 
@@ -398,27 +377,24 @@ namespace HrAdm.Tables
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(100);
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.Sql)
                     .IsRequired()
-                    .IsUnicode(false);
+                    .HasMaxLength(500);
 
                 entity.Property(e => e.ToEmails)
+                    .IsRequired()
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TplFile)
                     .IsRequired()
-                    .HasMaxLength(30)
-                    .IsUnicode(false);
+                    .HasMaxLength(100);
             });
 
             modelBuilder.Entity<XpFlow>(entity =>
             {
-                entity.HasIndex(e => e.Code, "NonClusteredIndex-20210205-193224")
-                    .IsUnique();
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);
@@ -478,13 +454,13 @@ namespace HrAdm.Tables
                     .IsRequired()
                     .HasMaxLength(1)
                     .IsUnicode(false)
-                    .IsFixedLength(true);
+                    .IsFixedLength();
 
                 entity.Property(e => e.PassType)
                     .IsRequired()
                     .HasMaxLength(1)
                     .IsUnicode(false)
-                    .IsFixedLength(true);
+                    .IsFixedLength();
 
                 entity.Property(e => e.SignerType)
                     .HasMaxLength(2)
@@ -497,10 +473,6 @@ namespace HrAdm.Tables
 
             modelBuilder.Entity<XpFlowSign>(entity =>
             {
-                entity.HasIndex(e => e.FlowLevel, "XpFlowSign_FlowLevel");
-
-                entity.HasIndex(e => e.SignTime, "XpFlowSign_SignTime");
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);
@@ -520,7 +492,7 @@ namespace HrAdm.Tables
                     .IsRequired()
                     .HasMaxLength(1)
                     .IsUnicode(false)
-                    .IsFixedLength(true);
+                    .IsFixedLength();
 
                 entity.Property(e => e.SignTime).HasColumnType("datetime");
 
@@ -534,6 +506,71 @@ namespace HrAdm.Tables
                     .HasMaxLength(20);
 
                 entity.Property(e => e.SourceId)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<XpFlowSignTest>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FlowId)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NodeName)
+                    .IsRequired()
+                    .HasMaxLength(30);
+
+                entity.Property(e => e.Note).HasMaxLength(255);
+
+                entity.Property(e => e.SignStatus)
+                    .IsRequired()
+                    .HasMaxLength(1)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+
+                entity.Property(e => e.SignTime).HasColumnType("datetime");
+
+                entity.Property(e => e.SignerId)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SignerName)
+                    .IsRequired()
+                    .HasMaxLength(20);
+
+                entity.Property(e => e.SourceId)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<XpFlowTest>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Created).HasColumnType("datetime");
+
+                entity.Property(e => e.FlowStatus)
+                    .IsRequired()
+                    .HasMaxLength(1)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+
+                entity.Property(e => e.InputJson)
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UserId)
                     .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
@@ -557,7 +594,7 @@ namespace HrAdm.Tables
 
                 entity.Property(e => e.Type)
                     .IsRequired()
-                    .HasMaxLength(20)
+                    .HasMaxLength(10)
                     .IsUnicode(false);
             });
 
@@ -580,8 +617,6 @@ namespace HrAdm.Tables
                     .IsRequired()
                     .HasMaxLength(30);
 
-                entity.Property(e => e.Sort).HasDefaultValueSql("((99))");
-
                 entity.Property(e => e.Url)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -600,9 +635,6 @@ namespace HrAdm.Tables
 
             modelBuilder.Entity<XpRoleProg>(entity =>
             {
-                entity.HasIndex(e => new { e.RoleId, e.ProgId }, "NonClusteredIndex-20210116-190117")
-                    .IsUnique();
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);
@@ -633,6 +665,10 @@ namespace HrAdm.Tables
 
                 entity.Property(e => e.Created).HasColumnType("datetime");
 
+                entity.Property(e => e.NewValue).HasMaxLength(500);
+
+                entity.Property(e => e.OldValue).HasMaxLength(500);
+
                 entity.Property(e => e.RowId)
                     .IsRequired()
                     .HasMaxLength(10)
@@ -646,9 +682,6 @@ namespace HrAdm.Tables
 
             modelBuilder.Entity<XpUserRole>(entity =>
             {
-                entity.HasIndex(e => new { e.UserId, e.RoleId }, "NonClusteredIndex-20210116-185929")
-                    .IsUnique();
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);

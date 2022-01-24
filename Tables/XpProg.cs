@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace HrAdm.Tables
 {
     public partial class XpProg
@@ -12,7 +10,8 @@ namespace HrAdm.Tables
         public string Name { get; set; }
         public string Icon { get; set; }
         public string Url { get; set; }
-        public byte Sort { get; set; }
+        public short Sort { get; set; }
+        public byte AuthRow { get; set; }
         public byte FunCreate { get; set; }
         public byte FunRead { get; set; }
         public byte FunUpdate { get; set; }
