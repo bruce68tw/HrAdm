@@ -21,7 +21,7 @@ select
     FlowStatusName=c.Name_zhTW,
     UserName=u.Name
 from dbo.XpFlowSignTest s
-join dbo.XpFlowTest d on s.SourceId=d.Id and s.FlowLevel=d.FlowLevel and s.SignStatus='0'
+join dbo.XpFlowTest d on s.SourceId=d.Id and s.FlowLevel=d.FlowLevel
 join dbo.[User] u on d.UserId=u.Id
 join dbo.XpCode c on c.Type='FlowStatus' and d.FlowStatus=c.Value
 where d.Id='{{0}}'

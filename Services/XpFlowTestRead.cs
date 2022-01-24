@@ -17,7 +17,7 @@ namespace HrAdm.Services
 select 
     f.Name as FlowName, x.Name_zhTW as FlowStatusName, 
     case when d.FlowStatus='0' then s.NodeName else '' end as NodeName, 
-    case when d.FlowStatus='0' then u.Name else '' end as SignerName,
+    u.Name as SignerName,
 	d.Created, d.Id,
     case when (d.FlowStatus='0' and s.SignerId='{userId}') then 1 else 0 end as CanSign
 from dbo.XpFlowTest d 
