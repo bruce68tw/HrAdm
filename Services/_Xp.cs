@@ -19,13 +19,13 @@ namespace HrAdm.Services
         public static string SignRowsView = "~/Views/Leave/_SignRows.cshtml";
 
         //dir
-        public static string DirTpl = _Fun.DirRoot + "_template/";
-        public static string DirUpload = _Fun.DirRoot + "_upload/";
-        public static string DirLeave = DirUpload + "Leave/";
-        public static string DirUserExt = DirUpload + "UserExt/";
-        public static string DirUserLicense = DirUpload + "UserLicense/";
-        public static string DirCustInput = DirUpload + "CustInput/";
-        public static string DirUserImport = DirUpload + "UserImport/";
+        public static string DirTpl = _Fun.Dir("_template");
+        public static string DirUpload = _Fun.Dir("_upload");
+        public static string DirLeave = DirUpload + "Leave" + _Fun.DirSep;
+        public static string DirUserExt = DirUpload + "UserExt" + _Fun.DirSep;
+        public static string DirUserLicense = DirUpload + "UserLicense" + _Fun.DirSep;
+        public static string DirCustInput = DirUpload + "CustInput" + _Fun.DirSep;
+        public static string DirUserImport = DirUpload + "UserImport" + _Fun.DirSep;
         //dir cms
         public static string DirCms = DirUpload + "Cms";
 
@@ -50,7 +50,7 @@ namespace HrAdm.Services
 
         public static string DirCmsType(string cmsType)
         {
-            return DirCms + cmsType + "/";
+            return DirCms + cmsType + _Fun.DirSep;
         }
 
         #region get file content
@@ -102,7 +102,7 @@ namespace HrAdm.Services
         {
             var dir = DirTpl;
             if (hasLocale)
-                dir += _Locale.GetLocaleByUser() + "/";
+                dir += _Locale.GetLocaleByUser() + _Fun.DirSep;
 
             return dir + fileName;
         }
