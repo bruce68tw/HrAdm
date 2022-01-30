@@ -52,7 +52,7 @@
             <vc:xi-file dto="@(new(){ Title = "XiFile", Fid = "FldFile", Required = true, MaxSize = 1, FileType = "*" })"></vc:xi-file>
             @*<vc:xi-link dto="@(new(){ Title = "XiLink", Fid = "FldFile" })"></vc:xi-link>*@
             <vc:xi-hide dto="@(new(){ Fid = "Id" })"></vc:xi-hide>
-            <vc:xi-html dto="@(new(){ Title = "XiHtml", Fid = "FldHtml", Cols = "2,9" })"></vc:xi-html>
+            <vc:xi-html dto="@(new(){ Title = "XiHtml", Fid = "FldHtml", Required = true, Cols = "2,9" })"></vc:xi-html>
             <vc:xi-radio dto="@(new(){ Title = "XiRadio", Fid = "FldRadio", Rows = ViewBag.Radios })"></vc:xi-radio>
             <vc:xi-read dto="@(new(){ Title = "XiRead", Fid = "FldRead", Value = "label" })"></vc:xi-read>
             <vc:xi-select dto="@(new(){ Title = "XiSelect", Fid = "FldSelect", Rows = ViewBag.Selects, Required = true })"></vc:xi-select>
