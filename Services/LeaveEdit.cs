@@ -1,5 +1,6 @@
 ﻿using Base.Models;
 using Base.Services;
+using BaseApi.Services;
 using BaseWeb.Services;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HrAdm.Services
 {
-    public class LeaveEdit : XpEdit
+    public class LeaveEdit : XgEdit
     {
         public LeaveEdit(string ctrl) : base(ctrl) { }
 
@@ -55,7 +56,7 @@ where l.Id='{{0}}'
         private async Task<string> FnCreateSignRowsAsync(Db db, JObject newKeyJson)
         {
             var newKey = _Str.ReadNewKeyJson(newKeyJson);
-            return await _XpFlow.CreateSignRowsAsync(_inputRow, "UserId", "Leave", newKey, false, db);
+            return await _XgFlow.CreateSignRowsAsync(_inputRow, "UserId", "Leave", newKey, false, db);
         }
 
         public async Task<ResultDto> CreateAsnyc(JObject json, IFormFile t0_FileName)

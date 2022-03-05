@@ -70,6 +70,7 @@
     <Content Remove="Views\XpFlow\zz__LineCond.cshtml" />
     <Content Remove="Views\User\Edit - 複製.cshtml" />
     <Content Remove="Views\User\Read - 複製.cshtml" />
+    <Content Remove="Views\XpRole\Read_v0.cshtml" />
     <Content Remove="wwwroot\css\base\fontAwesome.c_old" />
   </ItemGroup>
 
@@ -85,6 +86,7 @@
     <None Remove="Controllers\MyController.cs_old" />
     <None Remove="Controllers\UserController.cs%281%29" />
     <None Remove="Controllers\UserController.cs%282%29" />
+    <None Remove="Controllers\zz_MyController.cs_old" />
     <None Remove="Views\CustInput\Edit.cshtml_old" />
     <None Remove="Views\LeaveSign\Edit.cshtml_old" />
     <None Remove="Views\Leave\Edit.cshtml_old" />

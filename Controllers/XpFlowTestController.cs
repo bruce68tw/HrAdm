@@ -64,7 +64,7 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<JsonResult> SignRow(string id, string status, string note)
         {
-            return Json(await _XpFlow.SignRowAsync(id, (status == "Y"), note, "XpFlowTest", true));
+            return Json(await _XgFlow.SignRowAsync(id, (status == "Y"), note, "XpFlowTest", true));
         }
 
     }//class

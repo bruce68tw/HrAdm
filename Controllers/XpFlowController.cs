@@ -27,12 +27,12 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new XpFlowRead().GetPageAsync(Ctrl, dt));
+            return JsonToCnt(await new XgFlowRead().GetPageAsync(Ctrl, dt));
         }
 
-        private XpFlowEdit EditService()
+        private XgFlowEdit EditService()
         {
-            return new XpFlowEdit(Ctrl);
+            return new XgFlowEdit(Ctrl);
         }
 
         [HttpPost]

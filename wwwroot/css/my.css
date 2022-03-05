@@ -904,7 +904,7 @@ input[type=number] {
     /*.xg-table thead th {*/
     .xg-table th {
         background: #eee;
-        border-width: 0 1px 0 0 !important;
+        border-width: 0 1px 1px 0 !important;
         /*
     border-top: none !important;
     border-bottom: none !important;
@@ -927,7 +927,7 @@ input[type=number] {
         /*padding-top: 3px;
     padding-bottom: 3px;
     height: 48px !important;*/
-        border-width: 1px 1px 0 0 !important;
+        border-width: 0 1px 1px 0 !important;
         /*border-bottom-width: 0;
     border-left-width: 0;*/
     }

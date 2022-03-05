@@ -1,4 +1,5 @@
 ﻿using Base.Services;
+using BaseApi.Services;
 using BaseWeb.Services;
 using HrAdm.Tables;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ namespace HrAdm.Services
     {
         //public const string SiteVer = "20201228f";     //for my.js/css
         public static string MyVer = _Date.NowSecStr(); //for my.js/css
-        public const string LibVer = "20220201a";       //for lib.js/css
+        public const string LibVer = "20220201g";       //for lib.js/css
 
         public static string NoImagePath = _Fun.DirRoot + "/wwwroot/image/noImage.jpg";
 
@@ -21,13 +22,14 @@ namespace HrAdm.Services
         //dir
         public static string DirTpl = _Fun.Dir("_template");
         public static string DirUpload = _Fun.Dir("_upload");
-        public static string DirLeave = DirUpload + "Leave" + _Fun.DirSep;
-        public static string DirUserExt = DirUpload + "UserExt" + _Fun.DirSep;
-        public static string DirUserLicense = DirUpload + "UserLicense" + _Fun.DirSep;
-        public static string DirCustInput = DirUpload + "CustInput" + _Fun.DirSep;
-        public static string DirUserImport = DirUpload + "UserImport" + _Fun.DirSep;
+        //
+        public static string DirLeave = DirUpload2("Leave");
+        public static string DirUserExt = DirUpload2("UserExt");
+        public static string DirUserLicense = DirUpload2("UserLicense");
+        public static string DirCustInput = DirUpload2("CustInput");
+        public static string DirUserImport = DirUpload2("UserImport");
         //dir cms
-        public static string DirCms = DirUpload + "Cms";
+        public static string DirCms = DirUpload2("Cms", false);
 
         //public static string Locale;
         //public static string LocaleNoDash;
@@ -47,6 +49,11 @@ namespace HrAdm.Services
             return $"{DirUserExt}PhotoFile_{key}.{ext}";
         }
         #endregion
+
+        private static string DirUpload2(string subDir, bool sep = true)
+        {
+            return DirUpload + subDir + (sep ? _Fun.DirSep : "");
+        }
 
         public static string DirCmsType(string cmsType)
         {

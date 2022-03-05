@@ -1,7 +1,7 @@
 ﻿using Base.Models;
 using Base.Services;
 using BaseApi.Controllers;
-using BaseWeb.Services;
+using BaseApi.Services;
 using HrAdm.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

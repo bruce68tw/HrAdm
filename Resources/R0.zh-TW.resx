@@ -234,4 +234,16 @@
   <data name="MenuXpFlowTest" xml:space="preserve">
     <value>3b.流程(測試)</value>
   </data>
+  <data name="Select" xml:space="preserve">
+    <value>選取</value>
+  </data>
+  <data name="Account" xml:space="preserve">
+    <value>用戶帳號</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>用戶名稱</value>
+  </data>
+  <data name="DeptName" xml:space="preserve">
+    <value>部門名稱</value>
+  </data>
 </root>

@@ -214,4 +214,16 @@
   <data name="MenuXpFlowTest" xml:space="preserve">
     <value>3b.Flow Test</value>
   </data>
+  <data name="Select" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="Account" xml:space="preserve">
+    <value>User Account</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>User Name</value>
+  </data>
+  <data name="DeptName" xml:space="preserve">
+    <value>Depart Name</value>
+  </data>
 </root>

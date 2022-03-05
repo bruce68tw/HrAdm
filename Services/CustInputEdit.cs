@@ -1,14 +1,13 @@
-﻿using Base.Enums;
-using Base.Models;
+﻿using Base.Models;
 using Base.Services;
-using BaseWeb.Services;
+using BaseApi.Services;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 
 namespace HrAdm.Services
 {
-    public class CustInputEdit : XpEdit
+    public class CustInputEdit : XgEdit
     {
         public CustInputEdit(string ctrl) : base(ctrl) { }
 

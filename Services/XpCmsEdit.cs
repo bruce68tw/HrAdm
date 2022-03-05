@@ -1,13 +1,13 @@
 ﻿using Base.Models;
 using Base.Services;
-using BaseWeb.Services;
+using BaseApi.Services;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 
 namespace HrAdm.Services
 {
-    public class XpCmsEdit : XpEdit
+    public class XpCmsEdit : XgEdit
     {
         public XpCmsEdit(string ctrl) : base(ctrl) { }
 

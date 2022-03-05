@@ -25,7 +25,7 @@ namespace HrAdm.Services
             var newId = _Str.NewId();
             await using var db = new Db();
             await db.BeginTranAsync();
-            var error = await _XpFlow.CreateSignRowsAsync(row, userFid, flowCode, newId, true, db);
+            var error = await _XgFlow.CreateSignRowsAsync(row, userFid, flowCode, newId, true, db);
 
             //create source row
             if (string.IsNullOrEmpty(error))

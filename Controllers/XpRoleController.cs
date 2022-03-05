@@ -1,9 +1,10 @@
-﻿using Base.Models;
+﻿using Base.Enums;
+using Base.Models;
 using Base.Services;
 using BaseApi.Controllers;
-using BaseWeb.Services;
 using HrAdm.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HrAdm.Controllers
@@ -20,6 +21,7 @@ namespace HrAdm.Controllers
                 ViewBag.Users = await _XpCode.GetUsersAsync(db);
                 //ViewBag.Progs = await _XpCode.GetProgsAsync(locale0, db);
                 ViewBag.AuthRanges = await _XpCode.GetAuthRangesAsync(locale0, db);
+                ViewBag.Depts = await _XpCode.GetDeptsAsync(db);
             }
             return View();
         }
@@ -63,6 +65,25 @@ namespace HrAdm.Controllers
         public async Task<ContentResult> GetViewJson(string key)
         {
             return JsonToCnt(await EditService().GetViewJsonAsync(key));
+        }
+
+        //get user list for modal
+        [HttpPost]
+        public async Task<ContentResult> GetUsers(string deptId, string account)
+        {
+            if (!string.IsNullOrEmpty(account))
+                account += '%';
+            var sql = @"
+select u.Id, u.Account, 
+    u.Name as UserName, d.Name as DeptName
+from dbo.[User] u
+join dbo.Dept d on u.DeptId=d.Id
+where (@Account is null or u.Account like @Account)
+and d.Id=iif(@DeptId is null, d.Id, @DeptId)
+order by d.Id, u.Account
+";
+            var rows = await _Db.GetJsonsAsync(sql, new List<object>() { "Account", account, "DeptId" , deptId });
+            return Content(rows == null ? "" : rows.ToString(), ContentTypeEstr.Json);
         }
 
     }//class

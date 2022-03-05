@@ -3,7 +3,7 @@ using Base.Services;
 
 namespace HrAdm.Services
 {
-    public class XpFlowSignEdit : XpEdit
+    public class XpFlowSignEdit : XgEdit
     {
         private string _flowCode;   //XpFlow.Code
         public XpFlowSignEdit(string ctrl, string flowCode) : base(ctrl) 

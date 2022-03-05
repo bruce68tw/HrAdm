@@ -17,12 +17,12 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new XpEasyRptRead().GetPageAsync(Ctrl, dt));
+            return JsonToCnt(await new XgEasyRptRead().GetPageAsync(Ctrl, dt));
         }
 
-        private XpEasyRptEdit EditService()
+        private XgEasyRptEdit EditService()
         {
-            return new XpEasyRptEdit(Ctrl);
+            return new XgEasyRptEdit(Ctrl);
         }
 
         [HttpPost]

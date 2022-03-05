@@ -1,6 +1,6 @@
 ﻿using Base.Models;
 using Base.Services;
-using BaseWeb.Services;
+using BaseApi.Services;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HrAdm.Services
 {
-    public class UserExtEdit : XpEdit
+    public class UserExtEdit : XgEdit
     {
         public UserExtEdit(string ctrl) : base(ctrl) { }
 
