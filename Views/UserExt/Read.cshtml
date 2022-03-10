@@ -64,11 +64,11 @@
     <div id="divRead">
         <form id='formRead' class='xg-form'>
             <div class="row">
-                <vc:xi-text dto="@(new XiTextDto { Title = R["Account"].Value, Fid = "Account", MaxLen = 20, InRow = true })"></vc:xi-text>
+                <vc:xi-text dto="@(new() { Title = R["Account"].Value, Fid = "Account", MaxLen = 20, InRow = true })"></vc:xi-text>
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
             </div>
-            <vc:xi-text dto="@(new XiTextDto { Title = R["UserName"].Value, Fid = "Name", MaxLen = 20 })"></vc:xi-text>
-            <vc:xi-select dto="@(new XiSelectDto { Title = R["Dept"].Value, Fid = "DeptId", Rows = (List<IdStrDto>)ViewBag.Depts })"></vc:xi-select>
+            <vc:xi-text dto="@(new() { Title = R["UserName"].Value, Fid = "Name", MaxLen = 20 })"></vc:xi-text>
+            <vc:xi-select dto="@(new() { Title = R["Dept"].Value, Fid = "DeptId", Rows = (List<IdStrDto>)ViewBag.Depts })"></vc:xi-select>
         </form>
 
         <div class='xg-btns-box'>
@@ -90,12 +90,12 @@
 
     <div id="divEdit" class="xg-hide">
         <form id='eform' class='xg-form'>
-            <vc:xi-hide dto="@(new XiHideDto { Fid = "Id" })"></vc:xi-hide>
-            <vc:xi-text dto="@(new XiTextDto { Title = R["Account"].Value, Fid = "Account", MaxLen = 20 })"></vc:xi-text>
-            <vc:xi-text dto="@(new XiTextDto { Title = R["UserName"].Value, Fid = "Name", MaxLen = 20 })"></vc:xi-text>
-            <vc:xi-text dto="@(new XiTextDto { Title = R["Dept"].Value, Fid = "DeptId", MaxLen = 10 })"></vc:xi-text>
-            <vc:xi-file dto="@(new XiFileDto { Title = R0["UpdImage"].Value, Fid = "PhotoFile", LabelTip = R["TipUpdImage"].Value })"></vc:xi-file>
-            <vc:xi-check dto="@(new XiCheckDto { Title = R0["Status"].Value, Fid = "Status" })"></vc:xi-check>
+            <vc:xi-hide dto="@(new() { Fid = "Id" })"></vc:xi-hide>
+            <vc:xi-text dto="@(new() { Title = R["Account"].Value, Fid = "Account", MaxLen = 20 })"></vc:xi-text>
+            <vc:xi-text dto="@(new() { Title = R["UserName"].Value, Fid = "Name", MaxLen = 20 })"></vc:xi-text>
+            <vc:xi-text dto="@(new() { Title = R["Dept"].Value, Fid = "DeptId", MaxLen = 10 })"></vc:xi-text>
+            <vc:xi-file dto="@(new() { Title = R0["UpdImage"].Value, Fid = "PhotoFile", LabelTip = R["TipUpdImage"].Value })"></vc:xi-file>
+            <vc:xi-check dto="@(new() { Title = R0["Status"].Value, Fid = "Status" })"></vc:xi-check>
         </form>
 
         <div class='xg-btns-box'>
@@ -202,7 +202,7 @@
 <script id="tplUserJob" type="text/template">
     <tr>
         @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
-        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "UserId" })
+        @*await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "UserId" })*@
         @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "JobDesc" })
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "JobName", MaxLen = 30, Required = true })</td>
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "JobType", MaxLen = 30 })</td>
@@ -219,7 +219,7 @@
 <script id="tplUserSchool" type="text/template">
     <tr>
         @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
-        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "UserId" })
+        @*await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "UserId" })*@
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "SchoolName", MaxLen = 30, Required = true })</td>
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "SchoolDept", MaxLen = 20, Required = true })</td>
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "SchoolType", MaxLen = 20 })</td>
@@ -232,7 +232,7 @@
 <script id="tplUserLang" type="text/template">
     <tr>
         @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
-        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "UserId" })
+        @*await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "UserId" })*@
         @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Sort" })
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "LangName", MaxLen = 30, Required = true })</td>
         <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "ListenLevel", Rows = (List<IdStrDto>)ViewBag.LangLevels })</td>
@@ -246,7 +246,7 @@
 <script id="tplUserLicense" type="text/template">
     <tr>
         @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
-        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "UserId" })
+        @*await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "UserId" })*@
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "LicenseName", MaxLen = 30, Required = true })</td>
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "StartEnd", MaxLen = 30, Required = true })</td>
         <td>@await Component.InvokeAsync("XiFile", new XiFileDto { Fid = "FileName" })</td>
@@ -257,7 +257,7 @@
 <script id="tplUserSkill" type="text/template">
     <tr>
         @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
-        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "UserId" })
+        @*await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "UserId" })*@
         @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Sort" })
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "SkillName", MaxLen = 30, Required = true })</td>
         <td>@await Component.InvokeAsync("XiTextarea", new XiTextareaDto { Fid = "SkillDesc", MaxLen = 500 })</td>
