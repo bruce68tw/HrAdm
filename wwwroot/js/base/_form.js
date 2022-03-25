@@ -56,8 +56,9 @@ var _form = {
      * param json {json}
      */
     loadJson: function (form, json) {
-        for (var key in json)
+        for (var key in json) {
             _input.set(key, json[key], form);
+        }
     },
 
     /**

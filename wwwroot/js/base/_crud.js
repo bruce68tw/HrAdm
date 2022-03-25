@@ -260,7 +260,7 @@ var _crud = {
     },
 
     /**
-     * expand find2 form
+     * onclick find2 button for show/hide find2 form
      */
     onFind2: function () {
         //$('.xg-find-form').slideToggle();
@@ -599,17 +599,32 @@ var _crud = {
     },
 
     /**
-     * forms validate check
+     * forms validate check, also check systemError
      * return {bool}
      */ 
     validAll: function () {
+        //check system error
         var edit = _me.edit0;
+        if (_str.notEmpty(edit.systemError)) {
+            _tool.msg(edit.systemError);
+            return false;
+        }
+
+        //validate
         if (!edit.eform.valid())
             return false;
 
+        //check child Edit
         var childLen = _crud.getEditChildLen(edit);
         for (var i = 0; i < childLen; i++) {
+            //check system error
             var edit2 = _crud.getEditChild(edit, i);
+            if (_str.notEmpty(edit2.systemError)) {
+                _tool.msg(edit2.systemError);
+                return false;
+            }
+
+            //validate
             if (!edit2.valid())
                 return false;
         }
@@ -646,7 +661,7 @@ var _crud = {
      *   key, row(包含_childs, _deletes, _fileNo), files
      */
     onSave: function () {
-        //check input
+        //validate all input & system error(will show error msg)
         if (!_crud.validAll()) {
             _tool.alert(_BR.InputWrong);
             return;

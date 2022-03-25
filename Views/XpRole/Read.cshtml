@@ -84,7 +84,7 @@
         </form>
 
         <div class='xg-btns-box xg-mt5'>
-            <span class="xg-block-label">@R["UserList"]</span>
+            <span class="xg-span-label">@R["UserList"]</span>
             <button type="button" class="btn xg-btn" onclick="_me.onOpenUser()">@R0["Select"]</button>
         </div>
         <form id='eformUserRole' class='xg-form'>
@@ -123,7 +123,7 @@
         </form>
 
         <div class='xg-btns-box'>
-            <span class="xg-block-label">@R["RoleProg"]</span>
+            <span class="xg-span-label">@R["RoleProg"]</span>
             @await Component.InvokeAsync("XgAddRow", "_me.mRoleProg.onAddRow()")
         </div>
         <form id='eformRoleProg' class='xg-form' style="border:none;">

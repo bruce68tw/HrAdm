@@ -15,9 +15,12 @@ var _obj = {
      */
     getF: function (ft, box) {
         var obj = box.find(ft);
-        if (obj == null)
+        if (obj.length == 0) {
             _log.info('_obj.js getF() found none. (filter=' + ft + ')');
-        return obj;
+            return null;
+        } else {
+            return obj;
+        }
     },
 
     /**

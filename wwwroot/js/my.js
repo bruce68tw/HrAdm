@@ -699,7 +699,7 @@ var _crud = {
     },
 
     /**
-     * expand find2 form
+     * onclick find2 button for show/hide find2 form
      */
     onFind2: function () {
         //$('.xg-find-form').slideToggle();
@@ -1038,17 +1038,32 @@ var _crud = {
     },
 
     /**
-     * forms validate check
+     * forms validate check, also check systemError
      * return {bool}
      */ 
     validAll: function () {
+        //check system error
         var edit = _me.edit0;
+        if (_str.notEmpty(edit.systemError)) {
+            _tool.msg(edit.systemError);
+            return false;
+        }
+
+        //validate
         if (!edit.eform.valid())
             return false;
 
+        //check child Edit
         var childLen = _crud.getEditChildLen(edit);
         for (var i = 0; i < childLen; i++) {
+            //check system error
             var edit2 = _crud.getEditChild(edit, i);
+            if (_str.notEmpty(edit2.systemError)) {
+                _tool.msg(edit2.systemError);
+                return false;
+            }
+
+            //validate
             if (!edit2.valid())
                 return false;
         }
@@ -1085,7 +1100,7 @@ var _crud = {
      *   key, row(包含_childs, _deletes, _fileNo), files
      */
     onSave: function () {
-        //check input
+        //validate all input & system error(will show error msg)
         if (!_crud.validAll()) {
             _tool.alert(_BR.InputWrong);
             return;
@@ -1832,8 +1847,9 @@ var _form = {
      * param json {json}
      */
     loadJson: function (form, json) {
-        for (var key in json)
+        for (var key in json) {
             _input.set(key, json[key], form);
+        }
     },
 
     /**
@@ -3065,7 +3081,7 @@ var _ilink = {
 
     //value by fid
     get: function (fid, form) {
-        return this.getO(_obj.get(fid, form));   //use data-fid
+        return this.getO(_obj.get(fid, form));
     },
     //value by object
     getO: function (obj) {
@@ -3073,7 +3089,7 @@ var _ilink = {
     },
 
     set: function (fid, value, form) {
-        this.setO(_obj.get(fid, form), value);   //use data-fid
+        this.setO(_obj.get(fid, form), value);
     },
     setO: function (obj, value) {
         obj.text(value);
@@ -3089,7 +3105,7 @@ var _ilink = {
  */
 var _input = {
 
-    //get input value by data-fid
+    //get input value
     get: function (fid, box) {
         return _input.getO(_obj.get(fid, box), box);
     },
@@ -3142,6 +3158,9 @@ var _input = {
      * param type {string} optional, data-type
      */ 
     setO: function (obj, value, box, type) {
+        if (obj == null || !_var.isPureData(value))
+            return;
+
         type = type || _input.getType(obj);
         switch (type) {
             case 'text':
@@ -3366,7 +3385,7 @@ var _input = {
 var _iradio = $.extend({}, _ibase, {
 
     //=== get ===
-    //get checked data-value by fid
+    //get checked data-value
     get: function (fid, box) {
         return _iradio._getByName(fid, box);
     },
@@ -3504,7 +3523,7 @@ var _iread = {
 
     //value by fid
     get: function (fid, form) {
-        return _iread.getO(_obj.get(fid, form));   //use data-fid
+        return _iread.getO(_obj.get(fid, form));
     },
     //value by filter
     getF: function (filter, form) {
@@ -3515,7 +3534,7 @@ var _iread = {
         return obj.text();
     },
     set: function (fid, value, form) {
-        _iread.setO(_obj.get(fid, form), value);   //use data-fid
+        _iread.setO(_obj.get(fid, form), value);
     },
     setF: function (filter, value, form) {
         _iread.setO(_obj.getF(filter, form), value)
@@ -4082,9 +4101,12 @@ var _obj = {
      */
     getF: function (ft, box) {
         var obj = box.find(ft);
-        if (obj == null)
+        if (obj.length == 0) {
             _log.info('_obj.js getF() found none. (filter=' + ft + ')');
-        return obj;
+            return null;
+        } else {
+            return obj;
+        }
     },
 
     /**
@@ -4793,6 +4815,11 @@ var _var = {
         return (var1 === undefined || var1 === null)
     },
 
+    //check not object、array
+    isPureData: function (value) {
+        return (typeof value !== 'object' && !Array.isArray(value));
+    },
+
 };
 
 /**
@@ -5034,10 +5061,17 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         this.rowFilter = rowFilter;
         this.sortFid = sortFid;
 
+        this.systemError = '';
         this.hasTplRow = !_str.isEmpty(tplRowId);
         if (this.hasTplRow) {
             this.tplRow = $('#' + tplRowId).html();
             var rowObj = $(this.tplRow);
+            //check input & alert error if wrong
+            if (_obj.get(kid, rowObj) == null) {
+                this.systemError = 'EditMany.js input kid is wrong (' + kid + ')';
+                alert(this.systemError);
+            }
+
             _edit.setFidTypeVars(this, rowObj);
             _edit.setFileVars(this, rowObj);
         }
@@ -5644,18 +5678,34 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
  *   error fnWhenSave()
  *   void fnAfterSave()
  *   
- * param kid {string} (optional 'Id') key field id
- * param eformId {string} (optional 'eform')
+ * param kid {string} (default 'Id') pkey field id for getKey value & getUpdRow,
+ *   must existed or will set systemError variables !!
+ * param eformId {string} (default 'eform') must existed or will set systemError variables !!
+ * note!! if these two parameters not Id/eform, must new EditOne() and set them !!
+ * 
  * return {EditOne}
  */ 
 function EditOne(kid, eformId) {
 
     /**
-     * initial & and instance variables (this.validator by _valid.init())
+     * initial & and instance variables (this.validator is by _valid.init())
+     * called by this(at last)
      */
     this.init = function () {
         this.kid = kid || 'Id';
-        this.eform = $('#' + (eformId || 'eform'));     //multiple rows container object
+        eformId = eformId || 'eform';
+        this.eform = $('#' + eformId);     //multiple rows container object
+
+        //check input & alert error if wrong
+        this.systemError = '';
+        var error = (this.eform.length != 1) ? 'EditOne.js input eformId is wrong. (' + eformId + ')' :
+            (_obj.get(this.kid, this.eform) == null) ? 'EditOne.js input kid is wrong. (' + this.kid + ')' :
+            '';
+        if (error != '') {
+            this.systemError = error;
+            alert(error);
+            //return;   //not return
+        }
 
         _edit.setFidTypeVars(this, this.eform);
         _edit.setFileVars(this, this.eform);

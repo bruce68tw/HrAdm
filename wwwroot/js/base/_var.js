@@ -10,4 +10,9 @@ var _var = {
         return (var1 === undefined || var1 === null)
     },
 
+    //check not object、array
+    isPureData: function (value) {
+        return (typeof value !== 'object' && !Array.isArray(value));
+    },
+
 };

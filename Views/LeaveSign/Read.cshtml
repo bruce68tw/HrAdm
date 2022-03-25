@@ -38,7 +38,7 @@
             };
 
             //initial
-            _crud.init(config, null, '@R["Audit"]');
+            _crud.init(config, [new EditOne('SignId')], '@R["Audit"]');
             _me.eform = $('#eform');
         },
 

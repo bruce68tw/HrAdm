@@ -129,7 +129,6 @@
   <ItemGroup>
     <Folder Include="wwwroot\font\" />
     <Folder Include="wwwroot\image\" />
-    <Folder Include="wwwroot\js\base\" />
     <Folder Include="wwwroot\js\lib\" />
     <Folder Include="wwwroot\locale\en-US\" />
     <Folder Include="wwwroot\locale\zh-CN\" />
