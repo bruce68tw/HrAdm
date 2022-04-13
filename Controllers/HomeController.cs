@@ -72,7 +72,7 @@ where u.Account=@Account
                 DeptName = row["DeptName"].ToString(),
                 Locale = _Fun.Config.Locale,
                 ProgAuthStrs = await _XgProg.GetAuthStrsAsync(userId),
-                IsLogin = true,
+                //IsLogin = true,
             };
             #endregion
 
