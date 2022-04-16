@@ -2,6 +2,7 @@
 using Base.Models;
 using Base.Services;
 using BaseApi.Controllers;
+using BaseWeb.Attributes;
 using HrAdm.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace HrAdm.Controllers
 {
-    //[XgProgAuth]
+    [XgProgAuth]
     public class XpRoleController : ApiCtrl
     {
         public async Task<ActionResult> Read()

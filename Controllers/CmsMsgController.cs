@@ -1,11 +1,12 @@
-﻿using HrAdm.Enums;
+﻿using BaseWeb.Attributes;
+using HrAdm.Enums;
 using HrAdm.Models;
 using HrAdm.Services;
 using Microsoft.Extensions.Localization;
 
 namespace HrAdm.Controllers
 {
-    //[XgProgAuth]
+    [XgProgAuth]
     public class CmsMsgController : XpCmsController
     {
         //constructor, localization syntax

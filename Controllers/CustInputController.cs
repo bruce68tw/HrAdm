@@ -2,6 +2,7 @@
 using Base.Services;
 using BaseApi.Controllers;
 using BaseApi.Services;
+using BaseWeb.Attributes;
 using HrAdm.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace HrAdm.Controllers
 {
+    [XgProgAuth]
     public class CustInputController : ApiCtrl
     {
         public ActionResult Read()

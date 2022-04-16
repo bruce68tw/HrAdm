@@ -1,12 +1,14 @@
 ﻿using Base.Models;
 using Base.Services;
 using BaseApi.Controllers;
+using BaseWeb.Attributes;
 using BaseWeb.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace HrAdm.Controllers
 {
+    [XgProgAuth]
     public class XpEasyRptController : ApiCtrl
     {
         public ActionResult Read()

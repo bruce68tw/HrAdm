@@ -1,12 +1,13 @@
 ﻿using Base.Models;
 using BaseApi.Controllers;
+using BaseWeb.Attributes;
 using HrAdm.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace HrAdm.Controllers
 {
-    //[XgProgAuth]
+    [XgProgAuth]
     public class XpFlowSignController : ApiCtrl
     {
         public async Task<ActionResult> Read()

@@ -71,7 +71,7 @@ namespace HrAdm
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             //initial & set locale
-            _Fun.Init(env.IsDevelopment(), app.ApplicationServices, DbTypeEnum.MSSql, AuthTypeEnum.Data);
+            _Fun.Init(env.IsDevelopment(), app.ApplicationServices, DbTypeEnum.MSSql, AuthTypeEnum.Row);
             _Locale.SetCultureAsync(_Fun.Config.Locale);
 
             if (env.IsDevelopment())

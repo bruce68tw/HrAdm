@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace HrAdm.Controllers
 {
-    //[XgProgAuth]
+    [XgProgAuth]
     public class XpFlowTestController : ApiCtrl
     {
         public async Task<ActionResult> Read()

@@ -10,9 +10,10 @@ using System.Threading.Tasks;
 
 namespace HrAdm.Controllers
 {
-    //[XgProgAuth]
+    [XgLogin]
     public class LeaveController : ApiCtrl
     {
+        //[XgProgAuth(CrudEnum.Read)]
         public async Task<ActionResult> Read()
         {
             //for read view

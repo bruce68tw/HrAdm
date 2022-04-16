@@ -1,13 +1,13 @@
 ﻿using Base.Models;
 using BaseApi.Controllers;
+using BaseWeb.Attributes;
 using BaseWeb.Services;
-using HrAdm.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace HrAdm.Controllers
 {
-    //[XgProgAuth]
+    [XgProgAuth]
     public class XpTranLogController : ApiCtrl
     {
         public ActionResult Read()

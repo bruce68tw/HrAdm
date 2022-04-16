@@ -6,13 +6,16 @@
             columns: [
                 { data: 'Code' },
                 { data: 'Name' },
-                //{ data: 'Icon' },
                 { data: 'Url' },
+                { data: 'AuthRow' },
                 { data: 'Sort' },
                 { data: '_Fun' },
             ],
             columnDefs: [
-				{ targets: [4], render: function (data, type, full, meta) {
+				{ targets: [3], render: function (data, type, full, meta) {
+                    return _crud.dtYesEmpty(data);
+                }},
+				{ targets: [5], render: function (data, type, full, meta) {
                     return _crud.dtCrudFun(full.Id, full.Name, true, true, true);
                 }},
             ],

@@ -1,7 +1,7 @@
 ﻿@inject IHtmlLocalizer<HrAdm.R0> R0
 @inject IViewLocalizer R
 @{
-    var isAuthRow = _Fun.IsAuthTypeData();
+    var isAuthRow = _Fun.IsAuthTypeRow();
     var authRanges = (List<IdStrDto>)ViewBag.AuthRanges;
     var progs = GetProgs(); //for select input
 }

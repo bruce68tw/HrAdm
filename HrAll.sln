@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mantis", "..\Mantis\Mantis.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BaseApi", "..\Base\BaseApi\BaseApi.csproj", "{852AB9AF-0F72-49B8-8745-85A002B7FFBC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "..\UnitTest\UnitTest.csproj", "{1A7F934A-DEB3-4334-A2D9-D6C01FD85FB0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,14 @@ Global
 		{852AB9AF-0F72-49B8-8745-85A002B7FFBC}.Debug-Local|Any CPU.Build.0 = Debug-Local|Any CPU
 		{852AB9AF-0F72-49B8-8745-85A002B7FFBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{852AB9AF-0F72-49B8-8745-85A002B7FFBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A7F934A-DEB3-4334-A2D9-D6C01FD85FB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A7F934A-DEB3-4334-A2D9-D6C01FD85FB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A7F934A-DEB3-4334-A2D9-D6C01FD85FB0}.Debug-IP|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A7F934A-DEB3-4334-A2D9-D6C01FD85FB0}.Debug-IP|Any CPU.Build.0 = Debug|Any CPU
+		{1A7F934A-DEB3-4334-A2D9-D6C01FD85FB0}.Debug-Local|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A7F934A-DEB3-4334-A2D9-D6C01FD85FB0}.Debug-Local|Any CPU.Build.0 = Debug|Any CPU
+		{1A7F934A-DEB3-4334-A2D9-D6C01FD85FB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A7F934A-DEB3-4334-A2D9-D6C01FD85FB0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

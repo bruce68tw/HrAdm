@@ -1,6 +1,7 @@
 ﻿using Base.Models;
 using Base.Services;
 using BaseApi.Controllers;
+using BaseWeb.Attributes;
 using BaseWeb.Services;
 using HrAdm.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace HrAdm.Controllers
 {
+    [XgProgAuth]
     public class XpFlowController : ApiCtrl
     {
         public async Task<ActionResult> Read()

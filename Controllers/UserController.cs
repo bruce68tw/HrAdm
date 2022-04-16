@@ -1,13 +1,14 @@
 ﻿using Base.Models;
 using Base.Services;
 using BaseApi.Controllers;
+using BaseWeb.Attributes;
 using HrAdm.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace HrAdm.Controllers
 {
-    //[XgProgAuth]
+    [XgProgAuth]
     public class UserController : ApiCtrl
     {
         public async Task<ActionResult> Read()

@@ -1,7 +1,7 @@
 ﻿@inject IHtmlLocalizer<HrAdm.R0> R0
 @inject IViewLocalizer R
 @{ 
-    var isAuthRow = _Fun.IsAuthTypeData();
+    var isAuthRow = _Fun.IsAuthTypeRow();
     var authRanges = (List<IdStrDto>)ViewBag.AuthRanges;
 }
 
@@ -32,6 +32,7 @@
                     <th>@R["ProgCode"]</th>
                     <th>@R["ProgName"]</th>
                     <th>Url</th>
+                    <th>@R["AuthRow"]</th>
                     <th width="80px">@R0["Sort"]</th>
                     <th width="100px">@R0["Crud"]</th>
                 </tr>

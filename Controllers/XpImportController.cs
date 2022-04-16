@@ -1,6 +1,7 @@
 ﻿using Base.Models;
 using BaseApi.Controllers;
 using BaseApi.Services;
+using BaseWeb.Attributes;
 using BaseWeb.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 namespace HrAdm.Controllers
 {
     //Excel import base controller
+    [XgProgAuth]
     abstract public class XpImportController : ApiCtrl 
     {
         //public string ProgName;     //program display name
