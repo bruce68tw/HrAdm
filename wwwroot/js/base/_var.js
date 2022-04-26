@@ -9,6 +9,10 @@ var _var = {
     isEmpty: function (var1) {
         return (var1 === undefined || var1 === null)
     },
+    
+    notEmpty: function (var1) {
+        return !_var.isEmpty(var1);
+    },
 
     //check not object、array
     isPureData: function (value) {

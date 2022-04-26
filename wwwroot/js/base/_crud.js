@@ -91,8 +91,8 @@ var _crud = {
 
     dtStatusName: function (value) {
         return (value == '1')
-            ? '<div>' + _BR.StatusYes + '</div>'
-            : '<div class="text-danger">' + _BR.StatusNo + '</div>';
+            ? '<span>' + _BR.StatusYes + '</span>'
+            : '<span class="text-danger">' + _BR.StatusNo + '</span>';
     },
 
     dtYesEmpty: function (value) {
@@ -123,11 +123,11 @@ var _crud = {
 
     /**
      * initial CRUD
-     * param dtConfig {Object} datatables config
-     * param edits {object Array} for edit form
+     * param1 dtConfig {Object} datatables config
+     * param2 edits {object Array} for edit form
      *   1.null: means one table, get eform
      *   2.many edit object, if ary0 is null, then call new EditOne()
-     * param updName {string} update name, default to _BR.Update
+     * param3 updName {string} update name, default to _BR.Update
      */
     init: function (dtConfig, edits, updName) {
         //_crud.initEdit(edits);

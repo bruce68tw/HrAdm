@@ -50,7 +50,7 @@
         },
 
         edit0_afterOpenEdit: function (fun, json) {
-            _btn.setEdit('btnToRead', true, _me.eform);
+            _btn.setEdit('btnToRead', true, _me.divEdit);
             var box = _me.divSignRows;
             _ajax.getView('GetSignRows', { id: _me.edit0.getKey() }, function (html) {
                 box.html(html);

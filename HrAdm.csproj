@@ -9,7 +9,7 @@
     <Compile Remove="wwwroot\css\lib\jsPlumb\**" />
     <Compile Remove="wwwroot\css\lib\jsPlumb_old\**" />
     <Compile Remove="wwwroot\css\lib\old\**" />
-    <Compile Remove="wwwroot\js\lib\old\**" />
+    <Compile Remove="wwwroot\js\lib\**" />
     <Compile Remove="wwwroot_old2\**" />
     <Compile Remove="wwwroot_old\**" />
     <Compile Remove="_data\**" />
@@ -21,7 +21,7 @@
     <Content Remove="wwwroot\css\lib\jsPlumb\**" />
     <Content Remove="wwwroot\css\lib\jsPlumb_old\**" />
     <Content Remove="wwwroot\css\lib\old\**" />
-    <Content Remove="wwwroot\js\lib\old\**" />
+    <Content Remove="wwwroot\js\lib\**" />
     <Content Remove="wwwroot_old2\**" />
     <Content Remove="wwwroot_old\**" />
     <Content Remove="_data\**" />
@@ -33,7 +33,7 @@
     <EmbeddedResource Remove="wwwroot\css\lib\jsPlumb\**" />
     <EmbeddedResource Remove="wwwroot\css\lib\jsPlumb_old\**" />
     <EmbeddedResource Remove="wwwroot\css\lib\old\**" />
-    <EmbeddedResource Remove="wwwroot\js\lib\old\**" />
+    <EmbeddedResource Remove="wwwroot\js\lib\**" />
     <EmbeddedResource Remove="wwwroot_old2\**" />
     <EmbeddedResource Remove="wwwroot_old\**" />
     <EmbeddedResource Remove="_data\**" />
@@ -45,7 +45,7 @@
     <None Remove="wwwroot\css\lib\jsPlumb\**" />
     <None Remove="wwwroot\css\lib\jsPlumb_old\**" />
     <None Remove="wwwroot\css\lib\old\**" />
-    <None Remove="wwwroot\js\lib\old\**" />
+    <None Remove="wwwroot\js\lib\**" />
     <None Remove="wwwroot_old2\**" />
     <None Remove="wwwroot_old\**" />
     <None Remove="_data\**" />
@@ -129,7 +129,6 @@
   <ItemGroup>
     <Folder Include="wwwroot\font\" />
     <Folder Include="wwwroot\image\" />
-    <Folder Include="wwwroot\js\lib\" />
     <Folder Include="wwwroot\locale\en-US\" />
     <Folder Include="wwwroot\locale\zh-CN\" />
     <Folder Include="wwwroot\locale\zh-TW\" />
@@ -146,6 +145,24 @@
     <None Include="wwwroot\css\summernote-bs4.js.map" />
     <None Include="wwwroot\css\summernote-bs4.min.js.map" />
     <None Include="wwwroot\css\view\_xg_block.css_old" />
+    <None Include="wwwroot\js\lib\bootstrap-datepicker-1.9.js" />
+    <None Include="wwwroot\js\lib\bootstrap.bundle-5.1.3.js" />
+    <None Include="wwwroot\js\lib\bootstrap.bundle-5.1.3.min.js" />
+    <None Include="wwwroot\js\lib\chart-3.6.2.js" />
+    <None Include="wwwroot\js\lib\datatables-1.11.5.js" />
+    <None Include="wwwroot\js\lib\jquery-3.5.1.js" />
+    <None Include="wwwroot\js\lib\jquery.blockUI-2.7.js" />
+    <None Include="wwwroot\js\lib\jquery.pjax-2.0.1-bruce.js" />
+    <None Include="wwwroot\js\lib\jquery.simplePagination-1.6-bruce.js" />
+    <None Include="wwwroot\js\lib\jquery.validate-1.19.3-bruce.js" />
+    <None Include="wwwroot\js\lib\jsplumb-2.15.6.js" />
+    <None Include="wwwroot\js\lib\jsplumb-2.15.6.min.js" />
+    <None Include="wwwroot\js\lib\modernizr-2.8.3.js" />
+    <None Include="wwwroot\js\lib\moment-2.24.js" />
+    <None Include="wwwroot\js\lib\mustache-3.1.js" />
+    <None Include="wwwroot\js\lib\summernote-bs4.js" />
+    <None Include="wwwroot\js\lib\summernote-bs5.js" />
+    <None Include="wwwroot\js\lib\summernote-bs5.min.js" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties bundleconfig_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

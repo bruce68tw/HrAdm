@@ -530,8 +530,8 @@ var _crud = {
 
     dtStatusName: function (value) {
         return (value == '1')
-            ? '<div>' + _BR.StatusYes + '</div>'
-            : '<div class="text-danger">' + _BR.StatusNo + '</div>';
+            ? '<span>' + _BR.StatusYes + '</span>'
+            : '<span class="text-danger">' + _BR.StatusNo + '</span>';
     },
 
     dtYesEmpty: function (value) {
@@ -562,11 +562,11 @@ var _crud = {
 
     /**
      * initial CRUD
-     * param dtConfig {Object} datatables config
-     * param edits {object Array} for edit form
+     * param1 dtConfig {Object} datatables config
+     * param2 edits {object Array} for edit form
      *   1.null: means one table, get eform
      *   2.many edit object, if ary0 is null, then call new EditOne()
-     * param updName {string} update name, default to _BR.Update
+     * param3 updName {string} update name, default to _BR.Update
      */
     init: function (dtConfig, edits, updName) {
         //_crud.initEdit(edits);
@@ -1847,9 +1847,8 @@ var _form = {
      * param json {json}
      */
     loadJson: function (form, json) {
-        for (var key in json) {
+        for (var key in json)
             _input.set(key, json[key], form);
-        }
     },
 
     /**
@@ -2141,11 +2140,16 @@ var _fun = {
 
     //error BR code, same to _Fun.PreBrError, fixed len to 2
     PreBrError: 'B:',
+
+    //class name of hide RWD phone
+    HideRwd: 'xg-hide-rwd',
     //#endregion
 
     //variables
     locale: 'zh-TW',    //now locale, _Layout.cshmlt will set
     maxFileSize: 50971520,  //upload file limit(50M)
+    isRwd: false,
+    //pageRows: 10,       //for _page.js (pagination object)
 
     //mid variables
     //data: {},
@@ -2417,6 +2421,10 @@ var _ibase = {
     //get value by filter
     getF: function (ft, box) {
         return this.getO(_obj.getF(ft, box));
+    },
+    //get value by id
+    getD: function (id, box) {
+        return this.getO(_obj.getD(id, box));
     },
     //get value by object
     getO: function (obj) {
@@ -2963,8 +2971,11 @@ var _ihtml = $.extend({}, _ibase, {
                 height: height || 200,
                 //new version use callbacks !!
                 callbacks: {
+                    /*
+                    */
                     //https://codepen.io/ondrejsvestka/pen/PROgzQ
                     onChange: function (contents, $editable) {
+                        
                         //sync value
                         var me = $(this);
                         if (me.summernote('isEmpty')) {
@@ -2979,6 +2990,12 @@ var _ihtml = $.extend({}, _ibase, {
 
                         //re-validate
                         edit.validator.element(me);
+                        
+                        /*
+                        var me = $(this);
+                        me.val(me.summernote('isEmpty') ? "" : contents);
+                        edit.validator.element(me);
+                        */
                     },
                     onImageUpload: function (files) {
                         var me = $(this);   //jquery object
@@ -4652,11 +4669,12 @@ var _valid = {
         //config
         var config = {
             /*
+            */
             //errorClass: 'label label-danger',
             //onclick: false, //checkbox, radio, and select
-            ignore: ':hidden:not(.xd-valid[data-type=file]),:hidden:not([data-type=html]),.note-editable.card-block',   //or summernote got error
-            */
+            //ignore: ':hidden:not(.xd-valid[data-type=file]),:hidden:not([data-type=html]),.note-editable.card-block',   //or summernote got error
             ignore: ':hidden:not(.xd-valid)',     //html/file has .xd-valid need validate !!
+            //ignore: ':hidden:not(.xd-valid), .note-editable.panel-body',
             errorElement: 'span',
             errorPlacement: function (error, elm) {
                 error.insertAfter(_valid._getBox($(elm)));
@@ -4813,6 +4831,10 @@ var _var = {
     //variables is empty or not
     isEmpty: function (var1) {
         return (var1 === undefined || var1 === null)
+    },
+    
+    notEmpty: function (var1) {
+        return !_var.isEmpty(var1);
     },
 
     //check not object、array
@@ -5001,13 +5023,30 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
         if (dtConfig) {
             if (!_var.isEmpty(dtConfig.columnDefs)) {
                 var colDefs = dtConfig.columnDefs;
-                colDefs[colDefs.length] = _crud.dtColDef;
+                colDefs[colDefs.length] = _crud.dtColDef;   //add last array element
             }
             config = _json.copy(dtConfig, config);
         }
+
+        //add data-rwd-th if need
+        var dt = $(selector);
+        /*
+        if (_fun.isRwd) {
+            //讀取多筆資料 header (set this._rwdTh[])
+            var me = this;
+            me._rwdTh = [];
+            dt.find('th').each(function (idx) {
+                me._rwdTh[idx] = $(this).text() + '：';
+            });
+            config.createdRow = function (row, data, dataIndex) {
+                $(row).find('td').each(function (idx) {
+                    $(this).attr('data-rwd-th', me._rwdTh[idx]);
+                });
+            };
+        }
+        */
         
         //before/after ajax call, show/hide waiting msg
-        var dt = $(selector);
         dt.on('preXhr.dt', function (e, settings, data) { _fun.block(); });
         dt.on('xhr.dt', function (e, settings, data) { _fun.unBlock(); });
         this.dt = dt.DataTable(config);
@@ -6669,6 +6708,157 @@ function Flow(boxId, mNode, mLine) {
 
     //call last
     this.init();
+
+}//class
+/**
+ * pagin component, config has properties:
+ * pageStr {string} json string from backend(pageNo,pageRows,filterRows)
+ * pager {object} jquery page object
+ * linker {object} (optional) link object, if empty
+ * action {string} action url
+ * showMenu {bool} (default false) show page menu or not(select page rows)
+ * pageRowList {array} (default [10,25,50,100]) page menu item list
+ * onFind {function} (optional) callback for get input json
+ * return {Page}
+ */ 
+function Page(config) {
+
+	//get from input parameters
+	this.pager = config.pager;
+	this.linker = config.linker;
+	this.action = config.action;
+	this.showMenu = config.showMenu || _var.notEmpty(config.pageRowList);
+	this.pageRowList = config.pageRowList || [10,25,50,100];
+	//this.onFind = config.onFind;
+	//this.noRowMsg = noRowMsg || _BR.FindNone;
+
+	//initial
+	this._init = function(pageStr, onFind) {
+		//has: pageNo, pageRows, filterRows
+		this.pageArg = this._getPageArg(pageStr);
+		var arg = this.pageArg;
+		var pager = this.pager;
+		if (arg.filterRows <= 0) {
+			pager.hide();
+			_tool.msg(_BR.FindNone);
+			return;
+		}
+
+		/*
+		//var count = this.pager.length == 0 ? 0 : parseInt(this.pager.data('count'));
+		if (arg.filterRows <= arg.pageRows) {
+			if (arg.filterRows == 0)
+				pager.html('<div class="-info">' + noRowMsg + '</div>')
+			//pager.hide();
+			return;
+		}
+		*/
+
+		//set rows menu if need
+		var menu = '';
+		if (this.showMenu) {
+			//var tpl = "每頁顯示 _Menu @@筆, 第 _Start 至 _End 筆, 總共 _Total 筆";
+			var cols = _BR.Page.split('@@');
+			menu = cols[0].replace('_Menu', this._getMenuHtml());
+
+			var start = (arg.pageNo - 1) * arg.pageRows + 1;
+			var end = start + arg.pageRows - 1;
+			var info = cols[1]
+				.replace('_Start', start)
+				.replace('_End', end <= arg.filterRows ? end : arg.filterRows)
+				.replace('_Total', arg.filterRows);
+			menu = _str.format(
+				"<div class='xg-page-menu'>" +
+					"<label>{0}<span>{1}</span></label>" +
+				"</div>", menu, info);
+		}
+
+		//set html
+		//pager.addClass('row');	//for layout
+		pager.html(menu + "<div class='xg-page-btns'></div>");
+
+		//register onchange event, this did not work inside !!
+		pager.find('select').change(function () {
+			onFind();
+		});
+
+		//initial simplePagin
+		pager.find('.xg-page-btns').pagination({
+			currentPage: arg.pageNo,
+			itemsOnPage: arg.pageRows,
+			items: arg.filterRows,
+			//displayedPages: 3,
+			//cssStyle: 'col-md-' + (this.showMenu ? '8' : '12'),	//for layout, will add into ul class(listStyle)
+			//listStyle: 'pagination justify-content-' + (this.showMenu ? 'end' : 'center'),
+			listStyle: 'pagination ' + (this.showMenu ? 'xg-has-menu' : 'xg-no-menu'),
+			prevText: "<",
+			nextText: ">",
+			//prevText: "<i class='fas fa-chevron-left'></i>",
+			//nextText: "<i class='fas fa-chevron-right'></i>",
+			onPageClick: onFind,
+		});
+
+	};
+
+	this._getMenuHtml = function () {
+		var menu = "<select class='form-select' style='width:80px; display:inline-block'>";
+		for (var i = 0; i < this.pageRowList.length; i++) {
+			menu += _str.format("<option value='{0}'{1}>{0}</option>", this.pageRowList[i],
+				this.pageArg.pageRows == this.pageRowList[i] ? ' selected' : '');
+		}
+		menu += "</select>";
+		return menu;
+	};
+
+	//pageArg has 3 property: pageNo, pageRows, filterRows
+	this._getPageArg = function (pageStr) {
+		var json = JSON.parse(_html.decode(pageStr));
+		if (json['pageNo'] == null)
+			json['pageNo'] = 1;
+		if (json['pageRows'] == null)
+			json['pageRows'] = 0;
+		if (json['filterRows'] == null)
+			json['filterRows'] = -1;
+		return json;
+	};
+
+	/**
+	 * public method for find rows
+	 * param url {string} action url
+	 * param json {json} query json
+	 * param page {int} page no
+	 */
+	this.find = function (json, page) {
+		json = json || {};
+		var arg = this.pageArg;
+		if (_var.isEmpty(page)) {
+			arg.pageNo = 1;
+			arg.filterRows = -1;
+			arg.pageRows = this.pager.find('select').val();
+		} else {
+			arg.pageNo = page;
+		}
+
+		var url = this.action +
+			'?page=' + arg.pageNo +
+			'&rows=' + arg.pageRows +
+			'&filter=' + arg.filterRows;
+		for (var key in json) {
+			if (_str.notEmpty(json[key]))
+				url += '&' + key + '=' + json[key];
+		}
+
+		var linker = this.linker;
+		if (_obj.isExist(linker)) {
+			linker.attr('href', url);
+			linker.trigger('click');
+		} else {
+			window.location = url;
+        }
+	};
+
+    //call last
+    this._init(config.pageStr, config.onFind);
 
 }//class
 var _xp = {
