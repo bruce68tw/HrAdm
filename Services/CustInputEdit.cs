@@ -28,7 +28,7 @@ namespace HrAdm.Services
                     new() { Fid = "FldInt", Required = true },
                     new() { Fid = "FldFile", Required = true },
                     new() { Fid = "FldHtml", Required = true },
-                    new() { Fid = "FldLink", Col = "FldFile" },
+                    //new() { Fid = "FldLink", Col = "FldFile" },
 					new() { Fid = "FldRadio", Required = true },
                     new() { Fid = "FldRead", Col = "FldText" },
                     new() { Fid = "FldSelect", Required = true },

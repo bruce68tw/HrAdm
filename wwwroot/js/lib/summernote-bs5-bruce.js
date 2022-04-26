@@ -7323,8 +7323,9 @@ var Buttons = /*#__PURE__*/function () {
           className: 'dropdown-toggle',
           contents: this.ui.dropdownButtonContents('', this.options),
           tooltip: this.lang.color.more,
+          //bruce fix: toggle -> 'bs-toggle' for all
           data: {
-            toggle: 'dropdown'
+            'bs-toggle': 'dropdown'
           }
         }), this.ui.dropdown({
           items: (backColor ? ['<div class="note-palette">', '<div class="note-palette-title">' + this.lang.color.background + '</div>', '<div>', '<button type="button" class="note-color-reset btn btn-light btn-default" data-event="backColor" data-value="transparent">', this.lang.color.transparent, '</button>', '</div>', '<div class="note-holder" data-event="backColor"><!-- back colors --></div>', '<div>', '<button type="button" class="note-color-select btn btn-light btn-default" data-event="openPalette" data-value="backColorPicker-' + this.options.id + '">', this.lang.color.cpSelect, '</button>', '<input type="color" id="backColorPicker-' + this.options.id + '" class="note-btn note-color-select-btn" value="' + this.options.colorButton.backColor + '" data-event="backColorPalette-' + this.options.id + '">', '</div>', '<div class="note-holder-custom" id="backColorPalette-' + this.options.id + '" data-event="backColor"></div>', '</div>'].join('') : '') + (foreColor ? ['<div class="note-palette">', '<div class="note-palette-title">' + this.lang.color.foreground + '</div>', '<div>', '<button type="button" class="note-color-reset btn btn-light btn-default" data-event="removeFormat" data-value="foreColor">', this.lang.color.resetToDefault, '</button>', '</div>', '<div class="note-holder" data-event="foreColor"><!-- fore colors --></div>', '<div>', '<button type="button" class="note-color-select btn btn-light btn-default" data-event="openPalette" data-value="foreColorPicker-' + this.options.id + '">', this.lang.color.cpSelect, '</button>', '<input type="color" id="foreColorPicker-' + this.options.id + '" class="note-btn note-color-select-btn" value="' + this.options.colorButton.foreColor + '" data-event="foreColorPalette-' + this.options.id + '">', '</div>', // Fix missing Div, Commented to find easily if it's wrong
@@ -7405,7 +7406,7 @@ var Buttons = /*#__PURE__*/function () {
           contents: _this2.ui.dropdownButtonContents(_this2.ui.icon(_this2.options.icons.magic), _this2.options),
           tooltip: _this2.lang.style.style,
           data: {
-            toggle: 'dropdown'
+            'bs-toggle': 'dropdown'
           }
         }), _this2.ui.dropdown({
           className: 'dropdown-style',
@@ -7523,7 +7524,7 @@ var Buttons = /*#__PURE__*/function () {
           contents: _this2.ui.dropdownButtonContents('<span class="note-current-fontname"></span>', _this2.options),
           tooltip: _this2.lang.font.name,
           data: {
-            toggle: 'dropdown'
+            'bs-toggle': 'dropdown'
           }
         }), _this2.ui.dropdownCheck({
           className: 'dropdown-fontname',
@@ -7542,7 +7543,7 @@ var Buttons = /*#__PURE__*/function () {
           contents: _this2.ui.dropdownButtonContents('<span class="note-current-fontsize"></span>', _this2.options),
           tooltip: _this2.lang.font.size,
           data: {
-            toggle: 'dropdown'
+            'bs-toggle': 'dropdown'
           }
         }), _this2.ui.dropdownCheck({
           className: 'dropdown-fontsize',
@@ -7558,7 +7559,7 @@ var Buttons = /*#__PURE__*/function () {
           contents: _this2.ui.dropdownButtonContents('<span class="note-current-fontsizeunit"></span>', _this2.options),
           tooltip: _this2.lang.font.sizeunit,
           data: {
-            toggle: 'dropdown'
+            'bs-toggle': 'dropdown'
           }
         }), _this2.ui.dropdownCheck({
           className: 'dropdown-fontsizeunit',
@@ -7633,7 +7634,7 @@ var Buttons = /*#__PURE__*/function () {
           contents: _this2.ui.dropdownButtonContents(_this2.ui.icon(_this2.options.icons.alignLeft), _this2.options),
           tooltip: _this2.lang.paragraph.paragraph,
           data: {
-            toggle: 'dropdown'
+            'bs-toggle': 'dropdown'
           }
         }), _this2.ui.dropdown([_this2.ui.buttonGroup({
           className: 'note-align',
@@ -7649,7 +7650,7 @@ var Buttons = /*#__PURE__*/function () {
           contents: _this2.ui.dropdownButtonContents(_this2.ui.icon(_this2.options.icons.textHeight), _this2.options),
           tooltip: _this2.lang.font.height,
           data: {
-            toggle: 'dropdown'
+            'bs-toggle': 'dropdown'
           }
         }), _this2.ui.dropdownCheck({
           items: _this2.options.lineHeights,
@@ -7665,7 +7666,7 @@ var Buttons = /*#__PURE__*/function () {
           contents: _this2.ui.dropdownButtonContents(_this2.ui.icon(_this2.options.icons.table), _this2.options),
           tooltip: _this2.lang.table.table,
           data: {
-            toggle: 'dropdown'
+            'bs-toggle': 'dropdown'
           }
         }), _this2.ui.dropdown({
           title: _this2.lang.table.table,
@@ -10138,8 +10139,9 @@ var ui = function ui(editorOptions) {
 
           for (var col = 0, colSize = colors.length; col < colSize; col++) {
             var color = colors[col];
-            var colorName = colorsName[col];
-            buttons.push(['<button type="button" class="note-color-btn"', 'style="background-color:', color, '" ', 'data-event="', eventName, '" ', 'data-value="', color, '" ', 'title="', colorName, '" ', 'aria-label="', colorName, '" ', 'data-toggle="button" tabindex="-1"></button>'].join(''));
+              var colorName = colorsName[col];
+              //bruce fix: data-toggle -> data-bs-toggle
+            buttons.push(['<button type="button" class="note-color-btn"', 'style="background-color:', color, '" ', 'data-event="', eventName, '" ', 'data-value="', color, '" ', 'title="', colorName, '" ', 'aria-label="', colorName, '" ', 'data-bs-toggle="button" tabindex="-1"></button>'].join(''));
           }
 
           contents.push('<div class="note-color-row">' + buttons.join('') + '</div>');
