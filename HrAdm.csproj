@@ -160,9 +160,7 @@
     <None Include="wwwroot\js\lib\modernizr-2.8.3.js" />
     <None Include="wwwroot\js\lib\moment-2.24.js" />
     <None Include="wwwroot\js\lib\mustache-3.1.js" />
-    <None Include="wwwroot\js\lib\summernote-bs4.js" />
     <None Include="wwwroot\js\lib\summernote-bs5.js" />
-    <None Include="wwwroot\js\lib\summernote-bs5.min.js" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties bundleconfig_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

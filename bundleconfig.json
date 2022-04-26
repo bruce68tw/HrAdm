@@ -31,8 +31,7 @@
       "wwwroot/js/lib/modernizr-2.8.3.js",
       "wwwroot/js/lib/moment-2.24.js",
       "wwwroot/js/lib/bootstrap-datepicker-1.9.js",
-      "wwwroot/js/lib/mustache-3.1.js",
-      "wwwroot/js/lib/summernote-bs5.js"
+      "wwwroot/js/lib/mustache-3.1.js"
     ],
     "minify": {
       "enabled": true,
