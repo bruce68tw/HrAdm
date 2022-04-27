@@ -16,7 +16,7 @@ var _obj = {
     getF: function (ft, box) {
         var obj = box.find(ft);
         if (obj.length == 0) {
-            _log.info('_obj.js getF() found none. (filter=' + ft + ')');
+            //_log.info('_obj.js getF() found none. (filter=' + ft + ')');
             return null;
         } else {
             return obj;

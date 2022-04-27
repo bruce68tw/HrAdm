@@ -937,68 +937,45 @@ input[type=number] {
     border-bottom: none;
 }
 
-
-/*
-  包含: 
-  1.xg-table
-  2.xg-table裡面的輸入元件
-  3.jQuery dataTables
-*/
+/* include: read, edit table */
 .xg-table {
+    border-collapse: separate !important;
     width: 100% !important;
     font-size: 15px;
-    border-left: 1px solid lightgray;
-    border-top: 1px solid lightgray;
-    /*table-layout: fixed;*/
+    border-width: 1px 0 0 1px !important;
+    border-color: lightgray !important;
+    border-style: solid !important;
 }
 
-    /*
-.xg-table td {
-    vertical-align: middle;
-    height: 32px;
-}
-*/
+    .xg-table th, .xg-table td {
+        font-weight: normal !important;
+        border-width: 0 1px 1px 0 !important;
+        border-color: lightgray !important;
+        border-style: solid !important;
+        vertical-align: middle !important;
+        text-align: center !important;
+        padding: 0.75rem; /* front web */
+    }
+
+    .xg-table th {
+        background: #eee;
+    }
 
     .xg-table tr:hover {
         background: #F6F6F6;
     }
 
-    /*.xg-table thead th {*/
-    .xg-table th {
-        background: #eee;
-        border-width: 0 1px 1px 0 !important;
-        /*
-    border-top: none !important;
-    border-bottom: none !important;
-    border-bottom-width: 1px !important;
-    border-left-width: 0;
-    */
-        vertical-align: middle !important;
-        /*padding-top: 3px;
-    padding-bottom: 3px;
-    height: 48px !important;*/
-        text-align: center !important;
-        padding: 0.75rem;   /* front web */
+    .xg-table.xg-no-hline {
+        border-width: 1px 0 1px 1px !important;
     }
 
-        .xg-table th:last-child {
-            border-right-width: 0 !important;
+        .xg-table.xg-no-hline td {
+            border-width: 0 1px 0 0 !important;
         }
 
-    .xg-table tbody td {
-        vertical-align: middle !important;
-        /*padding-top: 3px;
-    padding-bottom: 3px;
-    height: 48px !important;*/
-        border-width: 0 1px 1px 0 !important;
-        /*border-bottom-width: 0;
-    border-left-width: 0;*/
-        padding: 0.75rem; /* front web */
-    }
-
-    .xg-table.xg-no-hline td {
-        border-top: none;
-        border-bottom: none;
+    .xg-table .xi-check > span {
+        top: -15px !important;
+        left: 8px !important;
     }
 
 /*
@@ -1012,19 +989,17 @@ input[type=number] {
 */
 
 /* table v scroll */
+.xg-table-vscroll {
+    border-width: 1px 0 1px 1px !important;
+}
+
 .xg-table-vscroll tbody {
-  display:block;
-  overflow-y:scroll;
+    display: block;
+    overflow-y: scroll;
 }
 
 .xg-table-vscroll tr {
   display:flex;
-}
-
-/* TODO: ?? */
-.xg-table .xi-check > span {
-    top: -10px !important;
-    left: 8px !important;
 }
 
 tr input {
@@ -1192,6 +1167,7 @@ body.xg-show-wait .xg-wait {
 /* table button with link style */
 .btn-link {
     padding: 0 !important;
+    text-decoration: none !important;
 }
 
 .table-condensed {

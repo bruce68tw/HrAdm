@@ -73,7 +73,7 @@
 
         <div class='xg-btns-box'>
         </div>
-        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+        <table id="tableRead" class="table xg-table" cellspacing="0">
             <thead>
                 <tr>
                     <th>@R["Account"]</th>
@@ -103,7 +103,7 @@
             @await Component.InvokeAsync("XgAddRow", "_me.mUserJob.onAddRow()")
         </div>
         <form id='eformUserJob' class='xg-form' style="border:none">
-            <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+            <table class="table xg-table xg-no-hline" cellspacing="0">
                 <thead>
                     <tr>
                         @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["JobName"].Value, Required = true })
@@ -126,7 +126,7 @@
             @await Component.InvokeAsync("XgAddRow", "_me.mUserSchool.onAddRow()")
         </div>
         <form id='eformUserSchool' class='xg-form' style="border:none">
-            <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+            <table class="table xg-table xg-no-hline" cellspacing="0">
                 <thead>
                     <tr>
                         @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["SchoolName"].Value, Required = true })
@@ -146,7 +146,7 @@
             @await Component.InvokeAsync("XgAddRow", "_me.mUserLang.onAddRow()")
         </div>
         <form id='eformUserLang' class='xg-form' style="border:none">
-            <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+            <table class="table xg-table xg-no-hline" cellspacing="0">
                 <thead>
                     <tr>
                         @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["LangName"].Value, Required = true })
@@ -166,7 +166,7 @@
             @await Component.InvokeAsync("XgAddRow", "_me.mUserLicense.onAddRow()")
         </div>
         <form id='eformUserLicense' class='xg-form' style="border:none">
-            <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+            <table class="table xg-table xg-no-hline" cellspacing="0">
                 <thead>
                     <tr>
                         @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["LicName"].Value, Required = true })
@@ -184,7 +184,7 @@
             @await Component.InvokeAsync("XgAddRow", "_me.mUserSkill.onAddRow()")
         </div>
         <form id='eformUserSkill' class='xg-form' style="border:none">
-            <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+            <table class="table xg-table xg-no-hline" cellspacing="0">
                 <thead>
                     <tr>
                         @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["SkillName"].Value, Required = true })

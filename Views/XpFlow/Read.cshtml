@@ -87,7 +87,7 @@
         <div class='xg-btns-box'>
             @await Component.InvokeAsync("XgCreate")
         </div>
-        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+        <table id="tableRead" class="table xg-table" cellspacing="0">
             <thead>
                 <tr>
                     <th>@R["FlowCode"]</th>
@@ -212,7 +212,7 @@
                             @R["RunCond"]
                             <button type="button" class="btn btn-sm btn-primary" onclick="_me.flow.onAddLineCond()">@br.BtnAddRow</button>
                         </div>
-                        <table class="table table-bordered xg-table" cellspacing="0">
+                        <table class="table xg-table" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th width="104px" class="text-center"></th>

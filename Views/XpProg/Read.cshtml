@@ -26,7 +26,7 @@
         <div class='xg-btns-box'>
             @await Component.InvokeAsync("XgCreate")
         </div>
-        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+        <table id="tableRead" class="table xg-table" cellspacing="0">
             <thead>
                 <tr>
                     <th>@R["ProgCode"]</th>
@@ -74,7 +74,7 @@
             @await Component.InvokeAsync("XgAddRow", "_me.mRoleProg.onAddRow()")
         </div>
         <form id='eformRoleProg' class='xg-form' style="border:none;">
-            <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+            <table class="table xg-table xg-no-hline" cellspacing="0">
                 <thead>
                     <tr>
                         @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["Role"].Value, Required = true })

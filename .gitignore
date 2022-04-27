@@ -6,4 +6,5 @@ _upload/
 packages/
 *.rar
 old/
+wwwroot_old/
 .config/

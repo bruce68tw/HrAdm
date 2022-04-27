@@ -66,7 +66,7 @@
         <div class='xg-btns-box'>
             @await Component.InvokeAsync("XgCreate")
         </div>
-        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+        <table id="tableRead" class="table xg-table" cellspacing="0">
             <thead>
                 <tr>
                     <th>@R["RoleName"]</th>
@@ -88,7 +88,7 @@
             <button type="button" class="btn xg-btn" onclick="_me.onOpenUser()">@R0["Select"]</button>
         </div>
         <form id='eformUserRole' class='xg-form'>
-            <table class="table table-bordered xg-table" cellspacing="0">
+            <table class="table xg-table" cellspacing="0">
                 <thead>
                     <tr>
                         <th>@R0["DeptName"]</th>
@@ -127,7 +127,7 @@
             @await Component.InvokeAsync("XgAddRow", "_me.mRoleProg.onAddRow()")
         </div>
         <form id='eformRoleProg' class='xg-form' style="border:none;">
-            <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+            <table class="table xg-table xg-no-hline" cellspacing="0">
                 <thead>
                     <tr>
                         @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["Prog"].Value, Tip = "欄位前面有*表示有資料權限",  Required = true })
@@ -219,7 +219,7 @@
                 </div>
 
                 <!-- query result list -->
-                <table id="tableUser" class="table table-bordered xg-table xg-table-vscroll" cellspacing="0" style="width:100%">
+                <table id="tableUser" class="table xg-table xg-table-vscroll" cellspacing="0" style="width:100%">
                     <thead>
                         <tr>
                             <th>@R0["Select"]</th>
