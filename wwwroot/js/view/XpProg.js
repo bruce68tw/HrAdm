@@ -13,17 +13,17 @@
             ],
             columnDefs: [
 				{ targets: [3], render: function (data, type, full, meta) {
-                    return _crud.dtYesEmpty(data);
+                    return _crudR.dtYesEmpty(data);
                 }},
 				{ targets: [5], render: function (data, type, full, meta) {
-                    return _crud.dtCrudFun(full.Id, full.Name, true, true, true);
+                    return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                 }},
             ],
         };
 
         //initial
         _me.mRoleProg = new EditMany('Id', 'eformRoleProg', 'tplRoleProg', 'tr');
-		_crud.init(config, [null, _me.mRoleProg]);
+		_crudR.init(config, [null, _me.mRoleProg]);
     },
 
 }; //class

@@ -20,14 +20,14 @@
                 ],
                 columnDefs: [
                     { targets: [3], render: function (data, type, full, meta) {
-                         return _crud.dtStatusName(data);
+                         return _crudR.dtStatusName(data);
                     }},
                     { targets: [4], render: function (data, type, full, meta) {
                         var html = '<a href="javascript:_me.onGenWord(\'{0}\')">{1}</a>';
                         return _str.format(html, full.Id, '@R["GenResume"]');
                     }},
                     { targets: [5], render: function (data, type, full, meta) {
-                        return _crud.dtCrudFun(full.Id, full.Name, true, false, true);
+                        return _crudR.dtCrudFun(full.Id, full.Name, true, false, true);
                     }},
                 ],
             };
@@ -38,7 +38,7 @@
             _me.mUserLang = new EditMany('Id', 'eformUserLang', 'tplUserLang', 'tr', 'Sort');
             _me.mUserLicense = new EditMany('Id', 'eformUserLicense', 'tplUserLicense', 'tr');
             _me.mUserSkill = new EditMany('Id', 'eformUserSkill', 'tplUserSkill', 'tr', 'Sort');
-            _crud.init(config, [null, _me.mUserJob, _me.mUserSchool, _me.mUserLang, _me.mUserLicense, _me.mUserSkill]);
+            _crudR.init(config, [null, _me.mUserJob, _me.mUserSchool, _me.mUserLang, _me.mUserLicense, _me.mUserSkill]);
         },
 
         //onclick viewFile, called by XiFile component
@@ -60,7 +60,7 @@
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuUserExt"].Value } })
-<div class="xp-prog">
+<div class="xg-prog">
     <div id="divRead">
         <form id='formRead' class='xg-form'>
             <div class="row">

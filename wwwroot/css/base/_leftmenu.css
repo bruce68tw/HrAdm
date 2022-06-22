@@ -94,13 +94,3 @@
     color: #fff;*/
     padding-left: 22px;
 }
-
-/* program area */
-.xg-body {
-    display: inline-block;
-    width: 100%;
-    height: 100vh;
-    vertical-align: top;
-    transition: 0.5s;
-    border-left: 1px solid #CCC;
-}

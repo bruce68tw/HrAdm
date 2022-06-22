@@ -6,7 +6,7 @@
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { "簽核流程(測試)" } })
-<div class="xp-prog">
+<div class="xg-prog">
     <div id="divRead">
         <form id='formRead' class='xg-form xg-mb10'>
             <div class="row">
@@ -50,7 +50,7 @@
 
         <div class='xg-center' style="margin-top:10px">
             <button type='button' class='btn xg-btn-size btn-primary' onclick='_me.onSubmit()'>送出</button>
-            <button type='button' id='btnToRead' class='btn xg-btn-size btn-secondary' onclick='_crud.onToRead()'>回列表頁</button>
+            <button type='button' id='btnToRead' class='btn xg-btn-size btn-secondary' onclick='_crudR.onToRead()'>回列表頁</button>
         </div>
     </div>
 </div>

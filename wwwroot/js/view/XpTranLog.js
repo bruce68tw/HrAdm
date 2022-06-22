@@ -20,7 +20,7 @@
         };
 
         //initial
-        _crud.init(config);
+        _crudR.init(config);
     },
 
 }; //class

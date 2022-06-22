@@ -25,7 +25,7 @@
                     return _date.mmToUiDt(data);
                 }},
 				{ targets: [8], render: function (data, type, full, meta) {
-                    return _crud.dtCrudFun(full.Id, 'Leave', true, true, true);
+                    return _crudR.dtCrudFun(full.Id, 'Leave', true, true, true);
                 }},
             ],
         };
@@ -33,7 +33,7 @@
         //initial
         _me.edit0 = new EditOne();
         _me.edit0.fnAfterOpenEdit = _me.edit0_afterOpenEdit;
-        _crud.init(config, [_me.edit0]);
+        _crudR.init(config, [_me.edit0]);
 
         //other variables
         _me.divSignRows = $('#divSignRows');

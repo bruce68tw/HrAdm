@@ -12,14 +12,14 @@
             ],
             columnDefs: [
 				{ targets: [2], render: function (data, type, full, meta) {
-                    return _crud.dtStatusName(data);                    
+                    return _crudR.dtStatusName(data);                    
                 }},
 				{ targets: [3], render: function (data, type, full, meta) {
                     var html = '<a href="javascript:_me.onOpenTest(\'{0}\');">{1}</a>';
                     return _str.format(html, full.Code, '測試流程');
                 }},
 				{ targets: [4], render: function (data, type, full, meta) {
-                    return _crud.dtCrudFun(full.Id, full.Name, true, true, true);
+                    return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                 }},
             ],
         };
@@ -30,7 +30,7 @@
         _me.edit0 = new EditOne();
         _me.mNode = new EditMany('Id', null, 'tplNode', '.xf-node');
         _me.mLine = new EditMany('Id', null, 'tplLine', '.xd-line', 'Sort');
-        _crud.init(config, [_me.edit0, _me.mNode, _me.mLine]);
+        _crudR.init(config, [_me.edit0, _me.mNode, _me.mLine]);
 
         //initial flow(jsplumb)
         _me.flow = new Flow('divEdit', _me.mNode, _me.mLine);
@@ -125,7 +125,7 @@
 
     //show Read form or not
     testToRead: function (toRead) {
-        _crud.swap(toRead, _me.divFlowTest);
+        _crudR.swap(toRead, _me.divFlowTest);
     },
 
 }; //class

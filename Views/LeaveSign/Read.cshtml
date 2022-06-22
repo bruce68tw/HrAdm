@@ -32,13 +32,13 @@
                         return _date.mmToUiDt(data);
                     }},
 				    { targets: [7], render: function (data, type, full, meta) {
-                        return _str.format('<button type="button" class="btn btn-outline-secondary btn-sm" onclick="_crud.onUpdate(\'{0}\')">@R["Audit"]</button>', full.Id);
+                        return _str.format('<button type="button" class="btn btn-outline-secondary btn-sm" onclick="_crudR.onUpdate(\'{0}\')">@R["Audit"]</button>', full.Id);
                     }},
                 ],
             };
 
             //initial
-            _crud.init(config, [new EditOne('SignId')], '@R["Audit"]');
+            _crudR.init(config, [new EditOne('SignId')], '@R["Audit"]');
             _me.eform = $('#eform');
         },
 
@@ -56,7 +56,7 @@
                 note: _itext.get('Note', form),
             };
             _ajax.getJson('SignRow', data, function (data) {
-                _crud.afterSave(data);
+                _crudE.afterSave(data);
             });
         },
 
@@ -64,7 +64,7 @@
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuLeaveSign"].Value } })
-<div class="xp-prog">
+<div class="xg-prog">
     <div id="divRead">
         <table id="tableRead" class="table xg-table" cellspacing="0">
             <thead>
@@ -101,7 +101,7 @@
 
         <div class='xg-center' style="margin-top:10px">
             <button type='button' class='btn xg-btn-size btn-success' onclick='_me.onSubmit()'>@R0["Submit"]</button>
-            <button type='button' class='btn xg-btn-size btn-primary' onclick='_crud.onToRead()'>@R0["ToRead"]<i class='ico-back'></i></button>
+            <button type='button' class='btn xg-btn-size btn-primary' onclick='_crudR.onToRead()'>@R0["ToRead"]<i class='ico-back'></i></button>
         </div>
     </div>
 </div>

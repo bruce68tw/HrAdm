@@ -29,7 +29,7 @@
             //initial
             _me.edit0 = new EditOne();
             _me.edit0.fnAfterOpenEdit = _me.edit0_afterOpenEdit;
-            _crud.init(config, [_me.edit0]);
+            _crudR.init(config, [_me.edit0]);
 
             //other variables
             _me.eform = $('#eform');
@@ -40,7 +40,8 @@
         onView: function (flowCode, key) {
             _ajax.getJson('GetViewJson', { flowCode: flowCode, key: key }, function (data) {
                 //consider other flow types
-                _crud.toEditMode(_fun.FunV, data);
+                //here!!
+                _crudR.toEditMode(_fun.FunV, data);
             });
         },
 
@@ -61,7 +62,7 @@
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuXpFlowSign"].Value } })
-<div class="xp-prog">
+<div class="xg-prog">
     <div id="divRead">
         <form id='formRead' class='xg-form xg-mb10'>
             <div class="row">
@@ -109,7 +110,7 @@
         </form>
 
         <div class='xg-center'>
-            <button id='btnToRead' type='button' class='btn xg-btn-size btn-primary' onclick='_crud.onToRead()'>@R0["ToRead"]<i class='ico-back'></i></button>
+            <button id='btnToRead' type='button' class='btn xg-btn-size btn-primary' onclick='_crudR.onToRead()'>@R0["ToRead"]<i class='ico-back'></i></button>
         </div>
     </div>
 </div>

@@ -39,7 +39,7 @@
             };
 
             //initial
-            _crud.init(config);
+            _crudR.init(config);
             _me.modalImport = $('#modalImport');
         },
 
@@ -71,7 +71,7 @@
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { progName } })
-<div class="xp-prog">
+<div class="xg-prog">
     <div id="divRead">
         <form id='formRead' class='xg-form'>
             <div class="row">

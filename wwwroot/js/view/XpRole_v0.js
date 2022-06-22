@@ -9,7 +9,7 @@
             ],
             columnDefs: [
 				{ targets: [1], render: function (data, type, full, meta) {
-                    return _crud.dtCrudFun(full.Id, full.Name, true, true, true);
+                    return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                 }},
             ],
         };
@@ -17,7 +17,7 @@
         //initial
         _me.mUserRole = new EditMany('Id');
         _me.mRoleProg = new EditMany('Id', 'eformRoleProg', 'tplRoleProg', 'tr');
-        _crud.init(config, [null, _me.mUserRole, _me.mRoleProg]);
+        _crudR.init(config, [null, _me.mUserRole, _me.mRoleProg]);
 
         _me.mUserRole.fnLoadJson = _me.mUserRole_loadJson;
         _me.mUserRole.fnGetUpdJson = _me.mUserRole_getUpdJson;

@@ -12,18 +12,17 @@
             ],
             columnDefs: [
 				{ targets: [3], render: function (data, type, full, meta) {
-                    //return _crud.dtSetStatus(full.Id, data);
-                    return _crud.dtStatusName(data);
+                    return _crudR.dtStatusName(data);
                 }},
 				{ targets: [4], render: function (data, type, full, meta) {
-                    return _crud.dtCrudFun(full.Id, full.Name, true, true, true);
+                    return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                 }},
             ],
         };
 
         //initial
         _me.mUserRole = new EditMany('Id');
-        _crud.init(config, [null, _me.mUserRole]);
+        _crudR.init(config, [null, _me.mUserRole]);
 
         _me.mUserRole.fnLoadJson = _me.mUserRole_loadJson;
         _me.mUserRole.fnGetUpdJson = _me.mUserRole_getUpdJson;
