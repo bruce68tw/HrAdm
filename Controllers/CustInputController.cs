@@ -30,7 +30,7 @@ namespace HrAdm.Controllers
             //testing error case
             //return JsonToCnt(_Json.GetError());
 
-            return JsonToCnt(await new CustInputRead().GetPageAsync(Ctrl, dt));
+            return JsonToCnt(await new CustInputRead().GetPageA(Ctrl, dt));
         }
 
         private CustInputEdit EditService()
@@ -42,14 +42,14 @@ namespace HrAdm.Controllers
         public async Task<ContentResult> GetUpdJson(string key)
         {
             //_Fun.Except();
-            return JsonToCnt(await EditService().GetUpdJsonAsync(key));
+            return JsonToCnt(await EditService().GetUpdJsonA(key));
         }
 
         [HttpPost]
         public async Task<ContentResult> GetViewJson(string key)
         {
             //_Fun.Except();
-            return JsonToCnt(await EditService().GetViewJsonAsync(key));
+            return JsonToCnt(await EditService().GetViewJsonA(key));
         }
 
         [HttpPost]
@@ -57,7 +57,7 @@ namespace HrAdm.Controllers
         public async Task<JsonResult> Create(string json, IFormFile t0_FldFile)
         {
             //_Fun.Except();
-            return Json(await EditService().CreateAsnyc(_Str.ToJson(json), t0_FldFile));
+            return Json(await EditService().CreateA(_Str.ToJson(json), t0_FldFile));
         }
 
         [HttpPost]
@@ -65,7 +65,7 @@ namespace HrAdm.Controllers
         public async Task<JsonResult> Update(string key, string json, IFormFile t0_FldFile)
         {
             //_Fun.Except();
-            return Json(await EditService().UpdateAsnyc(key, _Str.ToJson(json), t0_FldFile));
+            return Json(await EditService().UpdateA(key, _Str.ToJson(json), t0_FldFile));
         }
 
         //TODO: add your code
@@ -75,7 +75,7 @@ namespace HrAdm.Controllers
             //for testing exception
             //_Fun.Except();
 
-            return await _Xp.ViewCustInputAsync(fid, key, ext);
+            return await _Xp.ViewCustInputA(fid, key, ext);
         }
 
         [HttpPost]
@@ -84,7 +84,7 @@ namespace HrAdm.Controllers
             //testing error case
             //return Json(_Model.GetError());
 
-            return Json(await EditService().DeleteAsync(key));
+            return Json(await EditService().DeleteA(key));
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace HrAdm.Controllers
         public async Task<string> SetHtmlImage(IFormFile file)
         {
             var subDir = "image/CustInput";
-            var fileName = await _WebFile.SaveHtmlImage(file, $"{_Web.DirWeb}{subDir}");
+            var fileName = await _WebFile.SaveHtmlImageA(file, $"{_Web.DirWeb}{subDir}");
             return _Fun.GetHtmlImageUrl($"{subDir}/{fileName}");
         }
 

@@ -52,7 +52,7 @@ from dbo.[User] u
 join dbo.Dept d on u.DeptId=d.Id
 where u.Account=@Account
 ";
-            var row = await _Db.GetJsonAsync(sql, new List<object>() { "Account", vo.Account });
+            var row = await _Db.GetJsonA(sql, new List<object>() { "Account", vo.Account });
             //TODO: encode if need
             //if (row == null || row["Pwd"].ToString() != _Str.Md5(vo.Pwd))
             if (row == null || row["Pwd"].ToString() != vo.Pwd)
@@ -71,7 +71,7 @@ where u.Account=@Account
                 DeptId = row["DeptId"].ToString(),
                 DeptName = row["DeptName"].ToString(),
                 Locale = _Fun.Config.Locale,
-                ProgAuthStrs = await _XgProg.GetAuthStrsAsync(userId),
+                ProgAuthStrs = await _XgProg.GetAuthStrsA(userId),
                 //IsLogin = true,
             };
             #endregion

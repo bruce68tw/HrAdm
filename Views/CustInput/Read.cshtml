@@ -19,13 +19,13 @@
     <div id="divRead">
         <form id='formRead' class='xg-form'>
             <div class="row">
-                <vc:xi-text dto="@(new XiTextDto { Title = R["Text"].Value, Fid = "FldText", InRow = true })"></vc:xi-text>
-                @await Component.InvokeAsync("XgFindTbar")
+                <vc:xi-text dto="@(new XiTextDto { Title = R["Text"].Value, Fid = "FldText", InRow = true })"/>
+                <vc:xg-find-tbar/>
             </div>
         </form>
 
         <div class='xg-btns-box'>
-            @await Component.InvokeAsync("XgCreate")
+            <vc:xg-create/>
         </div>
         <table id="tableRead" class="table xg-table" cellspacing="0">
             <thead>
@@ -44,21 +44,21 @@
 
     <div id="divEdit" class="xg-hide">
         <form id='eform' class='xg-form'>
-            <vc:xi-check dto="@(new(){ Title = "XiCheck", Fid = "FldCheck", Edit = "U", LabelTip = "CheckBox Input" })"></vc:xi-check>
-            <vc:xi-date dto="@(new(){ Title = "XiDate", Fid = "FldDate", Required = true, LabelTip = "Date Input" })"></vc:xi-date>
-            <vc:xi-dt dto="@(new(){ Title = "XiDt", Fid = "FldDt", Required = true, Cols = "2,8" })"></vc:xi-dt>
-            <vc:xi-dec dto="@(new(){ Title = "XiDec", Fid = "FldDec", Required = true, Cols = "2,6", Width = "100px" })"></vc:xi-dec>
-            <vc:xi-int dto="@(new(){ Title = "XiInt", Fid = "FldInt", Required = true, Cols = "2,6", Width = "100px", Min = 2, Max = 10 })"></vc:xi-int>
-            <vc:xi-file dto="@(new(){ Title = "XiFile", Fid = "FldFile", Required = true, MaxSize = 1, FileType = "*" })"></vc:xi-file>
+            <vc:xi-check dto="@(new(){ Title = "XiCheck", Fid = "FldCheck", Edit = "U", LabelTip = "CheckBox Input" })"/>
+            <vc:xi-date dto="@(new(){ Title = "XiDate", Fid = "FldDate", Required = true, LabelTip = "Date Input" })"/>
+            <vc:xi-dt dto="@(new(){ Title = "XiDt", Fid = "FldDt", Required = true, Cols = "2,8" })"/>
+            <vc:xi-dec dto="@(new(){ Title = "XiDec", Fid = "FldDec", Required = true, Cols = "2,6", Width = "100px" })"/>
+            <vc:xi-int dto="@(new(){ Title = "XiInt", Fid = "FldInt", Required = true, Cols = "2,6", Width = "100px", Min = 2, Max = 10 })"/>
+            <vc:xi-file dto="@(new(){ Title = "XiFile", Fid = "FldFile", Required = true, MaxSize = 1, FileType = "*" })"/>
             @*<vc:xi-link dto="@(new(){ Title = "XiLink", Fid = "FldFile" })"></vc:xi-link>*@
-            <vc:xi-hide dto="@(new(){ Fid = "Id" })"></vc:xi-hide>
-            <vc:xi-html dto="@(new(){ Title = "XiHtml", Fid = "FldHtml", Required = true, Cols = "2,9" })"></vc:xi-html>
-            <vc:xi-radio dto="@(new(){ Title = "XiRadio", Fid = "FldRadio", Rows = ViewBag.Radios })"></vc:xi-radio>
-            <vc:xi-read dto="@(new(){ Title = "XiRead", Fid = "FldRead", Value = "label" })"></vc:xi-read>
-            <vc:xi-select dto="@(new(){ Title = "XiSelect", Fid = "FldSelect", Rows = ViewBag.Selects, Required = true })"></vc:xi-select>
-            <vc:xi-textarea dto="@(new(){ Title = "XiTextarea", Fid = "FldTextarea", MaxLen = 255, Required = true, Cols = "2,9" })"></vc:xi-textarea>
-            <vc:xi-text dto="@(new(){ Title = "XiText", Fid = "FldText", MaxLen = 20, Required = true })"></vc:xi-text>
+            <vc:xi-hide dto="@(new(){ Fid = "Id" })"/>
+            <vc:xi-html dto="@(new(){ Title = "XiHtml", Fid = "FldHtml", Required = true, Cols = "2,9" })"/>
+            <vc:xi-radio dto="@(new(){ Title = "XiRadio", Fid = "FldRadio", Rows = ViewBag.Radios })"/>
+            <vc:xi-read dto="@(new(){ Title = "XiRead", Fid = "FldRead", Value = "label" })"/>
+            <vc:xi-select dto="@(new(){ Title = "XiSelect", Fid = "FldSelect", Rows = ViewBag.Selects, Required = true })"/>
+            <vc:xi-textarea dto="@(new(){ Title = "XiTextarea", Fid = "FldTextarea", MaxLen = 255, Required = true, Cols = "2,9" })"/>
+            <vc:xi-text dto="@(new(){ Title = "XiText", Fid = "FldText", MaxLen = 20, Required = true })"/>
         </form>
-        @await Component.InvokeAsync("XgSaveBack")
+        <vc:xg-save-back/>
     </div>
 </div>

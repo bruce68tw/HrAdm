@@ -35,9 +35,9 @@ order by d.Created desc
             };
         }
 
-        public async Task<JObject> GetPageAsync(string ctrl, DtDto dt)
+        public async Task<JObject> GetPageA(string ctrl, DtDto dt)
         {
-            return await new CrudRead().GetPageAsync(GetDto(_Fun.UserId()), dt, ctrl);
+            return await new CrudRead().GetPageA(GetDto(_Fun.UserId()), dt, ctrl);
         }
 
     } //class

@@ -72,7 +72,7 @@ namespace HrAdm
         {
             //initial & set locale
             _Fun.Init(env.IsDevelopment(), app.ApplicationServices, DbTypeEnum.MSSql, AuthTypeEnum.Row);
-            _Locale.SetCultureAsync(_Fun.Config.Locale);
+            _Locale.SetCultureA(_Fun.Config.Locale);
 
             if (env.IsDevelopment())
             {

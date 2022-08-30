@@ -19,10 +19,10 @@ namespace HrAdm.Controllers
             await using (var db = new Db())
             {
                 var locale0 = _Xp.GetLocale0();
-                ViewBag.Users = await _XpCode.GetUsersAsync(db);
+                ViewBag.Users = await _XpCode.UsersA(db);
                 //ViewBag.Progs = await _XpCode.GetProgsAsync(locale0, db);
-                ViewBag.AuthRanges = await _XpCode.GetAuthRangesAsync(locale0, db);
-                ViewBag.Depts = await _XpCode.GetDeptsAsync(db);
+                ViewBag.AuthRanges = await _XpCode.AuthRangesA(locale0, db);
+                ViewBag.Depts = await _XpCode.DeptsA(db);
             }
             return View();
         }
@@ -30,7 +30,7 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new XpRoleRead().GetPageAsync(Ctrl, dt));
+            return JsonToCnt(await new XpRoleRead().GetPageA(Ctrl, dt));
         }
 
         private XpRoleEdit EditService()
@@ -41,31 +41,31 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<JsonResult> Create(string json)
         {
-            return Json(await EditService().CreateAsync(_Str.ToJson(json)));
+            return Json(await EditService().CreateA(_Str.ToJson(json)));
         }
 
         [HttpPost]
         public async Task<JsonResult> Update(string key, string json)
         {
-            return Json(await EditService().UpdateAsync(key, _Str.ToJson(json)));
+            return Json(await EditService().UpdateA(key, _Str.ToJson(json)));
         }
 
         [HttpPost]
         public async Task<JsonResult> Delete(string key)
         {
-            return Json(await EditService().DeleteAsync(key));
+            return Json(await EditService().DeleteA(key));
         }
 
         [HttpPost]
         public async Task<ContentResult> GetUpdJson(string key)
         {
-            return JsonToCnt(await EditService().GetUpdJsonAsync(key));
+            return JsonToCnt(await EditService().GetUpdJsonA(key));
         }
 
         [HttpPost]
         public async Task<ContentResult> GetViewJson(string key)
         {
-            return JsonToCnt(await EditService().GetViewJsonAsync(key));
+            return JsonToCnt(await EditService().GetViewJsonA(key));
         }
 
         //get user list for modal
@@ -83,7 +83,7 @@ where (@Account is null or u.Account like @Account)
 and d.Id=iif(@DeptId is null, d.Id, @DeptId)
 order by d.Id, u.Account
 ";
-            var rows = await _Db.GetJsonsAsync(sql, new List<object>() { "Account", account, "DeptId" , deptId });
+            var rows = await _Db.GetJsonsA(sql, new List<object>() { "Account", account, "DeptId" , deptId });
             return Content(rows == null ? "" : rows.ToString(), ContentTypeEstr.Json);
         }
 

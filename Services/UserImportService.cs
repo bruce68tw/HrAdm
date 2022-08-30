@@ -19,7 +19,7 @@ namespace HrAdm.Services
         /// </summary>
         /// <param name="file"></param>
         /// <returns>ResultImportDto</returns>
-        public async Task<ResultImportDto> ImportAsync(IFormFile file, string dirUpload)
+        public async Task<ResultImportDto> ImportA(IFormFile file, string dirUpload)
         {
             var importDto = new ExcelImportDto<UserImportVo>()
             {
@@ -28,32 +28,32 @@ namespace HrAdm.Services
                 FnSaveImportRows = SaveImportRows,
                 CreatorName = _Fun.GetBaseUser().UserName,
             };
-            return await _WebExcel.ImportByFileAsync(file, dirUpload, importDto);
+            return await _WebExcel.ImportByFileA(file, dirUpload, importDto);
         }
 
         /// <summary>
         /// check & save DB
         /// </summary>
         /// <param name="okRows"></param>
-        /// <returns>list error/empty </returns>
+        /// <returns>list error/empty, 對應okRows </returns>
         private List<string> SaveImportRows(List<UserImportVo> okRows)
         {
             var db = _Xp.GetDb();
             var deptIds = db.Dept.Select(a => a.Id).ToList();
-            var results = new List<string>();
+            var errors = new List<string>();
             foreach (var row in okRows)
             {
                 //check rules: deptId
                 if (!deptIds.Contains(row.DeptId))
                 {
-                    results.Add("DeptId Wrong.");
+                    errors.Add("DeptId Wrong.");
                     continue;
                 }
 
                 //check rules: Account not repeat
                 if (db.User.Any(a => a.Account == row.Account))
                 {
-                    results.Add("Account Existed.");
+                    errors.Add("Account Existed.");
                     continue;
                 }
 
@@ -71,15 +71,15 @@ namespace HrAdm.Services
                 try
                 {
                     db.SaveChanges();
-                    results.Add("");
+                    errors.Add("");
                 }
                 catch (Exception ex)
                 {
-                    results.Add(ex.InnerException.Message);
+                    errors.Add(ex.InnerException.Message);
                 }
                 #endregion
             }
-            return results;
+            return errors;
         }
     } //class
 }

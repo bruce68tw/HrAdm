@@ -18,10 +18,10 @@ namespace HrAdm.Controllers
             await using(var db = new Db())
             {
                 var locale0 = _Xp.GetLocale0();
-                ViewBag.NodeTypes = await _XpCode.GetNodeTypesAsync(locale0, db);
-                ViewBag.SignerTypes = await _XpCode.GetSignerTypesAsync(locale0, db);
-                ViewBag.AndOrs = await _XpCode.GetAndOrsAsync(locale0, db);
-                ViewBag.LineOps = await _XpCode.GetLineOpsAsync(locale0, db);
+                ViewBag.NodeTypes = await _XpCode.NodeTypesA(locale0, db);
+                ViewBag.SignerTypes = await _XpCode.SignerTypesA(locale0, db);
+                ViewBag.AndOrs = await _XpCode.AndOrsA(locale0, db);
+                ViewBag.LineOps = await _XpCode.LineOpsA(locale0, db);
             }
             return View();
         }
@@ -29,7 +29,7 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new XgFlowRead().GetPageAsync(Ctrl, dt));
+            return JsonToCnt(await new XgFlowRead().GetPageA(Ctrl, dt));
         }
 
         private XgFlowEdit EditService()
@@ -40,31 +40,31 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetUpdJson(string key)
         {
-            return JsonToCnt(await EditService().GetUpdJsonAsync(key));
+            return JsonToCnt(await EditService().GetUpdJsonA(key));
         }
 
         [HttpPost]
         public async Task<ContentResult> GetViewJson(string key)
         {
-            return JsonToCnt(await EditService().GetViewJsonAsync(key));
+            return JsonToCnt(await EditService().GetViewJsonA(key));
         }
 
         [HttpPost]
         public async Task<JsonResult> Create(string json)
         {
-            return Json(await EditService().CreateAsync(_Str.ToJson(json), FnSetNewKey));
+            return Json(await EditService().CreateA(_Str.ToJson(json), FnSetNewKey));
         }
 
         [HttpPost]
         public async Task<JsonResult> Update(string key, string json)
         {
-            return Json(await EditService().UpdateAsync(key, _Str.ToJson(json), FnSetNewKey));
+            return Json(await EditService().UpdateA(key, _Str.ToJson(json), FnSetNewKey));
         }
 
         [HttpPost]
         public async Task<JsonResult> Delete(string key)
         {
-            return Json(await EditService().DeleteAsync(key));
+            return Json(await EditService().DeleteA(key));
         }
 
         /// <summary>

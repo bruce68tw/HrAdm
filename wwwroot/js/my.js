@@ -3386,7 +3386,7 @@ var _iradio = $.extend({}, _ibase, {
     //set checked status by name & data-value
     _setByName: function (name, value, box) {
         var obj = _obj.getF('[name=' + name + '][data-value=' + value + ']', box);
-        if (obj.length > 0) 
+        if (obj != null) 
             obj.prop('checked', true);
     },
 

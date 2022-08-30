@@ -24,8 +24,8 @@ namespace HrAdm.Services
             var userId = row[userFid].ToString();
             var newId = _Str.NewId();
             await using var db = new Db();
-            await db.BeginTranAsync();
-            var error = await _XgFlow.CreateSignRowsAsync(row, userFid, flowCode, newId, true, db);
+            await db.BeginTranA();
+            var error = await _XgFlow.CreateSignRowsA(row, userFid, flowCode, newId, true, db);
 
             //create source row
             if (string.IsNullOrEmpty(error))
@@ -41,13 +41,13 @@ values (@Id, @InputJson, @UserId, @Created, 1, '0')";
                     "UserId", userId,
                     "Created", DateTime.Now,
                 };
-                await db.ExecSqlAsync(sql, args);
+                await db.ExecSqlA(sql, args);
             }
 
             if (string.IsNullOrEmpty(error))
-                await db.CommitAsync();
+                await db.CommitA();
             else
-                await db.RollbackAsync();
+                await db.RollbackA();
 
             return error;
         }

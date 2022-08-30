@@ -39,23 +39,23 @@ namespace HrAdm.Services
             };
         }
 
-        public async Task<ResultDto> CreateAsnyc(JObject json, IFormFile t0_FldFile)
+        public async Task<ResultDto> CreateA(JObject json, IFormFile t0_FldFile)
         {
             var service = EditService();
-            var result = await service.CreateAsync(json);
+            var result = await service.CreateA(json);
             if (_Valid.ResultStatus(result))
-                await _WebFile.SaveCrudFileAsnyc(json, service.GetNewKeyJson(), _Xp.DirCustInput, t0_FldFile, nameof(t0_FldFile));
+                await _WebFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.DirCustInput, t0_FldFile, nameof(t0_FldFile));
             return result;
         }
 
         //TODO: add your code
         //t03_FileName: t + table serial _ + fid
-        public async Task<ResultDto> UpdateAsnyc(string key, JObject json, IFormFile t0_FldFile)
+        public async Task<ResultDto> UpdateA(string key, JObject json, IFormFile t0_FldFile)
         {
             var service = EditService();
-            var result = await service.UpdateAsync(key, json);
+            var result = await service.UpdateA(key, json);
             if (_Valid.ResultStatus(result))
-                await _WebFile.SaveCrudFileAsnyc(json, service.GetNewKeyJson(), _Xp.DirCustInput, t0_FldFile, nameof(t0_FldFile));
+                await _WebFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.DirCustInput, t0_FldFile, nameof(t0_FldFile));
             return result;
         }
 

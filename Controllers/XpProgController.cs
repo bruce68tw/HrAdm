@@ -17,8 +17,8 @@ namespace HrAdm.Controllers
             //for edit view
             await using (var db = new Db())
             {
-                ViewBag.Roles = await _XpCode.GetRolesAsync(db);
-                ViewBag.AuthRanges = await _XpCode.GetAuthRangesAsync(_Xp.GetLocale0(), db);
+                ViewBag.Roles = await _XpCode.RolesA(db);
+                ViewBag.AuthRanges = await _XpCode.AuthRangesA(_Xp.GetLocale0(), db);
             }
             return View();
         }
@@ -26,7 +26,7 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new XgProgRead().GetPageAsync(Ctrl, dt));
+            return JsonToCnt(await new XgProgRead().GetPageA(Ctrl, dt));
         }
 
         private XgProgEdit EditService()
@@ -37,31 +37,31 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<JsonResult> Create(string json)
         {
-            return Json(await EditService().CreateAsync(_Str.ToJson(json)));
+            return Json(await EditService().CreateA(_Str.ToJson(json)));
         }
 
         [HttpPost]
         public async Task<JsonResult> Update(string key, string json)
         {
-            return Json(await EditService().UpdateAsync(key, _Str.ToJson(json)));
+            return Json(await EditService().UpdateA(key, _Str.ToJson(json)));
         }
 
         [HttpPost]
         public async Task<JsonResult> Delete(string key)
         {
-            return Json(await EditService().DeleteAsync(key));
+            return Json(await EditService().DeleteA(key));
         }
 
         [HttpPost]
         public async Task<ContentResult> GetUpdJson(string key)
         {
-            return JsonToCnt(await EditService().GetUpdJsonAsync(key));
+            return JsonToCnt(await EditService().GetUpdJsonA(key));
         }
 
         [HttpPost]
         public async Task<ContentResult> GetViewJson(string key)
         {
-            return JsonToCnt(await EditService().GetViewJsonAsync(key));
+            return JsonToCnt(await EditService().GetViewJsonA(key));
         }
 
     }//class

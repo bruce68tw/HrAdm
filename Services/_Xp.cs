@@ -61,33 +61,33 @@ namespace HrAdm.Services
         }
 
         #region get file content
-        public static async Task<FileResult> ViewLeaveAsync(string fid, string key, string ext)
+        public static async Task<FileResult> ViewLeaveA(string fid, string key, string ext)
         {
-            return await ViewFileAsync(DirLeave, fid, key, ext);
+            return await ViewFileA(DirLeave, fid, key, ext);
         }
         
-        public static async Task<FileResult> ViewUserExtAsync(string fid, string key, string ext)
+        public static async Task<FileResult> ViewUserExtA(string fid, string key, string ext)
         {
             //return _WebFile.EchoImage(PathUserExt(key));
-            return await ViewFileAsync(DirUserExt, fid, key, ext);
+            return await ViewFileA(DirUserExt, fid, key, ext);
         }
-        public static async Task<FileResult> ViewUserLicenseAsync(string fid, string key, string ext)
+        public static async Task<FileResult> ViewUserLicenseA(string fid, string key, string ext)
         {
-            return await ViewFileAsync(DirUserLicense, fid, key, ext);
+            return await ViewFileA(DirUserLicense, fid, key, ext);
         }
-        public static async Task<FileResult> ViewCmsTypeAsync(string fid, string key, string ext, string cmsType)
+        public static async Task<FileResult> ViewCmsTypeA(string fid, string key, string ext, string cmsType)
         {
-            return await ViewFileAsync(DirCmsType(cmsType), fid, key, ext);
+            return await ViewFileA(DirCmsType(cmsType), fid, key, ext);
         }
-        public static async Task<FileResult> ViewCustInputAsync(string fid, string key, string ext)
+        public static async Task<FileResult> ViewCustInputA(string fid, string key, string ext)
         {
-            return await ViewFileAsync(DirCustInput, fid, key, ext);
+            return await ViewFileA(DirCustInput, fid, key, ext);
         }
 
-        private static async Task<FileResult> ViewFileAsync(string dir, string fid, string key, string ext)
+        private static async Task<FileResult> ViewFileA(string dir, string fid, string key, string ext)
         {
             var path = $"{dir}{fid}_{key}.{ext}";
-            return await _WebFile.ViewFileAsync(path, $"{fid}.{ext}");
+            return await _WebFile.ViewFileA(path, $"{fid}.{ext}");
         }
 
         #endregion

@@ -53,29 +53,29 @@ where l.Id='{{0}}'
         private JObject _inputRow;
 
         //delegate function of FnAfterSave
-        private async Task<string> FnCreateSignRowsAsync(Db db, JObject newKeyJson)
+        private async Task<string> FnCreateSignRowsA(Db db, JObject newKeyJson)
         {
             var newKey = _Str.ReadNewKeyJson(newKeyJson);
-            return await _XgFlow.CreateSignRowsAsync(_inputRow, "UserId", "Leave", newKey, false, db);
+            return await _XgFlow.CreateSignRowsA(_inputRow, "UserId", "Leave", newKey, false, db);
         }
 
-        public async Task<ResultDto> CreateAsnyc(JObject json, IFormFile t0_FileName)
+        public async Task<ResultDto> CreateA(JObject json, IFormFile t0_FileName)
         {
             _inputRow = _Json.ReadInputJson0(json);
             var service = EditService();
-            var result = await service.CreateAsync(json, null, FnCreateSignRowsAsync);
+            var result = await service.CreateA(json, null, FnCreateSignRowsA);
             if (_Valid.ResultStatus(result))
-                await _WebFile.SaveCrudFileAsnyc(json, service.GetNewKeyJson(), _Xp.DirLeave, t0_FileName, nameof(t0_FileName));
+                await _WebFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.DirLeave, t0_FileName, nameof(t0_FileName));
 
             return result;
         }
 
-        public async Task<ResultDto> UpdateAsnyc(string key, JObject json, IFormFile t0_FileName)
+        public async Task<ResultDto> UpdateA(string key, JObject json, IFormFile t0_FileName)
         {
             var service = EditService();
-            var result = await service.UpdateAsync(key, json);
+            var result = await service.UpdateA(key, json);
             if (_Valid.ResultStatus(result))
-                await _WebFile.SaveCrudFileAsnyc(json, service.GetNewKeyJson(), _Xp.DirLeave, t0_FileName, nameof(t0_FileName));
+                await _WebFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.DirLeave, t0_FileName, nameof(t0_FileName));
 
             return result;
         }

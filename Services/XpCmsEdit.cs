@@ -44,22 +44,22 @@ where c.Id='{0}'
             };
         }
 
-        public async Task<ResultDto> CreateAsnyc(JObject json, IFormFile t0_FileName, string dirUpload, string cmsType)
+        public async Task<ResultDto> CreateA(JObject json, IFormFile t0_FileName, string dirUpload, string cmsType)
         {
             _cmsType = cmsType;
             var service = EditService();
-            var result = await service.CreateAsync(json);
+            var result = await service.CreateA(json);
             if (_Valid.ResultStatus(result))
-                await _WebFile.SaveCrudFileAsnyc(json, service.GetNewKeyJson(), dirUpload, t0_FileName, nameof(t0_FileName));
+                await _WebFile.SaveCrudFileA(json, service.GetNewKeyJson(), dirUpload, t0_FileName, nameof(t0_FileName));
             return result;
         }
 
-        public async Task<ResultDto> UpdateAsnyc(string key, JObject json, IFormFile t0_FileName, string dirUpload)
+        public async Task<ResultDto> UpdateA(string key, JObject json, IFormFile t0_FileName, string dirUpload)
         {
             var service = EditService();
-            var result = await service.UpdateAsync(key, json);
+            var result = await service.UpdateA(key, json);
             if (_Valid.ResultStatus(result))
-                await _WebFile.SaveCrudFileAsnyc(json, service.GetNewKeyJson(), dirUpload, t0_FileName, nameof(t0_FileName));
+                await _WebFile.SaveCrudFileA(json, service.GetNewKeyJson(), dirUpload, t0_FileName, nameof(t0_FileName));
             return result;
         }
 

@@ -18,7 +18,7 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new XgTranLogRead().GetPageAsync(Ctrl, dt));
+            return JsonToCnt(await new XgTranLogRead().GetPageA(Ctrl, dt));
         }
 
     }//class

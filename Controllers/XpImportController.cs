@@ -28,7 +28,7 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new XgImportRead(ImportType).GetPageAsync(Ctrl, dt));
+            return JsonToCnt(await new XgImportRead(ImportType).GetPageA(Ctrl, dt));
         }
 
         //run import, drived class implement !!
@@ -45,7 +45,7 @@ namespace HrAdm.Controllers
         /// <returns>file</returns>
         public async Task<FileResult> Template()
         {
-            return await _WebFile.ViewFileAsync(TplPath);  //use this instead of PhysicalFile()
+            return await _WebFile.ViewFileA(TplPath);  //use this instead of PhysicalFile()
         }
 
         //download source import file
@@ -68,7 +68,7 @@ namespace HrAdm.Controllers
         //download import file
         private async Task<FileResult> GetFile(string realFileStem, string downFileName)
         {
-            return await _WebFile.ViewFileAsync($"{DirUpload}/{realFileStem}.xlsx", downFileName);
+            return await _WebFile.ViewFileA($"{DirUpload}/{realFileStem}.xlsx", downFileName);
         }
 
     }//class

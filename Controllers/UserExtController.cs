@@ -16,16 +16,16 @@ namespace HrAdm.Controllers
         public async Task<ActionResult> Read()
         {
 			//for read view
-			ViewBag.Depts = await _XpCode.GetDeptsAsync();
+			ViewBag.Depts = await _XpCode.DeptsA();
 			//for edit view
-			ViewBag.LangLevels = await _XpCode.GetLangLevelsAsync(_Xp.GetLocale0());
+			ViewBag.LangLevels = await _XpCode.LangLevelsA(_Xp.GetLocale0());
             return View();
         }
 
         [HttpPost]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new UserExtRead().GetPageAsync(Ctrl, dt));
+            return JsonToCnt(await new UserExtRead().GetPageA(Ctrl, dt));
         }
 
         private UserExtEdit EditService()
@@ -37,7 +37,7 @@ namespace HrAdm.Controllers
         //TODO: add your code, tSn_fid ex: t03_FileName
         public async Task<JsonResult> Create(string json, IFormFile t0_PhotoFile, List<IFormFile> t03_FileName)
         {
-            return Json(await EditService().CreateAsnyc(_Str.ToJson(json), t0_PhotoFile, t03_FileName));
+            return Json(await EditService().CreateA(_Str.ToJson(json), t0_PhotoFile, t03_FileName));
         }
 
         [HttpPost]
@@ -45,7 +45,7 @@ namespace HrAdm.Controllers
         public async Task<JsonResult> Update(string key, string json, IFormFile t0_PhotoFile, 
             List<IFormFile> t03_FileName)
         {
-            return Json(await EditService().UpdateAsnyc(key, _Str.ToJson(json), t0_PhotoFile, t03_FileName));
+            return Json(await EditService().UpdateA(key, _Str.ToJson(json), t0_PhotoFile, t03_FileName));
         }
 
         //TODO: add your code
@@ -53,26 +53,26 @@ namespace HrAdm.Controllers
         public async Task<FileResult> ViewFile(string table, string fid, string key, string ext)
         {
             return (fid == "PhotoFile")
-                ? await _Xp.ViewUserExtAsync(fid, key, ext)
-                : await _Xp.ViewUserLicenseAsync(fid, key, ext);
+                ? await _Xp.ViewUserExtA(fid, key, ext)
+                : await _Xp.ViewUserLicenseA(fid, key, ext);
         }
 
         [HttpPost]
         public async Task<JsonResult> Delete(string key)
         {
-            return Json(await EditService().DeleteAsync(key));
+            return Json(await EditService().DeleteA(key));
         }
 
         [HttpPost]
         public async Task<ContentResult> GetUpdJson(string key)
         {
-            return JsonToCnt(await EditService().GetUpdJsonAsync(key));
+            return JsonToCnt(await EditService().GetUpdJsonA(key));
         }
 
         [HttpPost]
         public async Task<ContentResult> GetViewJson(string key)
         {
-            return JsonToCnt(await EditService().GetViewJsonAsync(key));
+            return JsonToCnt(await EditService().GetViewJsonA(key));
         }
 
         //generate word resume
@@ -81,7 +81,7 @@ namespace HrAdm.Controllers
             //for testing exception
             //_Fun.Except();
 
-            await new UserExtService().GenWordAsync(id);
+            await new UserExtService().GenWordA(id);
         }
 
     }//class

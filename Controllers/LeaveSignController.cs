@@ -15,14 +15,14 @@ namespace HrAdm.Controllers
         {
             //for read view
             var locale0 = _Xp.GetLocale0();
-            ViewBag.SignStatuses2 = await _XpCode.GetSignStatuses2Async(locale0);
+            ViewBag.SignStatuses2 = await _XpCode.SignStatuses2A(locale0);
             return View();
         }
 
         [HttpPost]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new LeaveSignRead().GetPageAsync(Ctrl, dt));
+            return JsonToCnt(await new LeaveSignRead().GetPageA(Ctrl, dt));
         }
 
         private LeaveSignEdit EditService()
@@ -33,13 +33,13 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetUpdJson(string key)
         {
-            return JsonToCnt(await EditService().GetUpdJsonAsync(key));
+            return JsonToCnt(await EditService().GetUpdJsonA(key));
         }
 
         [HttpPost]
         public async Task<ContentResult> GetViewJson(string key)
         {
-            return JsonToCnt(await EditService().GetViewJsonAsync(key));
+            return JsonToCnt(await EditService().GetViewJsonA(key));
         }
 
         /// <summary>
@@ -52,14 +52,14 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<JsonResult> SignRow(string id, string status, string note)
         {
-            return Json(await _XgFlow.SignRowAsync(id, (status == "Y"), note, "Leave", false));
+            return Json(await _XgFlow.SignRowA(id, (status == "Y"), note, "Leave", false));
         }
 
         //TODO: add your code
         //get file/image
         public async Task<FileResult> ViewFile(string table, string fid, string key, string ext)
         {
-            return await _Xp.ViewLeaveAsync(fid, key, ext);
+            return await _Xp.ViewLeaveA(fid, key, ext);
         }
 
     }//class

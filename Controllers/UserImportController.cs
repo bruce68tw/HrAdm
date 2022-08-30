@@ -24,7 +24,7 @@ namespace HrAdm.Controllers
         [HttpPost]
         override public async Task<JsonResult> Import(IFormFile file)
         {
-            var model = await new UserImportService().ImportAsync(file, this.DirUpload);
+            var model = await new UserImportService().ImportA(file, this.DirUpload);
             return Json(model);
         }
 

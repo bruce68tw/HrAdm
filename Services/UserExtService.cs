@@ -15,7 +15,7 @@ namespace HrAdm.Services
         /// </summary>
         /// <param name="userId">User.Id</param>
         /// <return>error msg if any</return>
-        public async Task<bool> GenWordAsync(string userId)
+        public async Task<bool> GenWordA(string userId)
         {
             #region 1.check data && template file
             var error = "";
@@ -101,14 +101,14 @@ namespace HrAdm.Services
                 };
 
             //5.call public method
-            if (!await _WebWord.ExportByTplRowAsync(tplPath, "UserExt.docx", user, childs, images))
+            if (!await _WebWord.ExportByTplRowA(tplPath, "UserExt.docx", user, childs, images))
                 return false;
 
             //case of ok
             return true;
 
         lab_error:
-            await _Log.ErrorAsync("UserExtService.cs GenWord() failed: " + error);
+            await _Log.ErrorA("UserExtService.cs GenWord() failed: " + error);
             return false;
         }
 

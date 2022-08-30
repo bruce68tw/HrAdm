@@ -18,10 +18,10 @@ namespace HrAdm.Controllers
             //for read view
             var locale0 = _Xp.GetLocale0();
             await using var db = new Db();
-            ViewBag.Flows = await _XpCode.GetFlowsAsync(db);
-			ViewBag.FlowStatuses = await _XpCode.GetFlowStatusesAsync(locale0, db);
+            ViewBag.Flows = await _XpCode.FlowsA(db);
+			ViewBag.FlowStatuses = await _XpCode.FlowStatusesA(locale0, db);
 			//for edit view
-            ViewBag.SignStatuses2 = await _XpCode.GetSignStatuses2Async(locale0, db);
+            ViewBag.SignStatuses2 = await _XpCode.SignStatuses2A(locale0, db);
             return View();
         }
 
@@ -29,7 +29,7 @@ namespace HrAdm.Controllers
         [XgProgAuth(CrudEnum.Read)]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new XpFlowTestRead().GetPageAsync(Ctrl, dt));
+            return JsonToCnt(await new XpFlowTestRead().GetPageA(Ctrl, dt));
         }
 
         private XpFlowTestEdit EditService(string flowCode)
@@ -41,14 +41,14 @@ namespace HrAdm.Controllers
         [XgProgAuth(CrudEnum.Update)]
         public async Task<ContentResult> GetUpdJson(string flowCode, string key)
         {
-            return JsonToCnt(await EditService(flowCode).GetUpdJsonAsync(key));
+            return JsonToCnt(await EditService(flowCode).GetUpdJsonA(key));
         }
 
         [HttpPost]
         [XgProgAuth(CrudEnum.View)]
         public async Task<ContentResult> GetViewJson(string flowCode, string key)
         {
-            return JsonToCnt(await EditService(flowCode).GetViewJsonAsync(key));
+            return JsonToCnt(await EditService(flowCode).GetViewJsonA(key));
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<JsonResult> SignRow(string id, string status, string note)
         {
-            return Json(await _XgFlow.SignRowAsync(id, (status == "Y"), note, "XpFlowTest", true));
+            return Json(await _XgFlow.SignRowA(id, (status == "Y"), note, "XpFlowTest", true));
         }
 
     }//class

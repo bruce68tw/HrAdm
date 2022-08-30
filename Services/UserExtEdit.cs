@@ -122,30 +122,30 @@ namespace HrAdm.Services
 
         //TODO: add your code
         //t03_FileName: t + table serial _ + fid
-        public async Task<ResultDto> CreateAsnyc(JObject json, IFormFile t0_PhotoFile, List<IFormFile> t03_FileName)
+        public async Task<ResultDto> CreateA(JObject json, IFormFile t0_PhotoFile, List<IFormFile> t03_FileName)
         {
             var service = EditService();
-            var result = await service.CreateAsync(json);
+            var result = await service.CreateA(json);
             if (_Valid.ResultStatus(result))
             {
                 var newKeyJson = service.GetNewKeyJson();
-                await _WebFile.SaveCrudFileAsnyc(json, newKeyJson, _Xp.DirUserExt, t0_PhotoFile, nameof(t0_PhotoFile));
-                await _WebFile.SaveCrudFilesAsnyc(json, newKeyJson, _Xp.DirUserLicense, t03_FileName, nameof(t03_FileName));
+                await _WebFile.SaveCrudFileA(json, newKeyJson, _Xp.DirUserExt, t0_PhotoFile, nameof(t0_PhotoFile));
+                await _WebFile.SaveCrudFilesA(json, newKeyJson, _Xp.DirUserLicense, t03_FileName, nameof(t03_FileName));
             }
             return result;
         }
 
         //TODO: add your code
         //t03_FileName: t + table serial _ + fid
-        public async Task<ResultDto> UpdateAsnyc(string key, JObject json, IFormFile t0_PhotoFile, List<IFormFile> t03_FileName)
+        public async Task<ResultDto> UpdateA(string key, JObject json, IFormFile t0_PhotoFile, List<IFormFile> t03_FileName)
         {
             var service = EditService();
-            var result = await service.UpdateAsync(key, json);
+            var result = await service.UpdateA(key, json);
             if (_Valid.ResultStatus(result))
             {
                 var newKeyJson = service.GetNewKeyJson();
-                await _WebFile.SaveCrudFileAsnyc(json, newKeyJson, _Xp.DirUserExt, t0_PhotoFile, nameof(t0_PhotoFile));
-                await _WebFile.SaveCrudFilesAsnyc(json, newKeyJson, _Xp.DirUserLicense, t03_FileName, nameof(t03_FileName));
+                await _WebFile.SaveCrudFileA(json, newKeyJson, _Xp.DirUserExt, t0_PhotoFile, nameof(t0_PhotoFile));
+                await _WebFile.SaveCrudFilesA(json, newKeyJson, _Xp.DirUserLicense, t03_FileName, nameof(t03_FileName));
             }
             return result;
         }

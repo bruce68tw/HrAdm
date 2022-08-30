@@ -29,9 +29,9 @@ order by l.Created
             };
         }
 
-        public async Task<JObject> GetPageAsync(string ctrl, DtDto dt)
+        public async Task<JObject> GetPageA(string ctrl, DtDto dt)
         {
-            return await new CrudRead().GetPageAsync(GetDto(), dt, ctrl);
+            return await new CrudRead().GetPageA(GetDto(), dt, ctrl);
         }
 
     } //class
