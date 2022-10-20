@@ -45,15 +45,16 @@
         _me.edit0.onViewFile(table, fid, elm);
     },
 
+    //開啟畫面後會執行這個函數
     edit0_afterOpenEdit: function (fun, json) {
         var box = _me.divSignRows;
-        if (fun == _fun.FunC) {
+        if (fun == _fun.FunC) {     //表示新增
             box.empty();
 
-            //set initial value for new
+            //設定初始值
             var eform = _me.edit0.eform;    //get edit form object
-            _iselect.set('LeaveType', 'S', eform);
-            _idt.set('StartTime', '2022/10/1 9:00', eform);
+            _iselect.set('LeaveType', 'S', eform);          //設定下拉式欄位
+            _idt.set('StartTime', '2022/10/1 9:00', eform); //設定 "日期時間" 欄位
         } else {
             _ajax.getView('GetSignRows', { id: _me.edit0.getKey() }, function (html) {
                 box.html(html);
