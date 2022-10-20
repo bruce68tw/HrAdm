@@ -46,10 +46,14 @@
     },
 
     edit0_afterOpenEdit: function (fun, json) {
-        //alert('edit0_afterOpenEdit');
         var box = _me.divSignRows;
         if (fun == _fun.FunC) {
             box.empty();
+
+            //set initial value for new
+            var eform = _me.edit0.eform;    //get edit form object
+            _iselect.set('LeaveType', 'S', eform);
+            _idt.set('StartTime', '2022/10/1 9:00', eform);
         } else {
             _ajax.getView('GetSignRows', { id: _me.edit0.getKey() }, function (html) {
                 box.html(html);

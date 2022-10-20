@@ -1,6 +1,12 @@
 ﻿@inject IHtmlLocalizer<HrAdm.R0> R0
 @inject IViewLocalizer R
 
+@{
+    var today = "2022/10/1";
+    var leaveType = "P";    //事假
+    var flowStatus = "Y";   //同意
+}
+
 <script src="~/js/view/Leave.js"></script>
 <script type="text/javascript">
     $(function () {
@@ -17,12 +23,12 @@
                 <div class="col-md-10 xg-input">
                     @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "StartTime", InRow = true, BoxClass = "xg-inline" })
                     <span>～</span>
-                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "StartTime2", InRow = true, BoxClass = "xg-inline" })
+                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "StartTime2", Value = today, InRow = true, BoxClass = "xg-inline" })
                     @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
                 </div>
             </div>
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["LeaveType"].Value, Fid = "LeaveType", Rows = (List<IdStrDto>)ViewBag.LeaveTypes, BoxClass = "xg-date-w" })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["FlowStatus"].Value, Fid = "FlowStatus", Rows = (List<IdStrDto>)ViewBag.SignStatuses, BoxClass = "xg-date-w" })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["LeaveType"].Value, Fid = "LeaveType", Value = leaveType, Rows = (List<IdStrDto>)ViewBag.LeaveTypes, BoxClass = "xg-date-w" })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["FlowStatus"].Value, Fid = "FlowStatus", Value = flowStatus, Rows = (List<IdStrDto>)ViewBag.SignStatuses, BoxClass = "xg-date-w" })
         </form>
 
         @if (_XgProg.CheckCreate("Leave"))

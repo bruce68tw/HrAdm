@@ -141,7 +141,7 @@ var _crudR = {
 
             //4.Create Datatable object
             if (_var.notEmpty(dtConfig)) {
-                _me.dt = new Datatable('#tableRead', 'GetPage', dtConfig);
+                _me.dt = new Datatable('#tableRead', 'GetPage', dtConfig, _crudR._getFindCond());
             }
         }
 

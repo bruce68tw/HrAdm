@@ -39,7 +39,7 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
      * param findJson {json} find condition
      */
     this.find = function (findJson) {
-
+        //debugger;
         this.findJson = findJson;
         //this.findStr = findStr || '';
         this.resetCount();   //recount first
@@ -126,6 +126,7 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
 
                 //add input parameter for datatables
                 data: function (arg) {
+                    //debugger;
                     arg.findJson = _json.toStr(this.findJson);    //string type
                     arg.recordsFiltered = this.recordsFiltered;
                     if (this._keepStart)
