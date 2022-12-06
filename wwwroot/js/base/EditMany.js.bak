@@ -76,16 +76,6 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
-     * check is a new tr or not
-     * param tr {object} 
-     * return {bool}
-     */
-    this.isNewTr = function (tr) {
-        var id = _itext.get(this.kid, tr);
-        return _edit.isNewKey(id);
-    };
-
-    /**
      * reset edit form
      * param rowsBox {object} optional
      */
@@ -242,9 +232,6 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
                 _edit.setOld(obj2, row[fid]);
             }
 
-            //set date input
-            _idate.init(box);
-
             //one row into UI
             _form.loadJson(box, row);
 
@@ -263,11 +250,11 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
 
     /**
      * get row key
-     * param tr {object} row box
+     * param box {object} row box
      * return {string} key value
      */
-    this.getKey = function (tr) {
-        return _input.get(this.kid, tr);
+    this.getKey = function (box) {
+        return _input.get(this.kid, box);
     };
 
     /**

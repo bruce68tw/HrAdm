@@ -207,6 +207,7 @@
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "JobName", MaxLen = 30, Required = true })</td>
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "JobType", MaxLen = 30 })</td>
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "JobPlace", MaxLen = 30 })</td>
+        @*<td>@await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "JobPlace" })</td>*@
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "StartEnd", MaxLen = 30, Required = true })</td>
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "CorpName", MaxLen = 30, Required = true })</td>
         <td>@await Component.InvokeAsync("XiInt", new XiIntDto { Fid = "CorpUsers" })</td>

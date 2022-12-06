@@ -316,7 +316,7 @@ var _crudE = {
     /**
      * check current is create/update mode or not
      */
-    isEditMode: function() {
+    _isEditMode: function() {
         return (_me._nowFun !== _fun.FunV);
     },
 
@@ -425,7 +425,7 @@ var _crudE = {
      */
     onOpenModal: function(btn, title, fid, required, maxLen) {
         var tr = $(btn).closest('tr');
-        _tool.showArea(title, _itext.get(fid, tr), _crudE.isEditMode(), function(result) {
+        _tool.showArea(title, _itext.get(fid, tr), _crudE._isEditMode(), function(result) {
             _itext.set(fid, result, tr);
         });
     },

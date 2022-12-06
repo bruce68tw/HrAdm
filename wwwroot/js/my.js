@@ -755,7 +755,7 @@ var _crudE = {
     /**
      * check current is create/update mode or not
      */
-    _isEditMode: function() {
+    isEditMode: function() {
         return (_me._nowFun !== _fun.FunV);
     },
 
@@ -864,7 +864,7 @@ var _crudE = {
      */
     onOpenModal: function(btn, title, fid, required, maxLen) {
         var tr = $(btn).closest('tr');
-        _tool.showArea(title, _itext.get(fid, tr), _crudE._isEditMode(), function(result) {
+        _tool.showArea(title, _itext.get(fid, tr), _crudE.isEditMode(), function(result) {
             _itext.set(fid, result, tr);
         });
     },
@@ -1070,7 +1070,7 @@ var _crudR = {
 
             //4.Create Datatable object
             if (_var.notEmpty(dtConfig)) {
-                _me.dt = new Datatable('#tableRead', 'GetPage', dtConfig);
+                _me.dt = new Datatable('#tableRead', 'GetPage', dtConfig, _crudR._getFindCond());
             }
         }
 
@@ -4837,7 +4837,7 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
      * param findJson {json} find condition
      */
     this.find = function (findJson) {
-
+        //debugger;
         this.findJson = findJson;
         //this.findStr = findStr || '';
         this.resetCount();   //recount first
@@ -4924,6 +4924,7 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
 
                 //add input parameter for datatables
                 data: function (arg) {
+                    //debugger;
                     arg.findJson = _json.toStr(this.findJson);    //string type
                     arg.recordsFiltered = this.recordsFiltered;
                     if (this._keepStart)
@@ -5087,6 +5088,16 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     this.isNewRow = function (row) {
         //return _str.isEmpty(row[this.kid]);
         return _edit.isNewKey(row[this.kid]);
+    };
+
+    /**
+     * check is a new tr or not
+     * param tr {object} 
+     * return {bool}
+     */
+    this.isNewTr = function (tr) {
+        var id = _itext.get(this.kid, tr);
+        return _edit.isNewKey(id);
     };
 
     /**
@@ -5264,11 +5275,11 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
 
     /**
      * get row key
-     * param box {object} row box
+     * param tr {object} row box
      * return {string} key value
      */
-    this.getKey = function (box) {
-        return _input.get(this.kid, box);
+    this.getKey = function (tr) {
+        return _input.get(this.kid, tr);
     };
 
     /**

@@ -6,7 +6,7 @@
     _Fun.Config.SystemName = R0["SystemName"].Value;
     var locale = _Locale.GetLocaleByUser();
     var min = _Fun.IsDev ? "" : ".min";   //min js
-    var menus = SetMenuName(await _Web.GetMenuAsync());  //by access right
+    var menus = SetMenuName(await _Web.GetMenuA());  //by access right
     /*
     var menus = new List<MenuDto>()
     {
@@ -40,6 +40,16 @@
     }
 }
 
+<style>
+	.xu-body {
+		display: inline-block;
+		width: 100%;
+		min-height: 600px;
+		transition: 0.5s;
+		border-left: 1px solid #CCC;
+	}
+</style>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -54,6 +64,8 @@
 
     <!-- 2.load lib js -->
     <script src="~/js/lib@(min).js?v=@(_Xp.LibVer)"></script>
+    <script src="~/js/lib/bootstrap.bundle-5.1.3.min.js?v=@(_Xp.LibVer)"></script>
+    <script src="~/js/lib/summernote-bs5.min-bruce.js?v=@(_Xp.LibVer)"></script>
 
     <!-- 3.load my site js(debug/production mode) !! -->
     <environment include="Production">
@@ -76,7 +88,7 @@
             _fun.locale = '@(locale)';
             //initial
             _leftmenu.init();
-            _pjax.init('.xg-body');
+            _pjax.init('.xu-body');
             _tool.init();
             moment.locale(_fun.locale);
         });
@@ -94,13 +106,12 @@
         @await Component.InvokeAsync("XgLeftMenu", new { rows = menus })
 
         <!-- work area -->
-        <div class="xg-body">
+        <div class="xu-body">
             @RenderBody()
         </div>
     </div>
 
     <!-- tool component -->
-    @await Component.InvokeAsync("XgTool")
-
+    <vc:xg-tool/>
 </body>
 </html>
