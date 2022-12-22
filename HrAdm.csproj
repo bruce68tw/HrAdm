@@ -72,6 +72,8 @@
     <Content Remove="Views\User\Read - 複製.cshtml" />
     <Content Remove="Views\XpRole\Read_v0.cshtml" />
     <Content Remove="wwwroot\css\base\fontAwesome.c_old" />
+    <Content Remove="wwwroot\js\bootstrap.bundle-5.1.3.min.js" />
+    <Content Remove="wwwroot\js\summernote-bs5.min-bruce.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -145,6 +147,7 @@
     <None Include="wwwroot\css\summernote-bs4.js.map" />
     <None Include="wwwroot\css\summernote-bs4.min.js.map" />
     <None Include="wwwroot\css\view\_xg_block.css_old" />
+    <None Include="wwwroot\js\bootstrap.bundle-5.1.3.min.js" />
     <None Include="wwwroot\js\lib\bootstrap-datepicker-1.9.js" />
     <None Include="wwwroot\js\lib\bootstrap.bundle-5.1.3.js" />
     <None Include="wwwroot\js\lib\bootstrap.bundle-5.1.3.min.js" />
@@ -162,6 +165,7 @@
     <None Include="wwwroot\js\lib\mustache-3.1.js" />
     <None Include="wwwroot\js\lib\summernote-bs5-bruce.js" />
     <None Include="wwwroot\js\lib\summernote-bs5.min-bruce.js" />
+    <None Include="wwwroot\js\summernote-bs5.min-bruce.js" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties bundleconfig_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

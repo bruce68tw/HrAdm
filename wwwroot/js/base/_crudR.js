@@ -158,6 +158,9 @@ var _crudR = {
      * get Find condition
      */
     _getFindCond: function () {
+        if (_me.rform == null)
+            return null;
+
         var row = _form.toJson(_me.rform);
         var find2 = _me.rform2;
         if (find2 !== null && _obj.isShow(find2))

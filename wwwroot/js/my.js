@@ -1087,6 +1087,9 @@ var _crudR = {
      * get Find condition
      */
     _getFindCond: function () {
+        if (_me.rform == null)
+            return null;
+
         var row = _form.toJson(_me.rform);
         var find2 = _me.rform2;
         if (find2 !== null && _obj.isShow(find2))
@@ -5256,6 +5259,9 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
                 var obj2 = _obj.get(fid, box);
                 _edit.setOld(obj2, row[fid]);
             }
+
+            //set date input
+            _idate.init(box);
 
             //one row into UI
             _form.loadJson(box, row);
