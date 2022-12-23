@@ -68,13 +68,13 @@
     <script src="~/js/summernote-bs5.min-bruce.js?v=@(_Xp.LibVer)"></script>
 
     <!-- 3.load my site js(debug/production mode) !! -->
-    <environment include="Production">
-        <script src="~/js/my@(min).js?v=@(_Xp.MyVer)"></script>
-    </environment>
     <environment include="Development">
         <!-- tail ver will load failed !! -->
         <script asp-src-include="~/js/base/*.js"></script>
         <script asp-src-include="~/js/view/_*.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/js/my@(min).js?v=@(_Xp.MyVer)"></script>
     </environment>
 
     <!-- 4.load local js -->
