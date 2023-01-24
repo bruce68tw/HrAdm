@@ -207,7 +207,7 @@
                     @await Component.InvokeAsync("XiInt", new XiIntDto { Title = R["RunOrder"].Value + " :", Fid = "Sort", Required = true, Cols = "4,2" })
                     @*Html.XiNum("Sort", "", "Run Order :", true, cols, new PropNumModel() { IsDigit = true, MaxValue = 10, Width = "80px" })*@
                     @*Html.XiRadios("LineType", "0", "Run Type :", (List<IdStrDto>)ViewBag.LineTypes, 9)*@
-                    <div id="divLineCondBox" class="row xg-row">
+                    <div id="divLineCondBox" class="row zz_xg-row">
                         <div class="col-md-12" style="margin:5px 0 2px -10px;">
                             @R["RunCond"]
                             <button type="button" class="btn btn-sm btn-primary" onclick="_me.flow.onAddLineCond()">@br.BtnAddRow</button>

@@ -198,6 +198,7 @@
     border-color: #6c757d;
 }
 
+/* 只設定大小 */
 .xg-btn-size {
     padding: .25rem .5rem;
     margin-right: 3px;
@@ -476,6 +477,7 @@ path, .jtk-endpoint { cursor:pointer; }
 }
 
 /* form without line */
+/* 停用 xg-row */
 .xg-form {
     /*font size same to .form-control*/
     font-size: 16px;
@@ -483,11 +485,12 @@ path, .jtk-endpoint { cursor:pointer; }
     /*margin-bottom: 0px;*/
 }
 
-    .xg-form .xg-row {
-        /*min-height: 53px;*/
+    /* 停用 xg-row
+    .xg-form .zz_xg-row {
         margin: 0;
         border: none;
     }
+    */
 
     .xg-form .xg-input {
         padding-top: 7px;

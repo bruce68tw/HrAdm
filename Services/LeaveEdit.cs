@@ -24,7 +24,7 @@ select l.*,
     FlowStatusName=c.Name_{locale},
     CreatorName=u.Name,
     ReviserName=u2.Name,
-    {_Fun.UserFid}=u3.Id, {_Fun.DeptFid}=u3.DeptId
+    {_Fun.FidUser}=u3.Id, {_Fun.FidDept}=u3.DeptId
 from dbo.Leave l
 join dbo.XpCode c on c.Type='FlowStatus' and l.FlowStatus=c.Value
 join dbo.[User] u on l.Creator=u.Id

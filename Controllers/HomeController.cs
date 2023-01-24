@@ -77,7 +77,7 @@ where u.Account=@Account
             #endregion
 
             //4.set session of base user info
-            _Http.GetSession().Set(_Fun.BaseUser, userInfo);   //extension method
+            _Http.GetSession().Set(_Fun.FidBaseUser, userInfo);   //extension method
 
             //5.redirect if need
             var url = _Str.IsEmpty(vo.FromUrl) ? "/Home/Index" : vo.FromUrl;

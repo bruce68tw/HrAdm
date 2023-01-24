@@ -56,8 +56,7 @@ namespace HrAdm
             _Fun.Config = config;
             
             //7.session (memory cache)
-            services.AddDistributedMemoryCache();
-            //AddDistributedRedisCache is old
+            services.AddDistributedMemoryCache();   //AddDistributedRedisCache is old
             //services.AddStackExchangeRedisCache(opts => { opts.Configuration = config.Redis; });
             services.AddSession(opts =>
             {
