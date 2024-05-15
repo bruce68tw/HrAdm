@@ -1,7 +1,7 @@
 ﻿using Base.Models;
+using BaseApi.Attributes;
 using BaseApi.Controllers;
-using BaseWeb.Attributes;
-using BaseWeb.Services;
+using BaseApi.Services;
 using HrAdm.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace HrAdm.Controllers
 {
     [XgProgAuth]
-    public class LeaveSignController : ApiCtrl
+    public class LeaveSignController : BaseCtrl
     {
         public async Task<ActionResult> Read()
         {
@@ -57,7 +57,7 @@ namespace HrAdm.Controllers
 
         //TODO: add your code
         //get file/image
-        public async Task<FileResult> ViewFile(string table, string fid, string key, string ext)
+        public async Task<FileResult?> ViewFile(string table, string fid, string key, string ext)
         {
             return await _Xp.ViewLeaveA(fid, key, ext);
         }

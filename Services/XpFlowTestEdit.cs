@@ -3,7 +3,7 @@ using Base.Services;
 
 namespace HrAdm.Services
 {
-    public class XpFlowTestEdit : XgEdit
+    public class XpFlowTestEdit : BaseEditSvc
     {
         private string _flowCode;   //XpFlow.Code
         public XpFlowTestEdit(string ctrl, string flowCode) : base(ctrl) 
@@ -24,7 +24,7 @@ from dbo.XpFlowSignTest s
 join dbo.XpFlowTest d on s.SourceId=d.Id and s.FlowLevel=d.FlowLevel
 join dbo.[User] u on d.UserId=u.Id
 join dbo.XpCode c on c.Type='FlowStatus' and d.FlowStatus=c.Value
-where d.Id='{{0}}'
+where d.Id=@Id
 ";
             return new EditDto() { ReadSql = sql };
         }

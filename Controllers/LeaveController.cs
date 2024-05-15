@@ -1,7 +1,7 @@
 ﻿using Base.Enums;
 using Base.Models;
 using Base.Services;
-using BaseWeb.Attributes;
+using BaseApi.Attributes;
 using BaseApi.Controllers;
 using HrAdm.Services;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace HrAdm.Controllers
 {
     [XgLogin]
-    public class LeaveController : ApiCtrl
+    public class LeaveController : BaseCtrl
     {
         //[XgProgAuth(CrudEnum.Read)]
         public async Task<ActionResult> Read()
@@ -41,7 +41,7 @@ namespace HrAdm.Controllers
         [XgProgAuth(CrudEnum.Create)]
         public async Task<JsonResult> Create(string json, IFormFile t0_FileName)
         {
-            return Json(await EditService().CreateA(_Str.ToJson(json), t0_FileName));
+            return Json(await EditService().CreateA(_Str.ToJson(json)!, t0_FileName));
         }
 
         [HttpPost]
@@ -55,7 +55,7 @@ namespace HrAdm.Controllers
         [XgProgAuth(CrudEnum.Update)]
         public async Task<JsonResult> Update(string key, string json, IFormFile t0_FileName)
         {
-            return Json(await EditService().UpdateA(key, _Str.ToJson(json), t0_FileName));
+            return Json(await EditService().UpdateA(key, _Str.ToJson(json)!, t0_FileName));
         }
 
         [HttpPost]
@@ -73,7 +73,7 @@ namespace HrAdm.Controllers
         }
 
         //get file/image
-        public async Task<FileResult> ViewFile(string table, string fid, string key, string ext)
+        public async Task<FileResult?> ViewFile(string table, string fid, string key, string ext)
         {
             return await _Xp.ViewLeaveA(fid, key, ext);
         }

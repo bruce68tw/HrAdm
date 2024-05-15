@@ -24,7 +24,7 @@ namespace HrAdm.Services
                         SignStatusName = _XpCode.GetValue(c, locale),
                         SignTime = (s.SignTime == null) 
                             ? "" : s.SignTime.Value.ToString(_Fun.CsDtFmt),
-                        Note = s.Note,
+                        Note = s.Note!,
                     })
                     .ToList();
         }

@@ -1,7 +1,7 @@
 ﻿using Base.Models;
 using BaseApi.Controllers;
 using BaseApi.Services;
-using BaseWeb.Attributes;
+using BaseApi.Attributes;
 using BaseWeb.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,12 +11,12 @@ namespace HrAdm.Controllers
 {
     //Excel import base controller
     [XgProgAuth]
-    abstract public class XpImportController : ApiCtrl 
+    abstract public class XpImportController : BaseCtrl 
     {
         //public string ProgName;     //program display name
-        public string ImportType;   //map to ImportLog.Type
-        public string TplPath;      //template file path
-        public string DirUpload;    //upload dir, no right slash
+        public string ImportType = "";   //map to ImportLog.Type
+        public string TplPath = "";      //template file path
+        public string DirUpload = "";    //upload dir, no right slash
 
         public ActionResult Read()
         {			
@@ -28,14 +28,14 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new XgImportRead(ImportType).GetPageA(Ctrl, dt));
+            return JsonToCnt(await new XgImportR(ImportType).GetPageA(Ctrl, dt));
         }
 
         //run import, drived class implement !!
         //abstract could not be async(CS1994), must use virtual method !!
         virtual public async Task<JsonResult> Import(IFormFile file) 
         { 
-            return await Task.FromResult<JsonResult>(null); ;
+            return await Task.FromResult<JsonResult>(result: null);
         }
 
         /// <summary>
@@ -43,13 +43,13 @@ namespace HrAdm.Controllers
         /// </summary>
         /// <param name="file">file name</param>
         /// <returns>file</returns>
-        public async Task<FileResult> Template()
+        public async Task<FileResult?> Template()
         {
-            return await _WebFile.ViewFileA(TplPath);  //use this instead of PhysicalFile()
+            return await _HttpFile.ViewFileA(TplPath);  //use this instead of PhysicalFile()
         }
 
         //download source import file
-        public async Task<FileResult> GetSource(string id, string name)
+        public async Task<FileResult?> GetSource(string id, string name)
         {
             return await GetFile(id, name);
             /*
@@ -60,15 +60,15 @@ namespace HrAdm.Controllers
         }
 
         //download failed import file
-        public async Task<FileResult> GetFail(string id, string name)
+        public async Task<FileResult?> GetFail(string id, string name)
         {
             return await GetFile(id + "_fail", name);
         }
 
         //download import file
-        private async Task<FileResult> GetFile(string realFileStem, string downFileName)
+        private async Task<FileResult?> GetFile(string realFileStem, string downFileName)
         {
-            return await _WebFile.ViewFileA($"{DirUpload}/{realFileStem}.xlsx", downFileName);
+            return await _HttpFile.ViewFileA($"{DirUpload}/{realFileStem}.xlsx", downFileName);
         }
 
     }//class

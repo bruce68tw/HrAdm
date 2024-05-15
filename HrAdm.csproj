@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>3b0e1b5c-c583-43d6-a792-329458bf8dd9</UserSecretsId>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +13,6 @@
     <Compile Remove="wwwroot\js\lib\**" />
     <Compile Remove="wwwroot_old2\**" />
     <Compile Remove="wwwroot_old\**" />
-    <Compile Remove="_data\**" />
     <Compile Remove="_log\**" />
     <Compile Remove="_source_old\**" />
     <Compile Remove="_sql\**" />
@@ -24,7 +24,6 @@
     <Content Remove="wwwroot\js\lib\**" />
     <Content Remove="wwwroot_old2\**" />
     <Content Remove="wwwroot_old\**" />
-    <Content Remove="_data\**" />
     <Content Remove="_log\**" />
     <Content Remove="_source_old\**" />
     <Content Remove="_sql\**" />
@@ -36,7 +35,6 @@
     <EmbeddedResource Remove="wwwroot\js\lib\**" />
     <EmbeddedResource Remove="wwwroot_old2\**" />
     <EmbeddedResource Remove="wwwroot_old\**" />
-    <EmbeddedResource Remove="_data\**" />
     <EmbeddedResource Remove="_log\**" />
     <EmbeddedResource Remove="_source_old\**" />
     <EmbeddedResource Remove="_sql\**" />
@@ -48,7 +46,6 @@
     <None Remove="wwwroot\js\lib\**" />
     <None Remove="wwwroot_old2\**" />
     <None Remove="wwwroot_old\**" />
-    <None Remove="_data\**" />
     <None Remove="_log\**" />
     <None Remove="_source_old\**" />
     <None Remove="_sql\**" />
@@ -89,6 +86,7 @@
     <None Remove="Controllers\UserController.cs%281%29" />
     <None Remove="Controllers\UserController.cs%282%29" />
     <None Remove="Controllers\zz_MyController.cs_old" />
+    <None Remove="Tables\MyContext - 複製.cs_old" />
     <None Remove="Views\CustInput\Edit.cshtml_old" />
     <None Remove="Views\LeaveSign\Edit.cshtml_old" />
     <None Remove="Views\Leave\Edit.cshtml_old" />
@@ -100,6 +98,14 @@
     <None Remove="Views\XpFlow\Edit.cshtml_old" />
     <None Remove="Views\XpProg\Edit.cshtml_old" />
     <None Remove="Views\XpRole\Edit.cshtml_old" />
+    <None Remove="_image\noImage.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="_image\noImage.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

@@ -6,7 +6,7 @@
     _Fun.Config.SystemName = R0["SystemName"].Value;
     var locale = _Locale.GetLocaleByUser();
     var min = _Fun.IsDev ? "" : ".min";   //min js
-    var menus = SetMenuName(await _Web.GetMenuA());  //by access right
+    var menus = SetMenuName(await _FunApi.GetMenuA());  //by access right
     /*
     var menus = new List<MenuDto>()
     {
@@ -31,8 +31,7 @@
     //re-set menu.Name(add locale)
     public List<MenuDto> SetMenuName(List<MenuDto> menus)
     {
-        if (menus == null)
-            return null;
+        //if (menus == null) return null;
 
         foreach(var menu in menus)
             menu.Name = R0["Menu" + menu.Code].Value;

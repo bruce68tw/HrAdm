@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HrAdm.Services
 {
-    public class UserExtEdit : XgEdit
+    public class UserExtEdit : BaseEditSvc
     {
         public UserExtEdit(string ctrl) : base(ctrl) { }
 
@@ -129,8 +129,8 @@ namespace HrAdm.Services
             if (_Valid.ResultStatus(result))
             {
                 var newKeyJson = service.GetNewKeyJson();
-                await _WebFile.SaveCrudFileA(json, newKeyJson, _Xp.DirUserExt, t0_PhotoFile, nameof(t0_PhotoFile));
-                await _WebFile.SaveCrudFilesA(json, newKeyJson, _Xp.DirUserLicense, t03_FileName, nameof(t03_FileName));
+                await _HttpFile.SaveCrudFileA(json, newKeyJson, _Xp.DirUserExt, t0_PhotoFile, nameof(t0_PhotoFile));
+                await _HttpFile.SaveCrudFilesA(json, newKeyJson, _Xp.DirUserLicense, t03_FileName, nameof(t03_FileName));
             }
             return result;
         }
@@ -144,8 +144,8 @@ namespace HrAdm.Services
             if (_Valid.ResultStatus(result))
             {
                 var newKeyJson = service.GetNewKeyJson();
-                await _WebFile.SaveCrudFileA(json, newKeyJson, _Xp.DirUserExt, t0_PhotoFile, nameof(t0_PhotoFile));
-                await _WebFile.SaveCrudFilesA(json, newKeyJson, _Xp.DirUserLicense, t03_FileName, nameof(t03_FileName));
+                await _HttpFile.SaveCrudFileA(json, newKeyJson, _Xp.DirUserExt, t0_PhotoFile, nameof(t0_PhotoFile));
+                await _HttpFile.SaveCrudFilesA(json, newKeyJson, _Xp.DirUserLicense, t03_FileName, nameof(t03_FileName));
             }
             return result;
         }

@@ -1,4 +1,4 @@
-﻿using BaseWeb.Attributes;
+﻿using BaseApi.Attributes;
 using HrAdm.Enums;
 using HrAdm.Services;
 using Microsoft.AspNetCore.Http;

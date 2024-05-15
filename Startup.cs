@@ -1,4 +1,5 @@
 using Base.Enums;
+using Base.Interfaces;
 using Base.Models;
 using Base.Services;
 using BaseWeb.Services;
@@ -44,7 +45,7 @@ namespace HrAdm
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             //4.user info for base component
-            services.AddSingleton<IBaseUserService, MyBaseUserService>();
+            services.AddSingleton<IBaseUserS, MyBaseUserService>();
 
             //5.ado.net for mssql
             services.AddTransient<DbConnection, SqlConnection>();

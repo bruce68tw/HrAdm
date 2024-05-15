@@ -5,9 +5,10 @@ namespace HrAdm.Tables
 {
     public partial class XpRoleProg
     {
-        public string Id { get; set; }
-        public string RoleId { get; set; }
-        public string ProgId { get; set; }
+        public int Sn { get; set; }
+        public string Id { get; set; } = null!;
+        public string RoleId { get; set; } = null!;
+        public string ProgId { get; set; } = null!;
         public byte FunCreate { get; set; }
         public byte FunRead { get; set; }
         public byte FunUpdate { get; set; }

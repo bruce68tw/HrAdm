@@ -1,15 +1,15 @@
 ﻿using Base.Models;
 using Base.Services;
+using BaseApi.Attributes;
 using BaseApi.Controllers;
-using BaseWeb.Attributes;
-using BaseWeb.Services;
+using BaseApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace HrAdm.Controllers
 {
     [XgProgAuth]
-    public class XpEasyRptController : ApiCtrl
+    public class XpEasyRptController : BaseCtrl
     {
         public ActionResult Read()
         {
@@ -19,12 +19,12 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new XgEasyRptRead().GetPageA(Ctrl, dt));
+            return JsonToCnt(await new XgEasyRptR().GetPageA(Ctrl, dt));
         }
 
-        private XgEasyRptEdit EditService()
+        private XgEasyRptE EditService()
         {
-            return new XgEasyRptEdit(Ctrl);
+            return new XgEasyRptE(Ctrl);
         }
 
         [HttpPost]
@@ -42,13 +42,13 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<JsonResult> Create(string json)
         {
-            return Json(await EditService().CreateA(_Str.ToJson(json)));
+            return Json(await EditService().CreateA(_Str.ToJson(json)!));
         }
 
         [HttpPost]
         public async Task<JsonResult> Update(string key, string json)
         {
-            return Json(await EditService().UpdateA(key, _Str.ToJson(json)));
+            return Json(await EditService().UpdateA(key, _Str.ToJson(json)!));
         }
 
         [HttpPost]

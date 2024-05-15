@@ -3,7 +3,7 @@ using Base.Services;
 
 namespace HrAdm.Services
 {
-    public class XpRoleEdit : XgEdit
+    public class XpRoleEdit : BaseEditSvc
     {
         public XpRoleEdit(string ctrl) : base(ctrl) { }
 
@@ -29,7 +29,7 @@ select a.*, u.Account,
 from dbo.XpUserRole a
 join dbo.[User] u on a.UserId=u.Id
 join dbo.Dept d on u.DeptId=d.Id
-where a.RoleId in ({0})
+where a.RoleId=@Id
 order by u.Account
 ",
                         Table = "dbo.XpUserRole",
@@ -49,7 +49,7 @@ order by u.Account
 select a.*
 from dbo.XpRoleProg a
 join dbo.XpProg p on a.ProgId=p.Id
-where a.RoleId in ({0})
+where a.RoleId=@Id
 order by p.Sort
 ",
                         Table = "dbo.XpRoleProg",

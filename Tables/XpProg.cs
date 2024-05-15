@@ -5,11 +5,12 @@ namespace HrAdm.Tables
 {
     public partial class XpProg
     {
-        public string Id { get; set; }
-        public string Code { get; set; }
-        public string Name { get; set; }
-        public string Icon { get; set; }
-        public string Url { get; set; }
+        public int Sn { get; set; }
+        public string Id { get; set; } = null!;
+        public string Code { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public string? Icon { get; set; }
+        public string? Url { get; set; }
         public short Sort { get; set; }
         public byte AuthRow { get; set; }
         public byte FunCreate { get; set; }

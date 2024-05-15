@@ -1,9 +1,9 @@
 ﻿using Base.Enums;
 using Base.Models;
 using Base.Services;
+using BaseApi.Attributes;
 using BaseApi.Controllers;
-using BaseWeb.Attributes;
-using BaseWeb.Services;
+using BaseApi.Services;
 using HrAdm.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace HrAdm.Controllers
 {
     [XgProgAuth]
-    public class XpFlowTestController : ApiCtrl
+    public class XpFlowTestController : BaseCtrl
     {
         public async Task<ActionResult> Read()
         {

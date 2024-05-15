@@ -1,6 +1,6 @@
 ﻿using Base.Models;
 using Base.Services;
-using BaseWeb.Services;
+using BaseApi.Services;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -93,22 +93,22 @@ namespace HrAdm.Services
             };
 
             //4.prepare image list
-            List<WordImageDto> images = null;
-            if (!string.IsNullOrEmpty(user.PhotoFile))
+            List<WordImageDto>? images = null;
+            if (!string.IsNullOrEmpty(user!.PhotoFile))
                 images = new List<WordImageDto>()
                 {
                     new() { Code = "Photo", FilePath = _Xp.PathUserExt(user.Id, _File.GetFileExt(user.PhotoFile)) }
                 };
 
             //5.call public method
-            if (!await _WebWord.ExportByTplRowA(tplPath, "UserExt.docx", user, childs, images))
+            if (!await _HttpWord.ExportByTplRowA(tplPath, "UserExt.docx", user, childs, images))
                 return false;
 
             //case of ok
             return true;
 
         lab_error:
-            await _Log.ErrorA("UserExtService.cs GenWord() failed: " + error);
+            await _Log.ErrorRootA("UserExtService.cs GenWord() failed: " + error);
             return false;
         }
 

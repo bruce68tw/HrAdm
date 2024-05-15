@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace HrAdm.Services
 {
-    public class XpCmsEdit : XgEdit
+    public class XpCmsEdit : BaseEditSvc
     {
         public XpCmsEdit(string ctrl) : base(ctrl) { }
 
-        private string _cmsType;
+        private string _cmsType = "";
         override public EditDto GetDto()
         {
             return new EditDto
@@ -25,7 +25,7 @@ select c.*,
 from dbo.Cms c
 join dbo.[User] u on c.Creator=u.Id
 left join dbo.[User] u2 on c.Reviser=u2.Id
-where c.Id='{0}'
+where c.Id=@Id
 ",
                 Items = new EitemDto[] 
 				{
@@ -50,7 +50,7 @@ where c.Id='{0}'
             var service = EditService();
             var result = await service.CreateA(json);
             if (_Valid.ResultStatus(result))
-                await _WebFile.SaveCrudFileA(json, service.GetNewKeyJson(), dirUpload, t0_FileName, nameof(t0_FileName));
+                await _HttpFile.SaveCrudFileA(json, service.GetNewKeyJson(), dirUpload, t0_FileName, nameof(t0_FileName));
             return result;
         }
 
@@ -59,7 +59,7 @@ where c.Id='{0}'
             var service = EditService();
             var result = await service.UpdateA(key, json);
             if (_Valid.ResultStatus(result))
-                await _WebFile.SaveCrudFileA(json, service.GetNewKeyJson(), dirUpload, t0_FileName, nameof(t0_FileName));
+                await _HttpFile.SaveCrudFileA(json, service.GetNewKeyJson(), dirUpload, t0_FileName, nameof(t0_FileName));
             return result;
         }
 

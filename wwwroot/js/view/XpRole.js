@@ -28,7 +28,7 @@
         _me.tplUr = $('#tplUserRole').html();   //tpl of user role
         _me.modalUser = $('#modalUser');        //modal for select user
         _me.modalUserBody = _me.modalUser.find('tbody');
-        _me.tplUser = $('#tplUser').html(); //tpl of modal user row
+        _me.tplUser = $('#tplUser').html();     //tpl of modal user row
     },
 
     //on open select user modal

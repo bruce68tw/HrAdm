@@ -5,7 +5,8 @@ namespace HrAdm.Tables
 {
     public partial class XpRole
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
+        public int Sn { get; set; }
+        public string Id { get; set; } = null!;
+        public string Name { get; set; } = null!;
     }
 }

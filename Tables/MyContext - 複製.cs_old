@@ -17,30 +17,30 @@ namespace HrAdm.Tables
         {
         }
 
-        public virtual DbSet<Cms> Cms { get; set; } = null!;
-        public virtual DbSet<CustInput> CustInput { get; set; } = null!;
-        public virtual DbSet<Dept> Dept { get; set; } = null!;
-        public virtual DbSet<Leave> Leave { get; set; } = null!;
-        public virtual DbSet<User> User { get; set; } = null!;
-        public virtual DbSet<UserJob> UserJob { get; set; } = null!;
-        public virtual DbSet<UserLang> UserLang { get; set; } = null!;
-        public virtual DbSet<UserLicense> UserLicense { get; set; } = null!;
-        public virtual DbSet<UserSchool> UserSchool { get; set; } = null!;
-        public virtual DbSet<UserSkill> UserSkill { get; set; } = null!;
-        public virtual DbSet<XpCode> XpCode { get; set; } = null!;
-        public virtual DbSet<XpEasyRpt> XpEasyRpt { get; set; } = null!;
-        public virtual DbSet<XpFlow> XpFlow { get; set; } = null!;
-        public virtual DbSet<XpFlowLine> XpFlowLine { get; set; } = null!;
-        public virtual DbSet<XpFlowNode> XpFlowNode { get; set; } = null!;
-        public virtual DbSet<XpFlowSign> XpFlowSign { get; set; } = null!;
-        public virtual DbSet<XpFlowSignTest> XpFlowSignTest { get; set; } = null!;
-        public virtual DbSet<XpFlowTest> XpFlowTest { get; set; } = null!;
-        public virtual DbSet<XpImportLog> XpImportLog { get; set; } = null!;
-        public virtual DbSet<XpProg> XpProg { get; set; } = null!;
-        public virtual DbSet<XpRole> XpRole { get; set; } = null!;
-        public virtual DbSet<XpRoleProg> XpRoleProg { get; set; } = null!;
-        public virtual DbSet<XpTranLog> XpTranLog { get; set; } = null!;
-        public virtual DbSet<XpUserRole> XpUserRole { get; set; } = null!;
+        public virtual DbSet<Cms> Cms { get; set; }
+        public virtual DbSet<CustInput> CustInput { get; set; }
+        public virtual DbSet<Dept> Dept { get; set; }
+        public virtual DbSet<Leave> Leave { get; set; }
+        public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<UserJob> UserJob { get; set; }
+        public virtual DbSet<UserLang> UserLang { get; set; }
+        public virtual DbSet<UserLicense> UserLicense { get; set; }
+        public virtual DbSet<UserSchool> UserSchool { get; set; }
+        public virtual DbSet<UserSkill> UserSkill { get; set; }
+        public virtual DbSet<XpCode> XpCode { get; set; }
+        public virtual DbSet<XpEasyRpt> XpEasyRpt { get; set; }
+        public virtual DbSet<XpFlow> XpFlow { get; set; }
+        public virtual DbSet<XpFlowLine> XpFlowLine { get; set; }
+        public virtual DbSet<XpFlowNode> XpFlowNode { get; set; }
+        public virtual DbSet<XpFlowSign> XpFlowSign { get; set; }
+        public virtual DbSet<XpFlowSignTest> XpFlowSignTest { get; set; }
+        public virtual DbSet<XpFlowTest> XpFlowTest { get; set; }
+        public virtual DbSet<XpImportLog> XpImportLog { get; set; }
+        public virtual DbSet<XpProg> XpProg { get; set; }
+        public virtual DbSet<XpRole> XpRole { get; set; }
+        public virtual DbSet<XpRoleProg> XpRoleProg { get; set; }
+        public virtual DbSet<XpTranLog> XpTranLog { get; set; }
+        public virtual DbSet<XpUserRole> XpUserRole { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -54,18 +54,19 @@ namespace HrAdm.Tables
         {
             modelBuilder.Entity<Cms>(entity =>
             {
-                entity.HasKey(e => e.Sn);
-
-                entity.HasIndex(e => e.Id, "Cms_Id")
-                    .IsUnique();
+                entity.Property(e => e.Id)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.CmsType)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Created).HasColumnType("datetime");
 
                 entity.Property(e => e.Creator)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
@@ -77,10 +78,6 @@ namespace HrAdm.Tables
 
                 entity.Property(e => e.FileName).HasMaxLength(100);
 
-                entity.Property(e => e.Id)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Note).HasMaxLength(255);
 
                 entity.Property(e => e.Revised).HasColumnType("datetime");
@@ -91,15 +88,16 @@ namespace HrAdm.Tables
 
                 entity.Property(e => e.StartTime).HasColumnType("datetime");
 
-                entity.Property(e => e.Title).HasMaxLength(255);
+                entity.Property(e => e.Title)
+                    .IsRequired()
+                    .HasMaxLength(255);
             });
 
             modelBuilder.Entity<CustInput>(entity =>
             {
-                entity.HasKey(e => e.Sn);
-
-                entity.HasIndex(e => e.Id, "CustInput_Id")
-                    .IsUnique();
+                entity.Property(e => e.Id)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.FldColor)
                     .HasMaxLength(10)
@@ -116,44 +114,39 @@ namespace HrAdm.Tables
                     .IsUnicode(false);
 
                 entity.Property(e => e.FldText).HasMaxLength(10);
-
-                entity.Property(e => e.Id)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Dept>(entity =>
             {
-                entity.HasKey(e => e.Sn);
-
-                entity.HasIndex(e => e.Id, "Dept_Id")
-                    .IsUnique();
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.MgrId)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Name).HasMaxLength(30);
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(30);
             });
 
             modelBuilder.Entity<Leave>(entity =>
             {
-                entity.HasKey(e => e.Sn);
-
-                entity.HasIndex(e => e.Id, "Leave_Id")
-                    .IsUnique();
+                entity.Property(e => e.Id)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.AgentId)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Created).HasColumnType("datetime");
 
                 entity.Property(e => e.Creator)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
@@ -162,17 +155,15 @@ namespace HrAdm.Tables
                 entity.Property(e => e.FileName).HasMaxLength(100);
 
                 entity.Property(e => e.FlowStatus)
+                    .IsRequired()
                     .HasMaxLength(1)
                     .IsUnicode(false)
                     .IsFixedLength();
 
                 entity.Property(e => e.Hours).HasColumnType("decimal(5, 1)");
 
-                entity.Property(e => e.Id)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.LeaveType)
+                    .IsRequired()
                     .HasMaxLength(1)
                     .IsUnicode(false)
                     .IsFixedLength();
@@ -186,54 +177,52 @@ namespace HrAdm.Tables
                 entity.Property(e => e.StartTime).HasColumnType("datetime");
 
                 entity.Property(e => e.UserId)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
             });
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.HasKey(e => e.Sn);
-
-                entity.HasIndex(e => e.Id, "User_Id")
-                    .IsUnique();
-
-                entity.Property(e => e.Account)
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.DeptId)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Name).HasMaxLength(20);
+                entity.Property(e => e.Account)
+                    .IsRequired()
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DeptId)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(20);
 
                 entity.Property(e => e.PhotoFile).HasMaxLength(100);
 
                 entity.Property(e => e.Pwd)
+                    .IsRequired()
                     .HasMaxLength(32)
                     .IsUnicode(false);
             });
 
             modelBuilder.Entity<UserJob>(entity =>
             {
-                entity.HasKey(e => e.Sn);
-
-                entity.HasIndex(e => e.Id, "UserJob_Id")
-                    .IsUnique();
-
-                entity.Property(e => e.CorpName).HasMaxLength(30);
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
+                entity.Property(e => e.CorpName).HasMaxLength(30);
+
                 entity.Property(e => e.JobDesc).IsUnicode(false);
 
-                entity.Property(e => e.JobName).HasMaxLength(30);
+                entity.Property(e => e.JobName)
+                    .IsRequired()
+                    .HasMaxLength(30);
 
                 entity.Property(e => e.JobPlace).HasMaxLength(30);
 
@@ -244,86 +233,84 @@ namespace HrAdm.Tables
                     .IsUnicode(false);
 
                 entity.Property(e => e.UserId)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
             });
 
             modelBuilder.Entity<UserLang>(entity =>
             {
-                entity.HasKey(e => e.Sn);
-
-                entity.HasIndex(e => e.Id, "UserLang_Id")
-                    .IsUnique();
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.LangName).HasMaxLength(30);
+                entity.Property(e => e.LangName)
+                    .IsRequired()
+                    .HasMaxLength(30);
 
                 entity.Property(e => e.ListenLevel)
-                    .HasMaxLength(1)
+                    .IsRequired()
+                    .HasMaxLength(10)
                     .IsUnicode(false)
                     .IsFixedLength();
 
                 entity.Property(e => e.ReadLevel)
-                    .HasMaxLength(1)
+                    .IsRequired()
+                    .HasMaxLength(10)
                     .IsUnicode(false)
                     .IsFixedLength();
 
                 entity.Property(e => e.SpeakLevel)
-                    .HasMaxLength(1)
+                    .IsRequired()
+                    .HasMaxLength(10)
                     .IsUnicode(false)
                     .IsFixedLength();
 
                 entity.Property(e => e.UserId)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.WriteLevel)
-                    .HasMaxLength(1)
+                    .IsRequired()
+                    .HasMaxLength(10)
                     .IsUnicode(false)
                     .IsFixedLength();
             });
 
             modelBuilder.Entity<UserLicense>(entity =>
             {
-                entity.HasKey(e => e.Sn);
-
-                entity.HasIndex(e => e.Id, "UserLicense_Id")
-                    .IsUnique();
-
-                entity.Property(e => e.FileName).HasMaxLength(100);
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.LicenseName).HasMaxLength(30);
+                entity.Property(e => e.FileName).HasMaxLength(100);
+
+                entity.Property(e => e.LicenseName)
+                    .IsRequired()
+                    .HasMaxLength(30);
 
                 entity.Property(e => e.StartEnd)
                     .HasMaxLength(30)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UserId)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
             });
 
             modelBuilder.Entity<UserSchool>(entity =>
             {
-                entity.HasKey(e => e.Sn);
-
-                entity.HasIndex(e => e.Id, "UserSchool_Id")
-                    .IsUnique();
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.SchoolDept).HasMaxLength(20);
 
-                entity.Property(e => e.SchoolName).HasMaxLength(30);
+                entity.Property(e => e.SchoolName)
+                    .IsRequired()
+                    .HasMaxLength(30);
 
                 entity.Property(e => e.SchoolType).HasMaxLength(20);
 
@@ -332,26 +319,25 @@ namespace HrAdm.Tables
                     .IsUnicode(false);
 
                 entity.Property(e => e.UserId)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
             });
 
             modelBuilder.Entity<UserSkill>(entity =>
             {
-                entity.HasKey(e => e.Sn);
-
-                entity.HasIndex(e => e.Id, "UserSkill_Id")
-                    .IsUnique();
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.SkillDesc).HasMaxLength(500);
 
-                entity.Property(e => e.SkillName).HasMaxLength(30);
+                entity.Property(e => e.SkillName)
+                    .IsRequired()
+                    .HasMaxLength(30);
 
                 entity.Property(e => e.UserId)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
             });
@@ -376,105 +362,102 @@ namespace HrAdm.Tables
 
                 entity.Property(e => e.Name_zhCN).HasMaxLength(30);
 
-                entity.Property(e => e.Name_zhTW).HasMaxLength(30);
+                entity.Property(e => e.Name_zhTW)
+                    .IsRequired()
+                    .HasMaxLength(30);
 
                 entity.Property(e => e.Note).HasMaxLength(255);
             });
 
             modelBuilder.Entity<XpEasyRpt>(entity =>
             {
-                entity.HasKey(e => e.Sn);
-
-                entity.HasIndex(e => e.Id, "XpEasyRpt_Id")
-                    .IsUnique();
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Name).HasMaxLength(50);
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(50);
 
-                entity.Property(e => e.Sql).HasMaxLength(500);
+                entity.Property(e => e.Sql)
+                    .IsRequired()
+                    .HasMaxLength(500);
 
                 entity.Property(e => e.ToEmails)
+                    .IsRequired()
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
-                entity.Property(e => e.TplFile).HasMaxLength(100);
+                entity.Property(e => e.TplFile)
+                    .IsRequired()
+                    .HasMaxLength(100);
             });
 
             modelBuilder.Entity<XpFlow>(entity =>
             {
-                entity.HasKey(e => e.Sn)
-                    .HasName("PK_Flow");
-
-                entity.HasIndex(e => e.Id, "XpFlow_Id")
-                    .IsUnique();
-
-                entity.Property(e => e.Code)
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Name).HasMaxLength(30);
+                entity.Property(e => e.Code)
+                    .IsRequired()
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(30);
             });
 
             modelBuilder.Entity<XpFlowLine>(entity =>
             {
-                entity.HasKey(e => e.Sn)
-                    .HasName("PK_FlowLine");
-
-                entity.HasIndex(e => e.Id, "XpFlowLine_Id")
-                    .IsUnique();
+                entity.Property(e => e.Id)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.CondStr)
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
                 entity.Property(e => e.EndNode)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.FlowId)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Id)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.StartNode)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
             });
 
             modelBuilder.Entity<XpFlowNode>(entity =>
             {
-                entity.HasKey(e => e.Sn)
-                    .HasName("PK_FlowNode");
-
-                entity.HasIndex(e => e.Id, "XpFlowNode_Id")
-                    .IsUnique();
-
-                entity.Property(e => e.FlowId)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Name).HasMaxLength(30);
+                entity.Property(e => e.FlowId)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(30);
 
                 entity.Property(e => e.NodeType)
+                    .IsRequired()
                     .HasMaxLength(1)
                     .IsUnicode(false)
                     .IsFixedLength();
 
                 entity.Property(e => e.PassType)
+                    .IsRequired()
                     .HasMaxLength(1)
                     .IsUnicode(false)
                     .IsFixedLength();
@@ -490,25 +473,23 @@ namespace HrAdm.Tables
 
             modelBuilder.Entity<XpFlowSign>(entity =>
             {
-                entity.HasKey(e => e.Sn)
-                    .HasName("PK_FlowSign");
-
-                entity.HasIndex(e => e.Id, "XpFlowSign_Id")
-                    .IsUnique();
-
-                entity.Property(e => e.FlowId)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.NodeName).HasMaxLength(30);
+                entity.Property(e => e.FlowId)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NodeName)
+                    .IsRequired()
+                    .HasMaxLength(30);
 
                 entity.Property(e => e.Note).HasMaxLength(255);
 
                 entity.Property(e => e.SignStatus)
+                    .IsRequired()
                     .HasMaxLength(1)
                     .IsUnicode(false)
                     .IsFixedLength();
@@ -516,36 +497,39 @@ namespace HrAdm.Tables
                 entity.Property(e => e.SignTime).HasColumnType("datetime");
 
                 entity.Property(e => e.SignerId)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.SignerName).HasMaxLength(20);
+                entity.Property(e => e.SignerName)
+                    .IsRequired()
+                    .HasMaxLength(20);
 
                 entity.Property(e => e.SourceId)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
             });
 
             modelBuilder.Entity<XpFlowSignTest>(entity =>
             {
-                entity.HasKey(e => e.Sn);
-
-                entity.HasIndex(e => e.Id, "XpFlowSignTest_Id")
-                    .IsUnique();
-
-                entity.Property(e => e.FlowId)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.NodeName).HasMaxLength(30);
+                entity.Property(e => e.FlowId)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NodeName)
+                    .IsRequired()
+                    .HasMaxLength(30);
 
                 entity.Property(e => e.Note).HasMaxLength(255);
 
                 entity.Property(e => e.SignStatus)
+                    .IsRequired()
                     .HasMaxLength(1)
                     .IsUnicode(false)
                     .IsFixedLength();
@@ -553,74 +537,75 @@ namespace HrAdm.Tables
                 entity.Property(e => e.SignTime).HasColumnType("datetime");
 
                 entity.Property(e => e.SignerId)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.SignerName).HasMaxLength(20);
+                entity.Property(e => e.SignerName)
+                    .IsRequired()
+                    .HasMaxLength(20);
 
                 entity.Property(e => e.SourceId)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
             });
 
             modelBuilder.Entity<XpFlowTest>(entity =>
             {
-                entity.HasKey(e => e.Sn);
-
-                entity.HasIndex(e => e.Id, "XpFlowTest_Id")
-                    .IsUnique();
-
-                entity.Property(e => e.Created).HasColumnType("datetime");
-
-                entity.Property(e => e.FlowStatus)
-                    .HasMaxLength(1)
-                    .IsUnicode(false)
-                    .IsFixedLength();
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Created).HasColumnType("datetime");
+
+                entity.Property(e => e.FlowStatus)
+                    .IsRequired()
+                    .HasMaxLength(1)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+
                 entity.Property(e => e.InputJson)
+                    .IsRequired()
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UserId)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
             });
 
             modelBuilder.Entity<XpImportLog>(entity =>
             {
-                entity.HasKey(e => e.Sn);
-
-                entity.HasIndex(e => e.Id, "XpImportLog_Id")
-                    .IsUnique();
-
-                entity.Property(e => e.Created).HasColumnType("datetime");
-
-                entity.Property(e => e.CreatorName).HasMaxLength(30);
-
-                entity.Property(e => e.FileName).HasMaxLength(100);
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Created).HasColumnType("datetime");
+
+                entity.Property(e => e.CreatorName)
+                    .IsRequired()
+                    .HasMaxLength(30);
+
+                entity.Property(e => e.FileName)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
                 entity.Property(e => e.Type)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
             });
 
             modelBuilder.Entity<XpProg>(entity =>
             {
-                entity.HasKey(e => e.Sn)
-                    .HasName("PK_Prog");
-
-                entity.HasIndex(e => e.Id, "XpProg_Id")
-                    .IsUnique();
+                entity.Property(e => e.Id)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Code)
+                    .IsRequired()
                     .HasMaxLength(30)
                     .IsUnicode(false);
 
@@ -628,11 +613,9 @@ namespace HrAdm.Tables
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Id)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Name).HasMaxLength(30);
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(30);
 
                 entity.Property(e => e.Url)
                     .HasMaxLength(100)
@@ -641,36 +624,28 @@ namespace HrAdm.Tables
 
             modelBuilder.Entity<XpRole>(entity =>
             {
-                entity.HasKey(e => e.Sn)
-                    .HasName("PK_Role");
-
-                entity.HasIndex(e => e.Id, "XpRole_Id")
-                    .IsUnique();
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Name).HasMaxLength(30);
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(30);
             });
 
             modelBuilder.Entity<XpRoleProg>(entity =>
             {
-                entity.HasKey(e => e.Sn)
-                    .HasName("PK_RoleProg");
-
-                entity.HasIndex(e => e.Id, "XpRoleProg_Id")
-                    .IsUnique();
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.ProgId)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.RoleId)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
             });
@@ -680,6 +655,7 @@ namespace HrAdm.Tables
                 entity.HasKey(e => e.Sn);
 
                 entity.Property(e => e.Act)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
@@ -694,31 +670,29 @@ namespace HrAdm.Tables
                 entity.Property(e => e.OldValue).HasMaxLength(500);
 
                 entity.Property(e => e.RowId)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TableName)
+                    .IsRequired()
                     .HasMaxLength(30)
                     .IsUnicode(false);
             });
 
             modelBuilder.Entity<XpUserRole>(entity =>
             {
-                entity.HasKey(e => e.Sn)
-                    .HasName("PK_UserRole");
-
-                entity.HasIndex(e => e.Id, "XpUserRole_Id")
-                    .IsUnique();
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.RoleId)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UserId)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
             });

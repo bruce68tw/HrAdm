@@ -1,6 +1,6 @@
 ﻿using Base.Models;
 using BaseApi.Controllers;
-using BaseWeb.Attributes;
+using BaseApi.Attributes;
 using HrAdm.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace HrAdm.Controllers
 {
     [XgProgAuth]
-    public class XpFlowSignController : ApiCtrl
+    public class XpFlowSignController : BaseCtrl
     {
         public async Task<ActionResult> Read()
         {
@@ -41,7 +41,7 @@ namespace HrAdm.Controllers
         }
 
         //get file/image
-        public async Task<FileResult> ViewFile(string table, string fid, string key, string ext)
+        public async Task<FileResult?> ViewFile(string table, string fid, string key, string ext)
         {
             return await _Xp.ViewLeaveA(fid, key, ext);
         }

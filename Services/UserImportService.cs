@@ -1,6 +1,6 @@
 ﻿using Base.Models;
 using Base.Services;
-using BaseWeb.Services;
+using BaseApi.Services;
 using HrAdm.Enums;
 using HrAdm.Models;
 using HrAdm.Tables;
@@ -28,7 +28,7 @@ namespace HrAdm.Services
                 FnSaveImportRows = SaveImportRows,
                 CreatorName = _Fun.GetBaseUser().UserName,
             };
-            return await _WebExcel.ImportByFileA(file, dirUpload, importDto);
+            return await _HttpExcel.ImportByFileA(file, dirUpload, importDto);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace HrAdm.Services
                 }
                 catch (Exception ex)
                 {
-                    errors.Add(ex.InnerException.Message);
+                    errors.Add(ex.InnerException!.Message);
                 }
                 #endregion
             }

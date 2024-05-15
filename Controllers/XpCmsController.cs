@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 namespace HrAdm.Controllers
 {
     //CMS base controller, abstract class
-    abstract public class XpCmsController : ApiCtrl 
+    abstract public class XpCmsController : BaseCtrl 
     {
         //public string ProgName;     //program name
-        public string CmsType;      //map to CmsTypeEstr
-        public string DirUpload;    //upload dir, no right slash
-        public CmsEditDto EditDto;
+        public string CmsType = "";      //map to CmsTypeEstr
+        public string DirUpload = "";    //upload dir, no right slash
+        public CmsEditDto EditDto = null!;
 
         //use shared view
         public ActionResult Read()
@@ -41,18 +41,18 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<JsonResult> Create(string json, IFormFile t0_FileName)
         {
-            return Json(await EditService().CreateA(_Str.ToJson(json), t0_FileName, DirUpload, CmsType));
+            return Json(await EditService().CreateA(_Str.ToJson(json)!, t0_FileName, DirUpload, CmsType));
         }
 
         //by dirUpload
         [HttpPost]
         public async Task<JsonResult> Update(string key, string json, IFormFile t0_FileName)
         {
-            return Json(await EditService().UpdateA(key, _Str.ToJson(json), t0_FileName, DirUpload));
+            return Json(await EditService().UpdateA(key, _Str.ToJson(json)!, t0_FileName, DirUpload));
         }
 
         //by cmsType
-        public async Task<FileResult> ViewFile(string table, string fid, string key, string ext)
+        public async Task<FileResult?> ViewFile(string table, string fid, string key, string ext)
         {
             return await _Xp.ViewCmsTypeA(fid, key, ext, CmsType);
         }

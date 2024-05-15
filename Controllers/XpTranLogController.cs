@@ -1,14 +1,14 @@
 ﻿using Base.Models;
+using BaseApi.Attributes;
 using BaseApi.Controllers;
-using BaseWeb.Attributes;
-using BaseWeb.Services;
+using BaseApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace HrAdm.Controllers
 {
     [XgProgAuth]
-    public class XpTranLogController : ApiCtrl
+    public class XpTranLogController : BaseCtrl
     {
         public ActionResult Read()
         {
@@ -18,7 +18,7 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new XgTranLogRead().GetPageA(Ctrl, dt));
+            return JsonToCnt(await new XgTranLogR().GetPageA(Ctrl, dt));
         }
 
     }//class

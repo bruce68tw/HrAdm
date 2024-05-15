@@ -1,8 +1,8 @@
 ﻿using Base.Models;
 using Base.Services;
+using BaseApi.Attributes;
+using BaseApi.Extensions;
 using BaseApi.Services;
-using BaseWeb.Attributes;
-using BaseWeb.Extensions;
 using HrAdm.Models;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -55,7 +55,7 @@ where u.Account=@Account
             var row = await _Db.GetJsonA(sql, new List<object>() { "Account", vo.Account });
             //TODO: encode if need
             //if (row == null || row["Pwd"].ToString() != _Str.Md5(vo.Pwd))
-            if (row == null || row["Pwd"].ToString() != vo.Pwd)
+            if (row == null || row["Pwd"]!.ToString() != vo.Pwd)
             {
                 vo.AccountMsg = "input wrong.";
                 goto lab_exit;
@@ -63,13 +63,13 @@ where u.Account=@Account
             #endregion
 
             #region 3.set base user info
-            var userId = row["UserId"].ToString();
+            var userId = row["UserId"]!.ToString();
             var userInfo = new BaseUserDto()
             {
                 UserId = userId,
-                UserName = row["UserName"].ToString(),
-                DeptId = row["DeptId"].ToString(),
-                DeptName = row["DeptName"].ToString(),
+                UserName = row["UserName"]!.ToString(),
+                DeptId = row["DeptId"]!.ToString(),
+                DeptName = row["DeptName"]!.ToString(),
                 Locale = _Fun.Config.Locale,
                 ProgAuthStrs = await _XgProg.GetAuthStrsA(userId),
                 //IsLogin = true,

@@ -1,7 +1,7 @@
 ﻿using Base.Models;
 using Base.Services;
 using BaseApi.Controllers;
-using BaseWeb.Attributes;
+using BaseApi.Attributes;
 using HrAdm.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace HrAdm.Controllers
 {
     [XgProgAuth]
-    public class UserExtController : ApiCtrl
+    public class UserExtController : BaseCtrl
     {
         public async Task<ActionResult> Read()
         {
@@ -37,7 +37,7 @@ namespace HrAdm.Controllers
         //TODO: add your code, tSn_fid ex: t03_FileName
         public async Task<JsonResult> Create(string json, IFormFile t0_PhotoFile, List<IFormFile> t03_FileName)
         {
-            return Json(await EditService().CreateA(_Str.ToJson(json), t0_PhotoFile, t03_FileName));
+            return Json(await EditService().CreateA(_Str.ToJson(json)!, t0_PhotoFile, t03_FileName));
         }
 
         [HttpPost]
@@ -45,12 +45,12 @@ namespace HrAdm.Controllers
         public async Task<JsonResult> Update(string key, string json, IFormFile t0_PhotoFile, 
             List<IFormFile> t03_FileName)
         {
-            return Json(await EditService().UpdateA(key, _Str.ToJson(json), t0_PhotoFile, t03_FileName));
+            return Json(await EditService().UpdateA(key, _Str.ToJson(json)!, t0_PhotoFile, t03_FileName));
         }
 
         //TODO: add your code
         //get file/image
-        public async Task<FileResult> ViewFile(string table, string fid, string key, string ext)
+        public async Task<FileResult?> ViewFile(string table, string fid, string key, string ext)
         {
             return (fid == "PhotoFile")
                 ? await _Xp.ViewUserExtA(fid, key, ext)

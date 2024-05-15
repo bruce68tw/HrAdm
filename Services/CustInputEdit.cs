@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HrAdm.Services
 {
-    public class CustInputEdit : XgEdit
+    public class CustInputEdit : BaseEditSvc
     {
         public CustInputEdit(string ctrl) : base(ctrl) { }
 
@@ -44,7 +44,7 @@ namespace HrAdm.Services
             var service = EditService();
             var result = await service.CreateA(json);
             if (_Valid.ResultStatus(result))
-                await _WebFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.DirCustInput, t0_FldFile, nameof(t0_FldFile));
+                await _HttpFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.DirCustInput, t0_FldFile, nameof(t0_FldFile));
             return result;
         }
 
@@ -55,7 +55,7 @@ namespace HrAdm.Services
             var service = EditService();
             var result = await service.UpdateA(key, json);
             if (_Valid.ResultStatus(result))
-                await _WebFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.DirCustInput, t0_FldFile, nameof(t0_FldFile));
+                await _HttpFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.DirCustInput, t0_FldFile, nameof(t0_FldFile));
             return result;
         }
 

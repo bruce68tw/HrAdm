@@ -6,19 +6,19 @@ namespace HrAdm.Models
     {
         [Required]
         [StringLength(20)]
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         [Required]
         [StringLength(20)]
-        public string Account { get; set; }
+        public string Account { get; set; } = "";
 
         [Required]
         [StringLength(32)]
-        public string Pwd { get; set; }
+        public string Pwd { get; set; } = "";
 
         [Required]
         [StringLength(10)]
-        public string DeptId { get; set; }
+        public string DeptId { get; set; } = "";
 
         /*
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

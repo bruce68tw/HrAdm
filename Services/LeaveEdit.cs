@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HrAdm.Services
 {
-    public class LeaveEdit : XgEdit
+    public class LeaveEdit : BaseEditSvc
     {
         public LeaveEdit(string ctrl) : base(ctrl) { }
 
@@ -30,7 +30,7 @@ join dbo.XpCode c on c.Type='FlowStatus' and l.FlowStatus=c.Value
 join dbo.[User] u on l.Creator=u.Id
 left join dbo.[User] u2 on l.Reviser=u2.Id
 join dbo.[User] u3 on l.UserId=u3.Id
-where l.Id='{{0}}'
+where l.Id=@Id
 ",
                 Items = new EitemDto[] 
 				{
@@ -50,24 +50,23 @@ where l.Id='{{0}}'
         }
 
         //private string _newKey;
-        private JObject _inputRow;
-
-        //delegate function of FnAfterSave
-        private async Task<string> FnCreateSignRowsA(Db db, JObject newKeyJson)
-        {
-            var newKey = _Str.ReadNewKeyJson(newKeyJson);
-            return await _XgFlow.CreateSignRowsA(_inputRow, "UserId", "Leave", newKey, false, db);
-        }
+        private JObject? _inputRow;
 
         public async Task<ResultDto> CreateA(JObject json, IFormFile t0_FileName)
         {
-            _inputRow = _Json.ReadInputJson0(json);
+            _inputRow = _Json.GetRows0(json)!;
             var service = EditService();
             var result = await service.CreateA(json, null, FnCreateSignRowsA);
             if (_Valid.ResultStatus(result))
-                await _WebFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.DirLeave, t0_FileName, nameof(t0_FileName));
-
+                await _HttpFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.DirLeave, t0_FileName, nameof(t0_FileName));
             return result;
+        }
+
+        //delegate function of FnAfterSave
+        private async Task<string> FnCreateSignRowsA(CrudEditSvc editService, Db db, JObject newKeyJson)
+        {
+            var newKey = _Str.ReadNewKeyJson(newKeyJson);
+            return await _XgFlow.CreateSignRowsA(_inputRow!, "UserId", "Leave", newKey, false, db);
         }
 
         public async Task<ResultDto> UpdateA(string key, JObject json, IFormFile t0_FileName)
@@ -75,8 +74,7 @@ where l.Id='{{0}}'
             var service = EditService();
             var result = await service.UpdateA(key, json);
             if (_Valid.ResultStatus(result))
-                await _WebFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.DirLeave, t0_FileName, nameof(t0_FileName));
-
+                await _HttpFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.DirLeave, t0_FileName, nameof(t0_FileName));
             return result;
         }
 

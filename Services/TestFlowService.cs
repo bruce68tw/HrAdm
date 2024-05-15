@@ -1,5 +1,5 @@
 ﻿using Base.Services;
-using BaseWeb.Services;
+using BaseApi.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -21,7 +21,7 @@ namespace HrAdm.Services
                 return "UserId 欄位不可空白。";
 
             //create signed rows first
-            var userId = row[userFid].ToString();
+            var userId = row[userFid]!.ToString();
             var newId = _Str.NewId();
             await using var db = new Db();
             await db.BeginTranA();

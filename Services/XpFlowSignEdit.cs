@@ -3,7 +3,7 @@ using Base.Services;
 
 namespace HrAdm.Services
 {
-    public class XpFlowSignEdit : XgEdit
+    public class XpFlowSignEdit : BaseEditSvc
     {
         private string _flowCode;   //XpFlow.Code
         public XpFlowSignEdit(string ctrl, string flowCode) : base(ctrl) 
@@ -28,7 +28,7 @@ from dbo.Leave l
 join dbo.[User] u on l.UserId=u.Id
 join dbo.[User] u2 on l.AgentId=u2.Id
 join dbo.XpCode c on c.Type='LeaveType' and l.LeaveType=c.Value
-where l.Id='{{0}}'
+where l.Id=@Id
 ";
             }
 

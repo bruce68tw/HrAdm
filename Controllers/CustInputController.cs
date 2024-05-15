@@ -2,7 +2,7 @@
 using Base.Services;
 using BaseApi.Controllers;
 using BaseApi.Services;
-using BaseWeb.Attributes;
+using BaseApi.Attributes;
 using HrAdm.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace HrAdm.Controllers
 {
-    [XgProgAuth]
-    public class CustInputController : ApiCtrl
+    //[XgProgAuth]
+    public class CustInputController : BaseCtrl
     {
         public ActionResult Read()
         {
@@ -57,7 +57,7 @@ namespace HrAdm.Controllers
         public async Task<JsonResult> Create(string json, IFormFile t0_FldFile)
         {
             //_Fun.Except();
-            return Json(await EditService().CreateA(_Str.ToJson(json), t0_FldFile));
+            return Json(await EditService().CreateA(_Str.ToJson(json)!, t0_FldFile));
         }
 
         [HttpPost]
@@ -65,12 +65,12 @@ namespace HrAdm.Controllers
         public async Task<JsonResult> Update(string key, string json, IFormFile t0_FldFile)
         {
             //_Fun.Except();
-            return Json(await EditService().UpdateA(key, _Str.ToJson(json), t0_FldFile));
+            return Json(await EditService().UpdateA(key, _Str.ToJson(json)!, t0_FldFile));
         }
 
         //TODO: add your code
         //get file/image
-        public async Task<FileResult> ViewFile(string table, string fid, string key, string ext)
+        public async Task<FileResult?> ViewFile(string table, string fid, string key, string ext)
         {
             //for testing exception
             //_Fun.Except();
@@ -95,7 +95,7 @@ namespace HrAdm.Controllers
         public async Task<string> SetHtmlImage(IFormFile file)
         {
             var subDir = "image/CustInput";
-            var fileName = await _WebFile.SaveHtmlImageA(file, $"{_Web.DirWeb}{subDir}");
+            var fileName = await _HttpFile.SaveFileByNewIdA(file, $"{_FunApi.DirWeb}{subDir}");
             return _Fun.GetHtmlImageUrl($"{subDir}/{fileName}");
         }
 
