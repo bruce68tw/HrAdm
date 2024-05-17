@@ -6,7 +6,7 @@ using BaseApi.Services;
 
 namespace HrAdm.Services
 {
-    public class MyBaseUserService : IBaseUserS
+    public class MyBaseUserService : IBaseUserSvc
     {
         //get base user info
         public BaseUserDto GetData()

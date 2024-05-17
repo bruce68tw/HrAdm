@@ -45,7 +45,7 @@ namespace HrAdm
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             //4.user info for base component
-            services.AddSingleton<IBaseUserS, MyBaseUserService>();
+            services.AddSingleton<IBaseUserSvc, MyBaseUserService>();
 
             //5.ado.net for mssql
             services.AddTransient<DbConnection, SqlConnection>();

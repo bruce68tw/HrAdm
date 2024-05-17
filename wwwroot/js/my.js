@@ -4958,7 +4958,7 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
      * param findJson {json} find condition
      */
     this.find = function (findJson) {
-        //debugger;
+
         this.findJson = findJson;
         //this.findStr = findStr || '';
         this.resetCount();   //recount first
