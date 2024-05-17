@@ -4,10 +4,10 @@
         //datatable config
         var config = {
             columns: [
-                { data: 'Account' },
-                { data: 'Name' },
+                { data: 'Account', sortable: true },
+                { data: 'Name', sortable: true },
                 { data: 'DeptName' },
-                { data: 'Status' },
+                { data: 'Status', sortable: true },
                 { data: '_Fun' },
             ],
             columnDefs: [

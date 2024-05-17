@@ -5045,7 +5045,12 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
 
                 //add input parameter for datatables
                 data: function (arg) {
-                    //debugger;
+                    //write order.fid if any
+                    var orders = arg.order;
+                    if (orders.length > 0) {
+                        var order = orders[0];
+                        order.fid = arg.columns[order.column].data;
+                    }
                     arg.findJson = _json.toStr(this.findJson);    //string type
                     arg.recordsFiltered = this.recordsFiltered;
                     if (this._keepStart)

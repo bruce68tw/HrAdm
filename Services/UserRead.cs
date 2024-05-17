@@ -11,8 +11,8 @@ namespace HrAdm.Services
         private readonly ReadDto dto = new()
         {
             ReadSql = @"
-select u.Id, u.Account, u.Name, u.Status,
-   d.Name as DeptName
+select u.*, 
+    d.Name as DeptName
 from dbo.[User] u
 join dbo.Dept d on u.DeptId=d.Id
 order by u.Name
