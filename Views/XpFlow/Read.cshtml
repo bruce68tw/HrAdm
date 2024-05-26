@@ -8,14 +8,14 @@
 
 <link href="~/css/lib/jsplumbtoolkit-defaults-2.15.6.css" rel="stylesheet">
 <style>
-    .xp-prog {
+    .xu-prog {
         height: 100%;
         width: 98%;
         padding: 0 !important;
         /*padding: 2px;*/
     }
 
-        .xp-prog.xu-hide {
+        .xu-prog.xu-hide {
             border: none !important;
             margin: 0;
             padding: 0;
@@ -131,6 +131,9 @@
     <li onclick="_me.flow.onMenuDelete()">Delete</li>
 </ul>
 
+<!-- flow lines container, for keep saving rows, hide -->
+<div id="divLinesBox" style="display:none"></div>
+
 <!-- flow node template, _isnew(lower case !!), _key are need !! -->
 <script id="tplNode" type="text/template">
     <div data-shape="Circle"
@@ -150,9 +153,6 @@
         <div class="xf-ep" action="begin"></div>
     </div>
 </script>
-
-<!-- flow lines container, for keep saving rows, hide -->
-<div id="divLinesBox" style="display:none"></div>
 
 <!-- flow line template -->
 <script id="tplLine" type="text/template">
@@ -235,6 +235,7 @@
     </div>
 </div>
 
+<!-- line condition template -->
 <script id="tplLineCond" type="text/template">
     <tr>
         <td width="104px">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "AndOr", Value = "{{AndOr}}", Rows = (List<IdStrDto>)ViewBag.AndOrs, InRow = true })</td>

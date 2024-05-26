@@ -27,35 +27,36 @@
             };
 
             //initial
-            _me.edit0 = new EditOne();
-            _me.edit0.fnAfterOpenEdit = _me.edit0_afterOpenEdit;
-            _crudR.init(config, [_me.edit0]);
+            //_me.edit0 = new EditOne();
+            _crudR.init(config);
 
             //other variables
             _me.eform = $('#eform');
             _me.divSignRows = $('#divSignRows');
         },
 
+        //auto called
+        fnAfterOpenEdit: async function (fun, json) {
+            _btn.setEdit('btnToRead', true, _me.divEdit);
+            _input.set('SignStatus', 'Y', )
+            var box = _me.divSignRows;
+            await _ajax.getViewA('GetSignRows', { id: _me.edit0.getKey() }, function (html) {
+                box.html(html);
+            });
+        },
+
         //on view row
-        onView: function (flowCode, key) {
-            _ajax.getJson('GetViewJson', { flowCode: flowCode, key: key }, function (data) {
+        onView: async function (flowCode, key) {
+            await _ajax.getJsonA('GetViewJson', { flowCode: flowCode, key: key }, function (json) {
                 //consider other flow types
-                //here!!
-                _crudR.toEditMode(_fun.FunV, data);
+                _crudE._loadJson(json);
+                _crudR.toEditMode(_fun.FunV);
             });
         },
 
         //onclick viewFile, called by XiFile component
         onViewFile: function (table, fid, elm) {
             _edit.viewFile(table, fid, elm, _itext.get('Id', _me.eform));
-        },
-
-        edit0_afterOpenEdit: function (fun, json) {
-            _btn.setEdit('btnToRead', true, _me.divEdit);
-            var box = _me.divSignRows;
-            _ajax.getView('GetSignRows', { id: _me.edit0.getKey() }, function (html) {
-                box.html(html);
-            });
         },
 
     }; //class

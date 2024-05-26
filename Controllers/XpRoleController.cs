@@ -83,7 +83,7 @@ where (@Account is null or u.Account like @Account)
 and d.Id=iif(@DeptId is null, d.Id, @DeptId)
 order by d.Id, u.Account
 ";
-            var rows = await _Db.GetJsonsA(sql, new List<object>() { "Account", account, "DeptId" , deptId });
+            var rows = await _Db.GetRowsA(sql, new List<object>() { "Account", account, "DeptId" , deptId });
             return Content(rows == null ? "" : rows.ToString(), ContentTypeEstr.Json);
         }
 

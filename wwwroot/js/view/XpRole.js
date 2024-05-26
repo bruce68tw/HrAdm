@@ -37,12 +37,12 @@
     },
 
     //onclick find user
-    onFindUser: function () {        
+    onFindUserA: async function () {        
         var data = {
             account: _itext.get('Account', _me.modalUser),
             deptId: _iselect.get('DeptId', _me.modalUser),
         };
-        _ajax.getJson('GetUsers', data, function (rows) {
+        await _ajax.getJsonA('GetUsers', data, function (rows) {
             _me.modalUserBody.empty();
             for (var i = 0; i < rows.length; i++) {
                 _me.modalUserBody.append($(Mustache.render(_me.tplUser, rows[i])));
@@ -79,7 +79,7 @@
                 continue;
 
             var tr = $(Mustache.render(_me.tplUr, row));
-            _form.loadJson(tr, row);
+            _form.loadRow(tr, row);
             _me.mUserRole.boxSetNewId(tr);
             _me.divUrBody.append(tr);
         }

@@ -32,21 +32,15 @@
 
         //initial
         _me.edit0 = new EditOne();
-        _me.edit0.fnAfterOpenEdit = _me.edit0_afterOpenEdit;
         _crudR.init(config, [_me.edit0]);
 
         //other variables
         _me.divSignRows = $('#divSignRows');
     },
 
-    //TODO: add your code
-    //onclick viewFile, called by XiFile component
-    onViewFile: function (table, fid, elm) {
-        _me.edit0.onViewFile(table, fid, elm);
-    },
-
+    //atuo called !!
     //開啟畫面後會執行這個函數
-    edit0_afterOpenEdit: function (fun, json) {
+    fnAfterOpenEditA: async function (fun, json) {
         var box = _me.divSignRows;
         if (fun == _fun.FunC) {     //表示新增
             box.empty();
@@ -56,10 +50,16 @@
             _iselect.set('LeaveType', 'S', eform);          //設定下拉式欄位
             _idt.set('StartTime', '2022/10/1 9:00', eform); //設定 "日期時間" 欄位
         } else {
-            _ajax.getView('GetSignRows', { id: _me.edit0.getKey() }, function (html) {
+            await _ajax.getViewA('GetSignRows', { id: _me.edit0.getKey() }, function (html) {
                 box.html(html);
             });
         }
+    },
+
+    //TODO: add your code
+    //onclick viewFile, called by XiFile component
+    onViewFile: function (table, fid, elm) {
+        _me.edit0.onViewFile(table, fid, elm);
     },
 
 }; //class

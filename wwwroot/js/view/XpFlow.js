@@ -27,17 +27,17 @@
         _me.divEditTbar = $('#divEditTbar');
 
         //initial edit one/many
-        _me.edit0 = new EditOne();
+        //_me.edit0 = new EditOne();
         _me.mNode = new EditMany('Id', null, 'tplNode', '.xf-node');
         _me.mLine = new EditMany('Id', null, 'tplLine', '.xd-line', 'Sort');
-        _crudR.init(config, [_me.edit0, _me.mNode, _me.mLine]);
+        _crudR.init(config, [null, _me.mNode, _me.mLine]);
 
         //initial flow(jsplumb)
         _me.flow = new Flow('divEdit', _me.mNode, _me.mLine);
 
         //custom function
-        _me.edit0.fnAfterSwap = _me.edit0_afterSwap;
-        _me.edit0.fnAfterOpenEdit = _me.edit0_afterOpenEdit;
+        //_me.edit0.fnAfterSwap = _me.edit0_afterSwap;
+        //_me.edit0.fnAfterOpenEdit = _me.edit0_afterOpenEdit;
         //
         _me.mNode.fnLoadJson = _me.mNode_loadJson;
         _me.mNode.fnGetUpdJson = _me.mNode_getUpdJson;
@@ -47,12 +47,13 @@
         _me.mLine.fnGetUpdJson = _me.mLine_getUpdJson;
         _me.mLine.fnValid = _me.mLine_valid;
 
-        //flow test
+        //for flow test
         _me.divFlowTest = $('#divFlowTest');
         _me.nowFlowCode = '';
     },
 
-    edit0_afterSwap: function (toRead) {
+    //auto called
+    fnAfterSwap: function (toRead) {
         if (toRead) {
             _me.divEditTbar.hide();
         } else {
@@ -60,11 +61,33 @@
         }
     },
 
+    //auto called !!
     //reset when create
-    edit0_afterOpenEdit: function (fun, json) {
+    fnAfterOpenEdit: function (fun, json) {
         if (fun === _fun.FunC) {
             _me.flow.reset();
         }
+    },
+
+    /**
+     * auto called !!
+     * jsPlumb line container must visible when rendering
+     * see _crudE.js _updateOrViewA()
+     * @param {string} fun
+     * @param {string} key
+     * @returns {bool}
+     */
+    fnUpdateOrViewA: async function (fun, key) {
+        var act = (fun == _fun.FunU)
+            ? 'GetUpdJson' : 'GetViewJson';
+        return await _ajax.getJsonA(act, { key: key }, function (json) {
+            //show container first
+            _crudR.toEditMode(fun, () => {
+                _crudE._loadJson(json);
+                _crudE._setEditStatus(fun);
+                _crudE._afterOpenEdit(fun, json);
+            });
+        });
     },
 
     //#region mNode/mLine custom function
@@ -84,7 +107,11 @@
     },
 
     mLine_loadJson: function (json) {
-        _me.flow.loadLines(json);
+        //debugger;
+        //_me.divEdit.show();
+        //await _time.sleepA(10000);
+        var rows = _crudE.getRowsByJson(json);
+        _me.flow.loadLines(rows);
     },
 
     //getUpdJson
@@ -107,13 +134,13 @@
         _me.testToRead(false)
     },
 
-    onSaveTest: function () {
+    onSaveTestA: async function () {
         //check & save
         var data = {
             code: _me.nowFlowCode,
             data: _itextarea.get('Data', _me.divFlowTest),
         };
-        _ajax.getStr('SaveFlowTest', data, function (error) {
+        await _ajax.getStrA('SaveFlowTest', data, function (error) {
             if (_str.isEmpty(error)) {
                 _tool.msg('作業完成。');
                 _me.testToRead(true);

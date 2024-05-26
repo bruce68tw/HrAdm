@@ -32,7 +32,7 @@
                         return _date.mmToUiDt(data);
                     }},
 				    { targets: [7], render: function (data, type, full, meta) {
-                        return _str.format('<button type="button" class="btn btn-outline-secondary btn-sm" onclick="_crudR.onUpdate(\'{0}\')">@R["Audit"]</button>', full.Id);
+                        return _str.format('<button type="button" class="btn btn-outline-secondary btn-sm" onclick="_crudR.onUpdateA(\'{0}\')">@R["Audit"]</button>', full.Id);
                     }},
                 ],
             };
@@ -42,20 +42,25 @@
             _me.eform = $('#eform');
         },
 
+        //auto called !!
+        fnAfterOpenEdit: async function (fun, json) {
+            _input.set('SignStatus', 'Y', _me.divEdit);
+        },
+
         //TODO: add your code
         //onclick viewFile, called by XiFile component
         onViewFile: function (table, fid, elm) {
             _edit.viewFile(table, fid, elm, _itext.get('LeaveId', _me.eform));
         },
 
-        onSubmit: function () {
+        onSubmit: async function () {
             var form = _me.eform;
             var data = {
                 id: _itext.get('SignId', form),
                 status: _iselect.get('SignStatus', form),
                 note: _itext.get('Note', form),
             };
-            _ajax.getJson('SignRow', data, function (data) {
+            await _ajax.getJsonA('SignRow', data, function (data) {
                 _crudE.afterSave(data);
             });
         },

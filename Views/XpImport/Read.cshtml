@@ -49,7 +49,7 @@
         },
 
         //on run import
-        onImport: function () {
+        onImport: async function () {
             var modal = _me.modalImport;
             var fileObj = modal.find(':file');
             var file = _ifile.getUploadFile(fileObj);
@@ -60,7 +60,7 @@
 
             var formData = new FormData();
             formData.append('file', file);
-            _ajax.getJsonByFormData('Import', formData, function (data) {
+            await _ajax.getJsonByFdA('Import', formData, function (data) {
                 _modal.hideO(modal);
                 _tool.msg(_str.format('@R["ImportDone"]', data.OkCount, data.FailCount));
                 _me.dt.reload();

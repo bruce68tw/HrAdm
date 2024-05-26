@@ -15,7 +15,7 @@
             columnDefs: [
 				{ targets: [4], render: function (data, type, full, meta) {
                     return (full.CanSign == 1)
-                        ? _str.format('<button type="button" class="btn btn-outline-secondary btn-sm" onclick="_crudR.onUpdate(\'{0}\')">審核</button>', full.Id)
+                        ? _str.format('<button type="button" class="btn btn-outline-secondary btn-sm" onclick="_crudR.onUpdateA(\'{0}\')">審核</button>', full.Id)
                         : '';
                 }},
 				{ targets: [5], render: function (data, type, full, meta) {
@@ -29,7 +29,6 @@
 
         //initial
         _me.edit0 = new EditOne();
-        _me.edit0.fnAfterOpenEdit = _me.edit0_afterOpenEdit;
         _crudR.init(config, [_me.edit0], '審核');
 
         //other variables
@@ -37,7 +36,8 @@
         _me.divSignRows = $('#divSignRows');
     },
 
-    edit0_afterOpenEdit: function (fun, json) {
+    //auto called !!
+    fnAfterOpenEdit: async function (fun, json) {
         //reset form
         var form = _me.eform;
         _iselect.set('SignStatus', '', form);
@@ -47,13 +47,13 @@
         if (fun == _fun.FunC) {
             box.empty();
         } else {
-            _ajax.getView('GetSignRows', { id: _me.edit0.getKey() }, function (html) {
+            await _ajax.getViewA('GetSignRows', { id: _me.edit0.getKey() }, function (html) {
                 box.html(html);
             });
         }
     },
 
-    onSubmit: function () {
+    onSubmitA: async function () {
         var form = _me.eform;
         var status = _iselect.get('SignStatus', form);
         if (_str.isEmpty(status)) {
@@ -66,7 +66,7 @@
             status: status,
             note: _itext.get('Note', form),
         };
-        _ajax.getJson('SignRow', data, function (data) {
+        await _ajax.getJsonA('SignRow', data, function (data) {
             //??
             _crudE.afterSave(data);
         });
