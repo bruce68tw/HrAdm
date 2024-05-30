@@ -3993,6 +3993,9 @@ var _json = {
 
     //filter json array
     filterRows: function (rows, fid, value) {
+        if (rows == null || rows.length == 0)
+            return null;
+
         return rows.filter(function (row) {
             return (row[fid] === value);
         });
@@ -5446,7 +5449,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         if (_var.isEmpty(reset) || reset)
             this.reset(rowsBox);
 
-        //var rows = json._rows;
+        //check
         var rowLen = (rows == null) ? 0 : rows.length;
         if (rowLen == 0)
             return;
