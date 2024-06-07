@@ -20,7 +20,7 @@ select
     LeaveName=c.Name_{locale}
 from dbo.XpFlowSign s
 join dbo.XpFlow f on f.Code='Leave' and s.FlowId=f.Id
-join dbo.Leave l on s.SourceId=l.Id and s.FlowLevel=l.FlowLevel and s.SignStatus='0'
+join dbo.Leave l on s.SourceId=l.Id and s.FlowLevel=l.FlowLevel
 join dbo.[User] u on l.UserId=u.Id
 join dbo.XpCode c on c.Type='LeaveType' and l.LeaveType=c.Value
 where s.SignerId='{_Fun.UserId()}'

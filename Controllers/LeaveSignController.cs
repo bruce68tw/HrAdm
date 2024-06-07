@@ -1,4 +1,5 @@
-﻿using Base.Models;
+﻿using Base.Enums;
+using Base.Models;
 using BaseApi.Attributes;
 using BaseApi.Controllers;
 using BaseApi.Services;
@@ -20,6 +21,7 @@ namespace HrAdm.Controllers
         }
 
         [HttpPost]
+        [XgProgAuth(CrudEnum.Read)]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
             return JsonToCnt(await new LeaveSignRead().GetPageA(Ctrl, dt));
@@ -52,7 +54,7 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<JsonResult> SignRow(string id, string status, string note)
         {
-            return Json(await _XgFlow.SignRowA(id, (status == "Y"), note, "Leave", false));
+            return Json(await _XgFlow.SignRowA(id, (status == "Y"), note, "Leave", false, FlowBackTypeEnum.ToPrev));
         }
 
         //TODO: add your code

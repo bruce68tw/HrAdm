@@ -21,7 +21,7 @@ select
     UserName=u.Name,
     AgentName=u2.Name
 from dbo.XpFlowSign s
-join dbo.Leave l on s.SourceId=l.Id and s.FlowLevel=l.FlowLevel and s.SignStatus='0'
+join dbo.Leave l on s.SourceId=l.Id and s.FlowLevel=l.FlowLevel
 join dbo.[User] u on l.UserId=u.Id
 join dbo.[User] u2 on l.AgentId=u2.Id
 join dbo.XpCode c on c.Type='LeaveType' and l.LeaveType=c.Value
