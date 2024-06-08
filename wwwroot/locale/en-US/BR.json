@@ -16,9 +16,6 @@
   "PlsSelect": "-Select-",
   "TipDeleteRow": "Delete this Row",
 
-  "NoAuthProg": "You have not access right, Please connect Admin.",
-  "NotLogin": "Please Login First.",
-
   "Required": "Required",
   "StrLen": "String too long({0})",
 

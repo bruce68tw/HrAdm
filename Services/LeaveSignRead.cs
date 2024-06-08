@@ -16,12 +16,13 @@ namespace HrAdm.Services
 select 
     s.Id, s.NodeName,
     l.StartTime, l.EndTime, l.Hours, l.Created,
-    UserName=u.Name,
+    UserName=u2.Name,
     LeaveName=c.Name_{locale}
 from dbo.XpFlowSign s
 join dbo.XpFlow f on f.Code='Leave' and s.FlowId=f.Id
 join dbo.Leave l on s.SourceId=l.Id and s.FlowLevel=l.FlowLevel
-join dbo.[User] u on l.UserId=u.Id
+join dbo.[User] u on s.SignerId=u.Id
+join dbo.[User] u2 on l.UserId=u2.Id
 join dbo.XpCode c on c.Type='LeaveType' and l.LeaveType=c.Value
 where s.SignerId='{_Fun.UserId()}'
 order by l.Created

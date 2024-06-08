@@ -33,12 +33,14 @@ namespace HrAdm.Controllers
         }
 
         [HttpPost]
+        [XgProgAuth(CrudEnum.Update)]
         public async Task<ContentResult> GetUpdJson(string key)
         {
             return JsonToCnt(await EditService().GetUpdJsonA(key));
         }
 
         [HttpPost]
+        [XgProgAuth(CrudEnum.View)]
         public async Task<ContentResult> GetViewJson(string key)
         {
             return JsonToCnt(await EditService().GetViewJsonA(key));

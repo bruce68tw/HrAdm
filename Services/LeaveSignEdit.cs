@@ -19,11 +19,13 @@ select
     l.StartTime, l.EndTime, l.Hours, l.Created, l.FileName,
     LeaveName=c.Name_{locale},
     UserName=u.Name,
-    AgentName=u2.Name
+    AgentName=u2.Name,
+    {_Fun.FidUser}=u3.Id, {_Fun.FidDept}=u3.DeptId
 from dbo.XpFlowSign s
 join dbo.Leave l on s.SourceId=l.Id and s.FlowLevel=l.FlowLevel
 join dbo.[User] u on l.UserId=u.Id
 join dbo.[User] u2 on l.AgentId=u2.Id
+join dbo.[User] u3 on s.SignerId=u3.Id
 join dbo.XpCode c on c.Type='LeaveType' and l.LeaveType=c.Value
 where s.Id=@Id
 ",
