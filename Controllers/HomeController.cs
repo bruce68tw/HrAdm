@@ -19,6 +19,7 @@ namespace HrAdmin.Controllers
             return View();
         }
 
+        //called by XgLogin
         public ActionResult Login(string url = "")
         {
             return View(new LoginVo() { FromUrl = url });
@@ -71,7 +72,7 @@ where u.Account=@Account
                 DeptId = row["DeptId"]!.ToString(),
                 DeptName = row["DeptName"]!.ToString(),
                 Locale = _Fun.Config.Locale,
-                ProgAuthStrs = await _XgProg.GetAuthStrsA(userId),
+                ProgAuthStrs = await _Auth.GetAuthStrsA(userId),
                 //IsLogin = true,
             };
             #endregion
