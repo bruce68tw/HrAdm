@@ -31,7 +31,7 @@
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["FlowStatus"].Value, Fid = "FlowStatus", Value = flowStatus, Rows = (List<IdStrDto>)ViewBag.SignStatuses, BoxClass = "xg-date-w" })
         </form>
 
-        @if (_XgProg.CheckCreate("Leave"))
+        @if (_Auth.CheckCreate("Leave"))
         {
             <div class='xg-btns-box'>
                 @await Component.InvokeAsync("XgCreate")

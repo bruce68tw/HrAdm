@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbAdm", "..\DbAdm\DbAdm.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BaseApi", "..\Base\BaseApi\BaseApi.csproj", "{852AB9AF-0F72-49B8-8745-85A002B7FFBC}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyCmd", "..\KeyCmd\KeyCmd.csproj", "{2225F503-E854-4F94-A3DE-C5F1578E0961}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,14 @@ Global
 		{852AB9AF-0F72-49B8-8745-85A002B7FFBC}.Debug-Local|Any CPU.Build.0 = Debug-Local|Any CPU
 		{852AB9AF-0F72-49B8-8745-85A002B7FFBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{852AB9AF-0F72-49B8-8745-85A002B7FFBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2225F503-E854-4F94-A3DE-C5F1578E0961}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2225F503-E854-4F94-A3DE-C5F1578E0961}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2225F503-E854-4F94-A3DE-C5F1578E0961}.Debug-IP|Any CPU.ActiveCfg = Debug|Any CPU
+		{2225F503-E854-4F94-A3DE-C5F1578E0961}.Debug-IP|Any CPU.Build.0 = Debug|Any CPU
+		{2225F503-E854-4F94-A3DE-C5F1578E0961}.Debug-Local|Any CPU.ActiveCfg = Debug|Any CPU
+		{2225F503-E854-4F94-A3DE-C5F1578E0961}.Debug-Local|Any CPU.Build.0 = Debug|Any CPU
+		{2225F503-E854-4F94-A3DE-C5F1578E0961}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2225F503-E854-4F94-A3DE-C5F1578E0961}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
