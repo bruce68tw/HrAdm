@@ -34,6 +34,34 @@ var _fun = {
 
     //variables ??
     //isCheck: true,
+    init: function (locale) {
+        //set jwt token
+        //_fun.jwtToken = localStorage.getItem('_jwtToken') || '';
+        //localStorage.removeItem('_jwtToken');
+
+        _fun.locale = locale;
+        //initial
+        _leftmenu.init();
+        _pjax.init('.xu-body');
+        _tool.init();
+        moment.locale(_fun.locale);
+    },
+
+    //get header json object for jwt
+    jsonAddJwtHeader: function (json) {
+        if (_fun.jwtToken)
+            json.headers = _fun.getJwtAuth();
+    },
+
+    getJwtAuth: function () {
+        return {
+            'Authorization': _fun.getJwtBearer()
+        };
+    },
+
+    getJwtBearer: function () {
+        return 'Bearer ' + _fun.jwtToken;
+    },
 
     //server need Fun/Hello()
     //no called

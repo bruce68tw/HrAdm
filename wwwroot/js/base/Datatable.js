@@ -123,7 +123,13 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
                 url: url,
                 type: 'POST',
                 dataType: 'json',
-
+                /*
+                beforeSend: function (jqXHR) {
+                    //debugger;
+                    if (_fun.jwtToken)
+                        jqXHR.setRequestHeader("Authorization", "Bearer " + _fun.jwtToken);
+                },
+                */
                 //add input parameter for datatables
                 data: function (arg) {
                     //write order.fid if any
