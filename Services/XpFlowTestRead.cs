@@ -24,7 +24,7 @@ from dbo.XpFlowTest d
 join dbo.XpFlowSignTest s on s.SourceId=d.Id and s.FlowLevel=d.FlowLevel
 join dbo.XpFlow f on s.FlowId=f.Id
 join dbo.XpCode x on x.Type='FlowStatus' and d.FlowStatus=x.Value
-join dbo.[User] u on s.SignerId=u.Id
+join dbo.XpUser u on s.SignerId=u.Id
 order by d.Created desc
 ",
                 TableAs = "d",

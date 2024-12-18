@@ -21,8 +21,8 @@ select
     c2.Name_{locale0} as SignStatusName, l.Created,
     l.Id
 from dbo.Leave l
-join dbo.[User] u on l.UserId=u.Id
-join dbo.[User] u2 on l.AgentId=u2.Id
+join dbo.XpUser u on l.UserId=u.Id
+join dbo.XpUser u2 on l.AgentId=u2.Id
 join dbo.XpCode c on c.Type='LeaveType' and l.LeaveType=c.Value
 join dbo.XpCode c2 on c2.Type='FlowStatus' and l.FlowStatus=c2.Value
 order by l.Id

@@ -13,8 +13,8 @@ namespace HrAdm.Services
             ReadSql = @"
 select u.*, 
     d.Name as DeptName
-from dbo.[User] u
-join dbo.Dept d on u.DeptId=d.Id
+from dbo.XpUser u
+join dbo.XpDept d on u.DeptId=d.Id
 order by u.Name
 ",
             Items = new QitemDto[] {

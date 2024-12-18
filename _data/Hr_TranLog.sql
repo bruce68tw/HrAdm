@@ -119,7 +119,7 @@ if object_id('trc_User', 'TR') is not null
 go
    
 create trigger trc_User
-   on dbo.[User]
+   on dbo.XpUser
    after insert
 as begin	
 
@@ -128,7 +128,7 @@ as begin
 	declare @table varchar(30)
 	declare @act varchar(10)
 	set @now = getdate()
-	set @table = 'User'
+	set @table = 'XpUser'
 	set @act = 'Create'
 	select @id=Id from inserted
 
@@ -146,7 +146,7 @@ if object_id('tru_User', 'TR') is not null
 go
    
 create trigger tru_User
-   on dbo.[User]
+   on dbo.XpUser
    after update
 as begin	
 
@@ -155,7 +155,7 @@ as begin
 	declare @table varchar(30)
 	declare @act varchar(10)
 	set @now = getdate()
-	set @table = 'User'
+	set @table = 'XpUser'
 	set @act = 'Update'
 	select @id=Id from deleted
 
@@ -192,7 +192,7 @@ if object_id('trd_User', 'TR') is not null
 go
    
 create trigger trd_User
-   on dbo.[User]
+   on dbo.XpUser
    after delete
 as begin	
 
@@ -201,7 +201,7 @@ as begin
 	declare @table varchar(30)
 	declare @act varchar(10)
 	set @now = getdate()
-	set @table = 'User'
+	set @table = 'XpUser'
 	set @act = 'Delete'
 	select @id=Id from deleted
 

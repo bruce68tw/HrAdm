@@ -3,7 +3,7 @@ if object_id('dbo.trc_User', 'TR') is not null
 go
    
 create trigger dbo.trc_User
-   on dbo.[User]
+   on dbo.XpUser
    after insert
 as begin	
 
@@ -12,7 +12,7 @@ as begin
 	declare @table varchar(30)
 	declare @crud char(1)
 	set @now = getdate()
-	set @table = 'User'
+	set @table = 'XpUser'
 	set @crud = 'C'
 	select @id=Id from inserted
 

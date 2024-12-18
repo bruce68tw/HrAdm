@@ -23,8 +23,8 @@ select c.*,
     CreatorName=u.Name,
     ReviserName=u2.Name
 from dbo.Cms c
-join dbo.[User] u on c.Creator=u.Id
-left join dbo.[User] u2 on c.Reviser=u2.Id
+join dbo.XpUser u on c.Creator=u.Id
+left join dbo.XpUser u2 on c.Reviser=u2.Id
 where c.Id=@Id
 ",
                 Items = new EitemDto[] 

@@ -16,28 +16,27 @@ namespace HrAdm.Services
         {
             return new EditDto
             {
-				Table = "dbo.[User]",
+				Table = "dbo.XpUser",
                 PkeyFid = "Id",
                 Col4 = null,
-                Items = new EitemDto[] 
-				{
+                Items =
+				[
 					new() { Fid = "Id" },
 					new() { Fid = "Account" },
 					new() { Fid = "Name" },
 					new() { Fid = "DeptId" },
                     new() { Fid = "PhotoFile" },
                     new() { Fid = "Status" },
-                },
-                Childs = new EditDto[]
-                {
-                    new EditDto
+                ],
+                Childs =
+				[
+					new EditDto
                     {
                         Table = "dbo.[UserJob]",
                         PkeyFid = "Id",
                         FkeyFid = "UserId",
                         Col4 = null,
-                        Items = new EitemDto[] 
-						{
+                        Items = [
 							new() { Fid = "Id" },
 							new() { Fid = "UserId" },
 							new() { Fid = "JobName", Required = true },
@@ -48,7 +47,7 @@ namespace HrAdm.Services
 							new() { Fid = "CorpUsers" },
 							new() { Fid = "IsManaged" },
 							new() { Fid = "JobDesc" },
-                        },
+                        ],
                     },
                     new EditDto
                     {
@@ -56,8 +55,7 @@ namespace HrAdm.Services
                         PkeyFid = "Id",
                         FkeyFid = "UserId",
                         Col4 = null,
-                        Items = new EitemDto[] 
-						{
+                        Items = [
 							new() { Fid = "Id" },
 							new() { Fid = "UserId" },
 							new() { Fid = "SchoolName", Required = true },
@@ -65,7 +63,7 @@ namespace HrAdm.Services
 							new() { Fid = "SchoolType" },
 							new() { Fid = "StartEnd", Required = true },
 							new() { Fid = "Graduated" },
-                        },
+                        ],
                     },
                     new EditDto
                     {
@@ -74,8 +72,7 @@ namespace HrAdm.Services
                         FkeyFid = "UserId",
 						OrderBy = "Sort",
                         Col4 = null,
-                        Items = new EitemDto[] 
-						{
+                        Items = [
 							new() { Fid = "Id" },
 							new() { Fid = "UserId" },
 							new() { Fid = "LangName", Required = true },
@@ -84,7 +81,7 @@ namespace HrAdm.Services
 							new() { Fid = "ReadLevel" },
 							new() { Fid = "WriteLevel" },
 							new() { Fid = "Sort" },
-                        },
+                        ],
                     },
                     new EditDto
                     {
@@ -92,14 +89,13 @@ namespace HrAdm.Services
                         PkeyFid = "Id",
                         FkeyFid = "UserId",
                         Col4 = null,
-                        Items = new EitemDto[] 
-						{
+                        Items = [
 							new() { Fid = "Id" },
 							new() { Fid = "UserId" },
 							new() { Fid = "LicenseName", Required = true },
 							new() { Fid = "StartEnd", Required = true },
 							new() { Fid = "FileName" },
-                        },
+                        ],
                     },
                     new EditDto
                     {
@@ -107,16 +103,15 @@ namespace HrAdm.Services
                         PkeyFid = "Id",
                         FkeyFid = "UserId",
                         Col4 = null,
-                        Items = new EitemDto[] 
-						{
+                        Items = [
 							new() { Fid = "Id" },
 							new() { Fid = "UserId" },
 							new() { Fid = "SkillName", Required = true },
 							new() { Fid = "SkillDesc" },
 							new() { Fid = "Sort" },
-                        },
+                        ],
                     },
-                },
+                ],
             };
         }
 

@@ -11,7 +11,7 @@ namespace HrAdm.Services
         {
             return new EditDto
             {
-				Table = "dbo.[User]",
+				Table = "dbo.XpUser",
                 PkeyFid = "Id",
                 Col4 = null,
                 Items = new EitemDto[] 

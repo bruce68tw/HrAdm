@@ -25,8 +25,8 @@ select
     UserName=u.Name,
     AgentName=u2.Name
 from dbo.Leave l
-join dbo.[User] u on l.UserId=u.Id
-join dbo.[User] u2 on l.AgentId=u2.Id
+join dbo.XpUser u on l.UserId=u.Id
+join dbo.XpUser u2 on l.AgentId=u2.Id
 join dbo.XpCode c on c.Type='LeaveType' and l.LeaveType=c.Value
 where l.Id=@Id
 ";

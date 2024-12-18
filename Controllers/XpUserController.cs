@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace HrAdm.Controllers
 {
     [XgProgAuth]
-    public class UserController : BaseCtrl
+    public class XpUserController : BaseCtrl
     {
         public async Task<ActionResult> Read()
         {

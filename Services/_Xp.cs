@@ -21,15 +21,15 @@ namespace HrAdm.Services
 
         //dir
         public static string DirTpl = _Fun.Dir("_template");
-        public static string DirUpload = _Fun.Dir("_upload");
+        public static string DirBaseUpload = _Fun.Dir("_upload");
         //
-        public static string DirLeave = DirUpload2("Leave");
-        public static string DirUserExt = DirUpload2("UserExt");
-        public static string DirUserLicense = DirUpload2("UserLicense");
-        public static string DirCustInput = DirUpload2("CustInput");
-        public static string DirUserImport = DirUpload2("UserImport");
+        public static string DirLeave = DirUpload("Leave");
+        public static string DirUserExt = DirUpload("UserExt");
+        public static string DirUserLicense = DirUpload("UserLicense");
+        public static string DirCustInput = DirUpload("CustInput");
+        public static string DirUserImport = DirUpload("UserImport");
         //dir cms
-        public static string DirCms = DirUpload2("Cms", false);
+        public static string DirCms = DirUpload("Cms", false);
 
         //public static string Locale;
         //public static string LocaleNoDash;
@@ -50,9 +50,9 @@ namespace HrAdm.Services
         }
         #endregion
 
-        private static string DirUpload2(string subDir, bool sep = true)
+        private static string DirUpload(string subDir, bool sep = true)
         {
-            return DirUpload + subDir + (sep ? _Fun.DirSep : "");
+            return DirBaseUpload + subDir + (sep ? _Fun.DirSep : "");
         }
 
         public static string DirCmsType(string cmsType)

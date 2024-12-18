@@ -11,8 +11,8 @@ namespace HrAdm.Services
         private readonly ReadDto dto = new()
         {
             ReadSql = @"
-select u.*, d.name as DeptName from dbo.[User] u
-join dbo.Dept d on u.DeptId=d.Id
+select u.*, d.name as DeptName from dbo.XpUser u
+join dbo.XpDept d on u.DeptId=d.Id
 order by u.Id
 ",
             Items = new QitemDto[] {

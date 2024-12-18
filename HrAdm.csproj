@@ -65,8 +65,8 @@
     <Content Remove="Views\XpFlow\zz_Edit.cshtml" />
     <Content Remove="Views\XpFlow\zz_Test.cshtml" />
     <Content Remove="Views\XpFlow\zz__LineCond.cshtml" />
-    <Content Remove="Views\User\Edit - 複製.cshtml" />
-    <Content Remove="Views\User\Read - 複製.cshtml" />
+    <Content Remove="Views\XpUser\Edit - 複製.cshtml" />
+    <Content Remove="Views\XpUser\Read - 複製.cshtml" />
     <Content Remove="Views\XpRole\Read_v0.cshtml" />
     <Content Remove="wwwroot\css\base\fontAwesome.c_old" />
     <Content Remove="wwwroot\js\bootstrap.bundle-5.1.3.min.js" />
@@ -91,7 +91,7 @@
     <None Remove="Views\LeaveSign\Edit.cshtml_old" />
     <None Remove="Views\Leave\Edit.cshtml_old" />
     <None Remove="Views\UserExt\Edit.cshtml_old" />
-    <None Remove="Views\User\Edit.cshtml_old" />
+    <None Remove="Views\XpUser\Edit.cshtml_old" />
     <None Remove="Views\XpCms\Edit.cshtml_old" />
     <None Remove="Views\XpEasyRpt\Edit.cshtml_old" />
     <None Remove="Views\XpFlowSign\Edit.cshtml_old" />

@@ -27,9 +27,9 @@ select l.*,
     {_Fun.FidUser}=u3.Id, {_Fun.FidDept}=u3.DeptId
 from dbo.Leave l
 join dbo.XpCode c on c.Type='FlowStatus' and l.FlowStatus=c.Value
-join dbo.[User] u on l.Creator=u.Id
-left join dbo.[User] u2 on l.Reviser=u2.Id
-join dbo.[User] u3 on l.UserId=u3.Id
+join dbo.XpUser u on l.Creator=u.Id
+left join dbo.XpUser u2 on l.Reviser=u2.Id
+join dbo.XpUser u3 on l.UserId=u3.Id
 where l.Id=@Id
 ",
                 Items = new EitemDto[] 
