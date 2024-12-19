@@ -13,16 +13,16 @@
             ],
             columnDefs: [
 				{ targets: [1], render: function (data, type, full, meta) {
-                    return _date.mmToUiDt2(data);
+                    return _date.dtsToUiDt2(data);
                 }},
 				{ targets: [2], render: function (data, type, full, meta) {
-                    return _date.mmToUiDt2(data);
+                    return _date.dtsToUiDt2(data);
                 }},
 				{ targets: [3], render: function (data, type, full, meta) {
                     return _crudR.dtStatusName(data);
                 }},
 				{ targets: [4], render: function (data, type, full, meta) {
-                    return _date.mmToUiDt(data);
+                    return _date.dtsToUiDt(data);
                 }},
 				{ targets: [5], render: function (data, type, full, meta) {
                     return _crudR.dtCrudFun(full.Id, '', true, true, true);

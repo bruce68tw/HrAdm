@@ -13,10 +13,10 @@
             ],
             columnDefs: [
 				{ targets: [3], render: function (data, type, full, meta) {
-                    return _date.mmToUiDate(data);
+                    return _date.dtsToFormat(data);
                 }},
 				{ targets: [4], render: function (data, type, full, meta) {
-                    return _date.mmToUiDt2(data);
+                    return _date.dtsToUiDt2(data);
                 }},
 				{ targets: [5], render: function (data, type, full, meta) {
                     return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);

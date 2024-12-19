@@ -16,13 +16,13 @@
             ],
             columnDefs: [
 				{ targets: [3], render: function (data, type, full, meta) {
-                    return _date.mmToUiDt2(data);
+                    return _date.dtsToUiDt2(data);
                 }},
 				{ targets: [4], render: function (data, type, full, meta) {
-                    return _date.mmToUiDt2(data);
+                    return _date.dtsToUiDt2(data);
                 }},
 				{ targets: [7], render: function (data, type, full, meta) {
-                    return _date.mmToUiDt(data);
+                    return _date.dtsToUiDt(data);
                 }},
 				{ targets: [8], render: function (data, type, full, meta) {
                     return _crudR.dtCrudFun(full.Id, 'Leave', true, true, true);

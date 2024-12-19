@@ -19,7 +19,7 @@
                         : '';
                 }},
 				{ targets: [5], render: function (data, type, full, meta) {
-                    return _date.mmToUiDt(data);
+                    return _date.dtsToUiDt(data);
                 }},
 				{ targets: [6], render: function (data, type, full, meta) {
                     return _crudR.dtCrudFun(full.Id, 'Leave', false, false, true);

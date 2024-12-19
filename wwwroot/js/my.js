@@ -582,6 +582,7 @@ var _chart = {
  *   divEdit:
  *   hasEdit:
  *   edit0:
+ *   eform0: 
  *   hasChild:
  *   _nowFun:
  *   modal:
@@ -621,6 +622,8 @@ var _crudE = {
             }
 
             _me.edit0 = edit0;
+            if (edit0.eform != null)
+                _me.eform0 = edit0.eform;
             _me.hasChild = (_fun.hasValue(_me.edit0[Childs]) && _me.edit0[Childs].length > 0);
             //_me.editLen = _me.edits.length;
             _crudE._initForm(_me.edit0);
@@ -732,6 +735,9 @@ var _crudE = {
             _ihtml.setEdits(box, '', true);
             _ihtml.setEdits(box, dataEdit, false);
         }
+
+        //remove span error
+        _me.divEdit.find('span.error').remove();
 
         //enable btnToRead for view fun
         //if (isView)
@@ -978,6 +984,20 @@ var _crudE = {
         var child = upRow[fid][childIdx];
         child[_crudE.Rows] = rows;
         return child;
+    },
+
+    /**
+     * 將目前畫面資料為新資料
+     * param upRow {json}
+     * param childIdx {int}
+     * param rows {jsons}
+     * return {json} child object
+     */
+    editToNew: function () {
+        var fun = _fun.FunC;
+        _crudE._setEditStatus(fun);
+        _me.edit0.resetKey();
+        _prog.setPath(fun);
     },
 
     //=== event start ===
@@ -1481,6 +1501,7 @@ var _crudR = {
 
 };//class
 /**
+ * 日期/時間格式包含: 資料庫、c#/js(兩者設定為一致)、UI
  * for date related
  * short name:
  *  1.date: moment date
@@ -1502,13 +1523,25 @@ var _date = {
     },
 
     /**
-     * ??get today date string in UI format
-    uiToday: function(){
-        //var date = new Date();
-        //return date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
-        return moment().format(_BR.MmDateFmt);
-    },
+     * get today date string in UI format
      */
+    uiToday: function(){
+        var mm = moment();
+        return _date.mmToUiDate(mm);
+    },
+
+    /**
+     * get this week monday in UI format
+     */
+    uiWeekMonday: function () {
+        var mm = moment().day(1)
+        return _date.mmToUiDate(mm);
+    },
+
+    uiWeekFriday: function () {
+        var mm = moment().day(5)
+        return _date.mmToUiDate(mm);
+    },
 
     /**
      * get current year, ex: 2021
@@ -1517,21 +1550,33 @@ var _date = {
         return (new Date()).getFullYear();
     },
 
+    mmToUiDate: function (mm) {
+        return mm.format(_BR.MmUiDateFmt);
+    },
+
+    mmToUiDt: function (mm) {
+        return mm.format(_BR.MmUiDtFmt);
+    },
+
+    mmToUiDt2: function (mm) {
+        return mm.format(_BR.MmUiDt2Fmt);
+    },
+
     /**
      * js date string to ui date string
      * param ds {string} js date string
      * return {string} ui date string
      */ 
-    mmToUiDate: function (ds) {
-        return (_str.isEmpty(ds))
+    dtsToFormat: function (ds) {
+        return _str.isEmpty(ds)
             ? ''
-            : moment(ds, _fun.MmDateFmt).format(_BR.MmUiDateFmt);
+            : _date.mmToUiDate(moment(ds, _fun.MmDateFmt));
     },
 
-    mmToUiDt: function (dts) {
-        return (_str.isEmpty(dts))
+    dtsToUiDt: function (dts) {
+        return _str.isEmpty(dts)
             ? ''
-            : moment(dts, _fun.MmDtFmt).format(_BR.MmUiDtFmt);
+            : _date.mmToUiDt(moment(dts, _fun.MmDtFmt));
     },
 
     /**
@@ -1539,26 +1584,26 @@ var _date = {
      * param dts {string} js datetime string
      * return {string} ui datetime2 string(no second)
      */
-    mmToUiDt2: function (dts) {
-        return (_str.isEmpty(dts))
+    dtsToUiDt2: function (dts) {
+        return _str.isEmpty(dts)
             ? ''
-            : moment(dts, _fun.MmDtFmt).format(_BR.MmUiDt2Fmt);
+            : _date.mmToUiDt2(moment(dts, _fun.MmDtFmt));
     },
 
-    mmToFormat: function (dts, format) {
+    dtsToFormat: function (dts, format) {
         return (_str.isEmpty(dts))
             ? ''
             : moment(dts, _fun.MmDtFmt).format(format);
     },
 
     //get datetime value for compare
-    mmToValue: function (dts) {
+    dtsToValue: function (dts) {
         return (_str.isEmpty(dts))
             ? 0
             : moment(dts, _fun.MmDtFmt).valueOf();
     },
 
-    mmToMoment: function (dts) {
+    dtsToMoment: function (dts) {
         return (_str.isEmpty(dts))
             ? null
             : moment(dts, _fun.MmDtFmt);
@@ -1630,8 +1675,8 @@ var _date = {
 
     /**
      * get month difference by date
-     * param dt1 {string} start date
-     * param dt2 {string} end date
+     * param dt1 {moment obj} start date
+     * param dt2 {moment obj} end date
      * return {int} 
      */ 
     getMonthDiffByDate: function (dt1, dt2) {
@@ -1641,11 +1686,12 @@ var _date = {
 
     /**
      * js date string add year
+     * jsDateAddYear -> dsAddYear
      * param ds {string} js date string
      * param year {int} year to add
      * return {string} new js date string
      */ 
-    jsDateAddYear: function (ds, year) {
+    dsAddYear: function (ds, year) {
         //return (parseInt(date.substring(0, 4)) + year) + date.substring(4);
         return moment(ds, _fun.MmDtFmt).add(year, 'y').format(_fun.MmDtFmt);
     },
@@ -1728,7 +1774,7 @@ var _edit = {
             if (value != old) {
                 //date/dt old value has more length
                 if ((ftype === 'date' || ftype === 'dt') &&
-                    _date.mmToValue(value) === _date.mmToValue(old))
+                    _date.dtsToValue(value) === _date.dtsToValue(old))
                     continue;
 
                 result[fid] = value;
@@ -1931,7 +1977,7 @@ var _file = {
 var _form = {
 
     /**
-     * get input values, except read type
+     * get input values, 排除不儲存的欄位, 可用在多筆的單行
      * param form {object} input form
      * return {json}
      */ 
@@ -2285,7 +2331,10 @@ var _fun = {
     locale: 'zh-TW',    //now locale, _Layout.cshmlt will set
     maxFileSize: 50971520,  //upload file limit(50M)
     isRwd: false,
-    //pageRows: 10,       //for _page.js (pagination object)
+    pageRows: 10,   //must be 10,20(not 25),50,100
+
+    //now userId
+    userId: '',
 
     //mid variables
     //data: {},
@@ -2612,6 +2661,7 @@ var _ibase = {
     },
     setO: function (obj, value) {
         obj.val(value);
+        obj.text(value);    //for XiRead
     },
 
     //set edit status
@@ -2793,7 +2843,7 @@ var _idate = $.extend({}, _ibase, {
      * param value {string} format: _fun.MmDateFmt
      */
     setO: function (obj, value) {
-        _idate._boxSetDate(_idate._objToBox(obj), _date.mmToUiDate(value));
+        _idate._boxSetDate(_idate._objToBox(obj), _date.dtsToFormat(value));
     },
 
     setEditO: function (obj, status) {
@@ -3377,7 +3427,7 @@ var _input = {
             case 'read':
                 var format = obj.data('format');
                 if (_str.notEmpty(format) && _str.notEmpty(_BR[format]))
-                    value = _date.mmToFormat(value, _BR[format]);
+                    value = _date.dtsToFormat(value, _BR[format]);
                 _iread.setO(obj, value);
                 break;
             case 'link':
@@ -5142,6 +5192,8 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
         
         //default config for dataTables
         var config = {
+            pageLength: _fun.pageRows || 10,
+            lengthMenu: [10, 20, 50, 100], //25 -> 20 for more friendly
             processing: false,  //use custom processing msg
             serverSide: true,   //server pagination
             jQueryUI: false,
@@ -5577,11 +5629,12 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
-      * get row(json) by tr object
+      * get row(json) by tr object, 不包含 xi-unsave 欄位
       * trObj {object} tr object
       * fidTypes {string array} field info array
       * return {json} one row
       */
+    /*
     this.getRow = function (trObj) {
         //var fidTypes = this.fidTypes;
         var row = {};
@@ -5592,6 +5645,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         }
         return row;
     };
+    */
 
     this.checkRowFilter = function () {
         if (this.hasRowFilter)
@@ -5675,7 +5729,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
             var tr = $(item);
             var key = _input.get(me.kid, tr);
             if (_edit.isNewKey(key)) {
-                var row2 = me.getRow(tr);
+                //var row2 = me.getRow(tr);
+                var row2 = _form.toRow(tr);
                 row2[me.DataFkeyFid] = upKey;   //write anyway !!
                 rows.push(row2);
                 return;     //continue;
@@ -5737,11 +5792,11 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
 
     /**
      * add one row(or empty) into UI
-     * param {object} (optional) rowsBox
      * param {object} (optional) row
+     * param {object} (optional) rowsBox
      * return {object} row jquery object(with UI)
      */
-    this.addRow = function (rowsBox, row) {
+    this.addRow = function (row, rowsBox) {
         row = row || {};
         rowsBox = this.getRowsBox(rowsBox);
         var obj = this._renderRow(rowsBox, row);
@@ -6061,6 +6116,13 @@ function EditOne(kid, eformId) {
      */
     this.reset = function () {
         _form.reset(this.eform);
+    };
+
+    /**
+     * reset key, for update/view -> create
+     */
+    this.resetKey = function () {
+        _itext.set(this.kid, '', this.eform);
     };
 
     /**
@@ -6495,7 +6557,7 @@ function Flow(boxId, mNode, mLine) {
             PosY: 100,
         };
 
-        var node = this.mNode.addRow(this.divFlowBox, this._setNodeClass(row));
+        var node = this.mNode.addRow(this._setNodeClass(row), this.divFlowBox);
         this._setNodeEvent(node);   //set node event
     };
 
