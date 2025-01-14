@@ -25,7 +25,7 @@ namespace HrAdm.Services
             {
                 ImportType = ImportTypeEstr.User,
                 TplPath = _Xp.DirTpl + "UserImport.xlsx",
-                FnSaveImportRows = SaveImportRows,
+                FnSaveImportRows = FnSaveImportRows,
                 CreatorName = _Fun.GetBaseUser().UserName,
             };
             return await _HttpExcel.ImportByFileA(file, dirUpload, importDto);
@@ -36,7 +36,7 @@ namespace HrAdm.Services
         /// </summary>
         /// <param name="okRows"></param>
         /// <returns>list error/empty, 對應okRows </returns>
-        private List<string> SaveImportRows(List<UserImportVo> okRows)
+        private List<string> FnSaveImportRows(List<UserImportVo> okRows)
         {
             var db = _Xp.GetDb();
             var deptIds = db.Dept.Select(a => a.Id).ToList();

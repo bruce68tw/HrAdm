@@ -1,7 +1,6 @@
 ﻿using Base.Models;
 using Base.Services;
 using BaseApi.Services;
-using BaseWeb.Services;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
@@ -17,6 +16,7 @@ namespace HrAdm.Services
             var locale = _Xp.GetLocale0();
             return new EditDto
             {
+                FnAfterSaveA = FnAfterSaveA,
 				Table = "dbo.Leave",
                 PkeyFid = "Id",
                 ReadSql = $@"
@@ -32,9 +32,9 @@ left join dbo.XpUser u2 on l.Reviser=u2.Id
 join dbo.XpUser u3 on l.UserId=u3.Id
 where l.Id=@Id
 ",
-                Items = new EitemDto[] 
-				{
-					new() { Fid = "Id" },
+                Items =
+                [
+                    new() { Fid = "Id" },
 					new() { Fid = "UserId", Required = true },
 					new() { Fid = "AgentId", Required = true },
 					new() { Fid = "LeaveType", Required = true },
@@ -45,7 +45,7 @@ where l.Id=@Id
                     new() { Fid = "FlowLevel", Value = "1" },
                     new() { Fid = "FlowStatus", Value = "0" },
 					new() { Fid = "Status", Value = 1 },
-                },
+                ],
             };
         }
 
@@ -56,17 +56,10 @@ where l.Id=@Id
         {
             _inputRow = _Json.GetRows0(json)!;
             var service = EditService();
-            var result = await service.CreateA(json, null, FnCreateSignRowsA);
+            var result = await service.CreateA(json);
             if (_Valid.ResultStatus(result))
                 await _HttpFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.DirLeave, t0_FileName, nameof(t0_FileName));
             return result;
-        }
-
-        //delegate function of FnAfterSave
-        private async Task<string> FnCreateSignRowsA(CrudEditSvc editService, Db db, JObject newKeyJson)
-        {
-            var newKey = _Str.ReadNewKeyJson(newKeyJson);
-            return await _XgFlow.CreateSignRowsA(_inputRow!, "UserId", "Leave", newKey, false, db);
         }
 
         public async Task<ResultDto> UpdateA(string key, JObject json, IFormFile t0_FileName)
@@ -76,6 +69,16 @@ where l.Id=@Id
             if (_Valid.ResultStatus(result))
                 await _HttpFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.DirLeave, t0_FileName, nameof(t0_FileName));
             return result;
+        }
+
+        //delegate function of FnAfterSave
+        //Create Sign Rows 
+        private async Task<string> FnAfterSaveA(bool isNew, CrudEditSvc crudEditSvc, Db db, JObject newKeyJson)
+        {
+            if (!isNew) return "";
+
+            var newKey = _Str.ReadNewKeyJson(newKeyJson);
+            return await _XgFlow.CreateSignRowsA(_inputRow!, "UserId", "Leave", newKey, false, db);
         }
 
     } //class

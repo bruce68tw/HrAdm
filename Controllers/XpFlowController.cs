@@ -52,38 +52,19 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<JsonResult> Create(string json)
         {
-            return Json(await EditService().CreateA(_Str.ToJson(json)!, FnSetNewKey));
+            return Json(await EditService().CreateA(_Str.ToJson(json)!));
         }
 
         [HttpPost]
         public async Task<JsonResult> Update(string key, string json)
         {
-            return Json(await EditService().UpdateA(key, _Str.ToJson(json)!, FnSetNewKey));
+            return Json(await EditService().UpdateA(key, _Str.ToJson(json)!));
         }
 
         [HttpPost]
         public async Task<JsonResult> Delete(string key)
         {
             return Json(await EditService().DeleteA(key));
-        }
-
-        /// <summary>
-        /// delegate for setNewKey
-        /// </summary>
-        /// <param name="inputJson"></param>
-        /// <param name="edit"></param>
-        /// <returns></returns>
-        private async Task<string> FnSetNewKey(CrudEditSvc editService, JObject inputJson, EditDto edit)
-        {
-            var error = await editService.SetNewKeyJsonA(inputJson, edit);
-            if (_Str.NotEmpty(error))
-                return error;
-
-            error = editService.SetChildFkey(inputJson, 1, "StartNode", "00");
-            if (_Str.NotEmpty(error))
-                return error;
-
-            return editService.SetChildFkey(inputJson, 1, "EndNode", "00");
         }
 
         //test flow
