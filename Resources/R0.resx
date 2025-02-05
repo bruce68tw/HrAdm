@@ -124,7 +124,7 @@
   <data name="MenuXpFlowSign" xml:space="preserve">
     <value>4.Flow Sign Query</value>
   </data>
-  <data name="MenuUser" xml:space="preserve">
+  <data name="MenuXpUser" xml:space="preserve">
     <value>5.User Maintain</value>
   </data>
   <data name="MenuXpRole" xml:space="preserve">

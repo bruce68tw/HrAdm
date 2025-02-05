@@ -16,11 +16,11 @@ namespace HrAdm.Services
         }
         public static async Task<List<IdStrDto>?> UsersA(Db? db = null)
         {
-            return await _Db.TableToCodesA("User", db);
+            return await _Db.TableToCodesA("XpUser", db);
         }
         public static async Task<List<IdStrDto>?> DeptsA(Db? db = null)
         {
-            return await _Db.TableToCodesA("Dept", db);
+            return await _Db.TableToCodesA("XpDept", db);
         }
         public static async Task<List<IdStrDto>?> RolesA(Db? db = null)
         {

@@ -13,7 +13,7 @@
             ],
             columnDefs: [
 				{ targets: [3], render: function (data, type, full, meta) {
-                    return _date.dtsToFormat(data);
+                    return _date.dtsToUiDate(data);
                 }},
 				{ targets: [4], render: function (data, type, full, meta) {
                     return _date.dtsToUiDt2(data);

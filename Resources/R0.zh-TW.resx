@@ -144,7 +144,7 @@
   <data name="MenuXpFlowSign" xml:space="preserve">
     <value>4.簽核資料查詢</value>
   </data>
-  <data name="MenuUser" xml:space="preserve">
+  <data name="MenuXpUser" xml:space="preserve">
     <value>5.用戶管理</value>
   </data>
   <data name="MenuXpRole" xml:space="preserve">
