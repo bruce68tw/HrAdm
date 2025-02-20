@@ -11,7 +11,8 @@ namespace HrAdm.Services
         //get base user info
         public BaseUserDto GetData()
         {
-            return _Http.GetSession().Get<BaseUserDto>(_Fun.FidBaseUser)!;   //extension method
+            //return _Http.GetSession().Get<BaseUserDto>(_Fun.FidBaseUser)!;   //extension method
+            return _Http.CookieToBr();
         }
     }
 }

@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <UserSecretsId>3b0e1b5c-c583-43d6-a792-329458bf8dd9</UserSecretsId>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
@@ -86,6 +87,8 @@
     <None Remove="Controllers\UserController.cs%281%29" />
     <None Remove="Controllers\UserController.cs%282%29" />
     <None Remove="Controllers\zz_MyController.cs_old" />
+    <None Remove="Program.cs_old" />
+    <None Remove="Startup.cs_old" />
     <None Remove="Tables\MyContext - 複製.cs_old" />
     <None Remove="Views\CustInput\Edit.cshtml_old" />
     <None Remove="Views\LeaveSign\Edit.cshtml_old" />
@@ -99,6 +102,11 @@
     <None Remove="Views\XpProg\Edit.cshtml_old" />
     <None Remove="Views\XpRole\Edit.cshtml_old" />
     <None Remove="_image\noImage.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Program.cs_old" />
+    <Compile Include="Startup.cs_old" />
   </ItemGroup>
 
   <ItemGroup>

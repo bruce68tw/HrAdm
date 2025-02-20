@@ -1,18 +1,17 @@
 ﻿using Base.Models;
 using Base.Services;
 using BaseApi.Attributes;
-using BaseApi.Extensions;
 using BaseApi.Services;
-using HrAdm.Models;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HrAdmin.Controllers
 {
     public class HomeController : Controller
     {
+        private bool encodePwd = false;
+
         [XgLogin]
         public ActionResult Index()
         {
@@ -28,6 +27,11 @@ namespace HrAdmin.Controllers
         [HttpPost]
         public async Task<ActionResult> Login(LoginVo vo)
         {
+            return await _Login.LoginByVoA(vo, encodePwd)
+                ? Redirect(_Str.IsEmpty(vo.FromUrl) ? "/Home/Index" : vo.FromUrl)
+                : View(vo);
+
+            /*
             #region 1.check input account & password
             //reset UI msg
             vo.AccountMsg = "";
@@ -86,12 +90,13 @@ where u.Account=@Account
 
         lab_exit:
             return View(vo);
+            */
         }
 
         public ActionResult Logout()
         {
-            _Http.GetSession().Clear();
-            return Redirect("/Home/Index");
+            _Http.DeleteCookie(_Fun.FidClientKey);
+            return Redirect("/Home/Login");
         }
 
         public ActionResult Error()
