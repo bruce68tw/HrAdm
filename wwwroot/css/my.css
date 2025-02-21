@@ -517,16 +517,6 @@ path, .jtk-endpoint { cursor:pointer; }
 .xg-fade.hide {
     display: none;
 }
-.xg-hide {
-    display: none;
-}
-
-@media (max-width:768px) {
-    .xg-hide-rwd {
-        display: none !important;
-    }
-}
-
 
 /**
  * checkbox, radio, use pure css, no js
@@ -1137,14 +1127,6 @@ body.xg-show-wait {
    modal element will be visible */
 body.xg-show-wait .xg-wait {
     display: block;
-}
-
-
-/* toolbar */
-
-/* row list toolbar */
-.xg-list-tbar {
-    padding: 3px 0 3px 0;
 }
 
 
