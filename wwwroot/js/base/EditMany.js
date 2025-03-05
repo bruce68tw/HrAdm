@@ -1,5 +1,6 @@
 ﻿/**
  * multiple edit forms
+ *   資料儲存在 html input
  * notice:
  *   1.set data-fkeyFid when save
  *   
@@ -431,7 +432,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * onclick addRow button
      */
     this.onAddRow = function () {
-        this.addRow();
+        var row = this.addRow();
+        _edit.addIsNew(row);    //增加_IsNew隱藏欄位
     };
 
     /**

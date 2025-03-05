@@ -10,6 +10,21 @@ var _edit = {
     DataOld: '_old',
 
     /**
+     * 增加隱藏欄位 _IsNew, 同時設為1
+     * param obj {box} jquery object
+     */
+    addIsNew: function (box, value) {
+        var fid = '_IsNew';
+        var field = box.find(_input.fidFilter(fid));
+        if (value == null)
+            value = '1';
+        if (field.length == 0)
+            box.append(`<input type="hidden" data-fid="${fid}" name="${fid}" value="${value}">`);
+        else
+            field.val(value);
+    },
+
+    /**
      * get old value 
      * param obj {object} input jquery object
      * return {string}

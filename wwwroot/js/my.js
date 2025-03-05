@@ -1030,6 +1030,7 @@ var _crudE = {
         var fun = _fun.FunC;
         _crudE._setEditStatus(fun);
         _crudE._resetForm(_me.edit0);
+        _edit.addIsNew(_me.edit0.eform);    //增加_IsNew隱藏欄位
         _crudE._afterOpenEdit(fun, null);
     },
 
@@ -1751,6 +1752,21 @@ var _edit = {
 
     //data property name for keep old value
     DataOld: '_old',
+
+    /**
+     * 增加隱藏欄位 _IsNew, 同時設為1
+     * param obj {box} jquery object
+     */
+    addIsNew: function (box, value) {
+        var fid = '_IsNew';
+        var field = box.find(_input.fidFilter(fid));
+        if (value == null)
+            value = '1';
+        if (field.length == 0)
+            box.append(`<input type="hidden" data-fid="${fid}" name="${fid}" value="${value}">`);
+        else
+            field.val(value);
+    },
 
     /**
      * get old value 
@@ -4869,11 +4885,11 @@ var _tool = {
 
     init: function () {
         //alert
-        _tool.xgAlert = $('#xgAlert');
-        _tool.xgMsg = $('#xgMsg');
-        _tool.xgAns = $('#xgAns');
-        _tool.xgArea = $('#xgArea');
-        _tool.xgImage = $('#xgImage');
+        _tool.xgAlert = $('.xg-alert');
+        _tool.xgMsg = $('#xgMsg');  //使用id
+        _tool.xgAns = $('#xgAns');  //使用id
+        _tool.xgArea = $('#xg-area');
+        _tool.xgImage = $('#xg-image');
     },
 
     /**
@@ -4919,14 +4935,15 @@ var _tool = {
         });
     },
 
-    //show waiting
+    //??show waiting
     showWait: function () {
         //$('body').addClass('xg-show-loading');
-        $('#xgWait').show();
+        $('.xg-wait').show();
     },
+    //??
     hideWait: function () {
         //$('body').removeClass('xg-show-loading');
-        $('#xgWait').hide();
+        $('.xg-wait').hide();
     },
 
     /**
@@ -5460,6 +5477,7 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
 } //class
 /**
  * multiple edit forms
+ *   資料儲存在 html input
  * notice:
  *   1.set data-fkeyFid when save
  *   
@@ -5891,7 +5909,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * onclick addRow button
      */
     this.onAddRow = function () {
-        this.addRow();
+        var row = this.addRow();
+        _edit.addIsNew(row);    //增加_IsNew隱藏欄位
     };
 
     /**
