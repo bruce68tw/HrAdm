@@ -202,14 +202,14 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * load this json rows into UI, also set old values !!
      * param json {json} 
      */
+    //todo: 未完成
     this.loadJson = function (json) {
-        if (this.hasEform) {
+        if (this.fnLoadJson) {
+            this.fnLoadJson(json);
+        } else {
             var rows = (json == null || json[_crudE.Rows] == null)
                 ? null : json[_crudE.Rows];
             this.loadRowsByBox(this.rowsBox, rows);
-        } else {
-            //will raise error if no function
-            this.fnLoadJson(json);
         }
     };
 
@@ -317,6 +317,15 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         return this.checkRowFilter()
             ? $(elm).closest(this.rowFilter)
             : null;
+    };
+
+    /**
+     * get row box by id
+     * param id {string} row id
+     * return {object} row box
+     */
+    this.idToRowBox = function (id) {
+        return this.eform.find(_input.fidFilter(id)).parent();
     };
 
     /**

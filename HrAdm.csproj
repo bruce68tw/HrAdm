@@ -110,6 +110,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Views\XpFlow\Read.cshtm_jsPlumb" />
     <Content Include="_image\noImage.jpg">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

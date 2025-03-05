@@ -12,7 +12,7 @@
             ],
             columnDefs: [
 				{ targets: [2], render: function (data, type, full, meta) {
-                    return _crudR.dtStatusName(data);                    
+                    return _crudR.dtStatusName(data);
                 }},
 				{ targets: [3], render: function (data, type, full, meta) {
                     var html = '<a href="javascript:_me.onOpenTest(\'{0}\');">{1}</a>';
@@ -28,7 +28,8 @@
 
         //initial edit one/many
         //_me.edit0 = new EditOne();
-        _me.mNode = new EditMany('Id', null, 'tplNode', '.xf-node');
+        //debugger; 
+        _me.mNode = new EditMany('Id', null, 'tplNode', '.xd-node');
         _me.mLine = new EditMany('Id', null, 'tplLine', '.xd-line', 'Sort');
         _crudR.init(config, [null, _me.mNode, _me.mLine]);
 

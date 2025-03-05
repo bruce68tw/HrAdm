@@ -44,11 +44,19 @@
 
 <style>
 	.xu-body {
+        /*
 		display: inline-block;
+            min-height: 600px;
+            */
 		width: 100%;
-		min-height: 600px;
 		transition: 0.5s;
 		border-left: 1px solid #CCC;
+
+        position: relative; /* 讓 child 參考這個 parent 來定位 */
+        flex-grow: 1; /* 讓 parent 佔滿剩餘空間 */
+        min-height: 100%;
+        /*background-color: lightblue;
+        padding: 10px;*/
 	}
 </style>
 
@@ -103,7 +111,7 @@
     <partial name="_Top.cshtml" />
 
     @* set height=100% in parent , so that menu be fine for ie & firefox !! *@
-    <div class="d-flex align-items-stretch" style="height:100%">
+    <div class="d-flex align-items-stretch" style="height: calc(100vh - 45px);">
         <!-- left menu -->
         @await Component.InvokeAsync("XgLeftMenu", new { rows = menus })
 

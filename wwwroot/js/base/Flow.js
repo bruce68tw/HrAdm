@@ -1,4 +1,5 @@
 ﻿/**
+ * 處理 flow UI 元素和資料(mNode, mLine)之間的轉換
  * workflow component
  * param boxId {string} edit canvas id
  * param mNode {EditMany}
@@ -6,6 +7,9 @@
  * return {Flow}
  */ 
 function Flow(boxId, mNode, mLine) {
+    /**
+     flowBox: FlowBox instance
+    */
 
     /**
      * initial flow
@@ -13,9 +17,9 @@ function Flow(boxId, mNode, mLine) {
     this.init = function () {
         //#region constant
         //node types
-        this.StartNode = 'S';
-        this.EndNode = 'E';
-        this.NormalNode = 'N';
+        //this.StartNode = 'S';
+        //this.EndNode = 'E';
+        //this.NormalNode = 'N';
         //this.AutoNode = 'A';
 
         //and/or seperator for line condition
@@ -27,17 +31,17 @@ function Flow(boxId, mNode, mLine) {
         //html filter/class
         this.NodeFilter = '.xf-node';   //for find node object
         this.MenuFilter = '.xf-menu';   //menu for node/line property
-        this.EpFilter = '.xf-ep';       //node end point
-        this.StartNodeCls = 'xf-start-node';    //start node class
-        this.EndNodeCls = 'xf-end-node';        //end node class
+        this.EpFilter = '.xf-ep';       //??node end point
+        this.StartNodeCls = 'xf-start';    //start node class
+        this.EndNodeCls = 'xf-end';        //end node class
         //this.AutoNodeCls = 'xf-auto-node';      //auto node class
 
         //connection(line) style: start, agree, disagree
-        this.InitLineCfg = { stroke: 'blue', strokeWidth: 2 };  //initial
-        this.OkLineCfg = { stroke: 'green', strokeWidth: 2 };   //ok
-        this.DenyLineCfg = { stroke: 'red', strokeWidth: 2 };   //deny(reject)
+        this.InitLineCfg = { stroke: 'blue', strokeWidth: 2 };  //??initial
+        this.OkLineCfg = { stroke: 'green', strokeWidth: 2 };   //??ok
+        this.DenyLineCfg = { stroke: 'red', strokeWidth: 2 };   //??deny(reject)
 
-        //start node config
+        //??start node config
         this.StartNodeCfg = {
             filter: this.EpFilter,
             //anchor: 'Continuous',
@@ -61,7 +65,7 @@ function Flow(boxId, mNode, mLine) {
             */
         };
 
-        //end node config
+        //??end node config
         this.EndNodeCfg = {
             dropOptions: { hoverClass: 'dragHover' },
             //anchor: 'Continuous',
@@ -115,8 +119,9 @@ function Flow(boxId, mNode, mLine) {
             j++;
         }
 
+        /*
         //get jsplumb instance
-        var plumb = jsPlumb.getInstance({
+        var flowBox = jsPlumb.getInstance({
             Container: boxId,
             //Connector: 'StateMachine',
             Connector: 'Flowchart',            
@@ -139,17 +144,23 @@ function Flow(boxId, mNode, mLine) {
         });
 
         //set one basic connection style 
-        plumb.registerConnectionType('basic', {
+        flowBox.registerConnectionType('basic', {
             anchor: 'Continuous',
             connector: 'Flowchart',
             //connector: 'StateMachine',            
         });
+        */
 
         //set instance first
-        this.plumb = plumb;
+        this.flowBox = new FlowBox(boxId, (nodeId, x, y) => this.onMoveNode(nodeId, x, y));
 
         //set event
         this._setFlowEvent();
+    };
+
+    this.onMoveNode = function (nodeId, x, y) {
+        var rowElm = this.mNode.idToRowBox(nodeId);
+        _form.loadRow(rowElm, { PosX: x, PosY: y });
     };
 
     /**
@@ -158,7 +169,7 @@ function Flow(boxId, mNode, mLine) {
      *   2.mouse down to hide context menu
      */
     this._setFlowEvent = function () {
-        var plumb = this.plumb;
+        var flowBox = this.flowBox;
         var me = this;
 
         // bind a click listener to each connection; the connection is deleted. you could of course
@@ -166,34 +177,35 @@ function Flow(boxId, mNode, mLine) {
         // happening.
         //(定義)Notification a Connection was clicked.
         /*
-        plumb.bind('click', function (c) {
+        flowBox.bind('click', function (c) {
             //this.showNodeProp();
             this.modalNodeProp.modal('show');
         });
         */
 
+        /* todo: temp remark
         //line(connection) show context menu
-        plumb.bind('contextmenu', function (elm, event) {
+        flowBox.bind('contextmenu', function (elm, event) {
             //"this" not work here !!
             me.showPopupMenu(elm, event, false);
         });
+        */
 
+        /*
         //event: before build connection
         //info: connection        
-        //plumb.bind('connection', function (info) {
-        plumb.bind('beforeDrop', function (info) {
+        //flowBox.bind('connection', function (info) {
+        flowBox.bind('beforeDrop', function (info) {
             //if (this.loading)
             //    return true;
 
             //if connection existed, return false for stop 
             //info.source did not work here !!
             var conn = info.connection;
-            if (plumb.getConnections({ source: conn.source, target: conn.target }).length > 0)
+            if (flowBox.getConnections({ source: conn.source, target: conn.target }).length > 0)
                 return false;
 
             //get source node & type
-            //var sourceType = me._elmToNodeRow(conn.source).NodeType;
-            //var lineType = this._isSourceCondMode(sourceType) ? this.LineTypeCond : this.LineTypeYes;
             var prop = me.getLineProp('');
 
             //set conn style & label
@@ -201,33 +213,15 @@ function Flow(boxId, mNode, mLine) {
             me._setLineLabel(conn, prop.label);
 
             //add parameters(line model) into connection
-            //debugger;
             var row = {
                 StartNode: me._elmToNodeValue(conn.source, 'Id'),
                 EndNode: me._elmToNodeValue(conn.target, 'Id'),
-                //LineType: lineType,
                 CondStr: '',
                 Sort: 9,
             };
             me._setLineKey(conn, me.addLine(row));
-            //this.connSetParas(conn, line, true);
 
-            //alert('connect');
             return true;
-        });
-
-        /*
-        // click listener for the enable/disable link in the source box (the blue one).
-        plumb.on(this.NodeFilter, 'contextmenu', function (ev) {
-            //this.nowIsNode = true;
-            //this.nowElm = ev.target;
-            this.wf._showPopupMenu('.xf-menu', ev);
-        */
-
-        /*
-        // bind a double click listener to 'boxEl'; add new node when this occurs.
-        jsPlumb.on(this.boxEl, 'dblclick', function (e) {
-            this.newNode(e.offsetX, e.offsetY);
         });
         */
 
@@ -247,18 +241,19 @@ function Flow(boxId, mNode, mLine) {
     /**
      * set node event & source/target property
      * param nodeObj {object} node object
-     */ 
+     */
+    /*
     this._setNodeEvent = function (nodeObj) {
         //set source & target property
         var nodeType = _itext.get('NodeType', nodeObj);
-        var plumb = this.plumb;
+        var flowBox = this.flowBox;
         var me = this;
 
         //event: move node (update x,y)
         //initialise draggable elements.
         //must put before makeSource/makeTarget !!
         var nodeElm = nodeObj[0];
-        plumb.draggable(nodeElm, {
+        flowBox.draggable(nodeElm, {
             grid: [10, 10],
             //update node position
             stop: function (params) {
@@ -270,11 +265,11 @@ function Flow(boxId, mNode, mLine) {
         });
 
         //build line(connection)
-        //must put after plumb.draggable() !!
-        if (nodeType != this.EndNode)
-            plumb.makeSource(nodeElm, this.StartNodeCfg);
-        if (nodeType != this.StartNode)
-            plumb.makeTarget(nodeElm, this.EndNodeCfg);
+        //must put after flowBox.draggable() !!
+        if (nodeType != FlowNode.TypeEnd)
+            flowBox.makeSource(nodeElm, this.StartNodeCfg);
+        if (nodeType != FlowNode.TypeStart)
+            flowBox.makeTarget(nodeElm, this.EndNodeCfg);
 
         //event: show node menu
         //this._setNodeEvent(nodeObj);
@@ -282,43 +277,42 @@ function Flow(boxId, mNode, mLine) {
             //"this" is not work here !!
             me.showPopupMenu(event.target, event, true);
         });
-
-        //create node, remark it: seems no work !!
-        // this is not part of the core demo functionality; it is a means for the Toolkit edition's wrapped
-        // version of this demo to find out about new nodes being added.
-        //plumb.fire('jsPlumbDemoNodeAdded', nodeElm);
     };
+    */
 
     /**
      * load nodes into UI
-     * param rows {jsons} node rows
+     * param rows {json} 後端傳回的完整json
      */
     this.loadNodes = function (json) {
-        this.reset();
+        //this.flowBox.reset();
 
         //stop drawing
-        jsPlumb.setSuspendDrawing(true);
+        //jsPlumb.setSuspendDrawing(true);
 
         //empty all nodes first
         var box = this.divFlowBox;
-        //box.find(this.NodeFilter).remove();
 
         //set nodes class
         var rows = _crudE.getRowsByJson(json);
-        for (var i = 0; i < rows.length; i++)
-            this._setNodeClass(rows[i]);
+        //for (var i = 0; i < rows.length; i++)
+        //    this._setNodeClass(rows[i]);
 
         //3rd param reset=false, coz box has other objects, cannot reset
         this.mNode.loadRowsByBox(box, rows, false);
 
+        this.flowBox.loadNodes(rows);
+
+        /*
         //set nodes event
         var me = this;
         box.find(this.NodeFilter).each(function () {
             me._setNodeEvent($(this));
         });
+        */
 
         //start drawing
-        jsPlumb.setSuspendDrawing(false, true);
+        //jsPlumb.setSuspendDrawing(false, true);
     };
 
     /**
@@ -327,25 +321,21 @@ function Flow(boxId, mNode, mLine) {
      */
     this.loadLines = function (rows) {
         //stop drawing
-        jsPlumb.setSuspendDrawing(true);
+        //jsPlumb.setSuspendDrawing(true);
 
-        /*
-        //empty jsplumb lines
-        var conns = this.plumb.getAllConnections();   //for in did not work !!
-        for (var i = 0; i < conns.length; i++)
-            this.plumb.deleteConnection(conns[i]);
-        */
 
         //render jsplumb line
         //var rows = _crudE.getRowsByJson(json);
-        for (var i = 0; i < rows.length; i++)
-            this._renderLine(rows[i]);
+        //for (var i = 0; i < rows.length; i++)
+        //    this._renderLine(rows[i]);
 
         //load editMany lines
         this.mLine.loadRowsByBox(this.divLinesBox, rows, false);
 
+        this.flowBox.loadLines(rows);
+
         //start drawing
-        jsPlumb.setSuspendDrawing(false, true);
+        //jsPlumb.setSuspendDrawing(false, true);
     };
 
     //#region node function
@@ -353,7 +343,8 @@ function Flow(boxId, mNode, mLine) {
      * set node class(_NodeClass), template has this field
      * param row {json} node row
      * return {json} new row
-     */ 
+     */
+    /*
     this._setNodeClass = function (row) {
         switch (row.NodeType) {
             case this.StartNode:
@@ -362,11 +353,9 @@ function Flow(boxId, mNode, mLine) {
             case this.EndNode:
                 row._NodeClass = this.EndNodeCls;
                 break;
-            /*
-            case this.AutoNode:
-                row._NodeClass = this.AutoNodeCls;
-                break;
-            */
+            //case this.AutoNode:
+            //    row._NodeClass = this.AutoNodeCls;
+            //    break;
             default:
                 //normal node
                 break;
@@ -374,6 +363,7 @@ function Flow(boxId, mNode, mLine) {
 
         return row;
     };
+    */
 
     //add new node
     this.addNode = function (name, nodeType) {
@@ -433,9 +423,9 @@ function Flow(boxId, mNode, mLine) {
 
     this.deleteNode = function (nodeElm) {
         //delete from & to lines
-        var plumb = this.plumb;
-        this.deleteLines(plumb.getConnections({ source: nodeElm }));
-        this.deleteLines(plumb.getConnections({ target: nodeElm }));
+        var flowBox = this.flowBox;
+        this.deleteLines(flowBox.getConnections({ source: nodeElm }));
+        this.deleteLines(flowBox.getConnections({ target: nodeElm }));
 
         //add deleted row of node
         var node = $(nodeElm);
@@ -457,7 +447,7 @@ function Flow(boxId, mNode, mLine) {
         //param 2(reference object) not work here !!
         var prop = this.getLineProp(row.CondStr);    //get line style & label
         //debugger;
-        var conn = this.plumb.connect({
+        var conn = this.flowBox.connect({
             //type: 'basic',
             source: this._idToNode(row.StartNode),
             target: this._idToNode(row.EndNode),
@@ -547,7 +537,7 @@ function Flow(boxId, mNode, mLine) {
         this.mLine.deleteRow(json.Id);
 
         //delete conn
-        this.plumb.deleteConnection(conn);
+        this.flowBox.deleteConnection(conn);
     };
     this.deleteLines = function (conns) {
         for (var i = 0; i < conns.length; i++) {
@@ -555,24 +545,6 @@ function Flow(boxId, mNode, mLine) {
         }
     };
     //#endregion (line function)
-
-    this.reset = function () {
-        //below method not working !!
-        //jsPlumb.deleteEveryEndpoint();
-        //jsPlumb.removeAllEndpoints();
-        //jsPlumb.detachEveryConnection();
-        //jsPlumb.reset();
-
-        //reset lines
-        var conns = this.plumb.getAllConnections();   //for in did not work !!
-        var len = conns.length;
-        for (var i = len - 1; i >= 0; i--)
-            this.plumb.deleteConnection(conns[i]);        
-
-        //reset nodes
-        var box = this.divFlowBox;
-        box.find(this.NodeFilter).remove();
-    };
 
     /**
      * show popup menu for node(normal, auto)/line
@@ -598,7 +570,7 @@ function Flow(boxId, mNode, mLine) {
         } else {
             nodeType = this._elmToNodeValue(elm.source, 'NodeType');
             //canEdit = (nodeType == this.StartNode || nodeType == this.AutoNode);
-            canEdit = (nodeType == this.StartNode);
+            canEdit = (nodeType == FlowNode.TypeStart);
         }
         /*
         //debugger;
