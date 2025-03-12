@@ -443,6 +443,7 @@ var _crudE = {
      * return {bool}
      */
     onUpdateA: async function(key) {
+        _edit.removeIsNew(_me.edit0.eform);    //增加_IsNew隱藏欄位
         return await _crudE._updateOrViewA(_fun.FunU, key);
     },
 

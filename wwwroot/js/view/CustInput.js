@@ -4,6 +4,7 @@
         //datatable config
         var config = {
             columns: [
+                { data: 'Id' },
                 { data: 'FldText' },
                 { data: 'FldInt' },
                 { data: 'FldDec' },
@@ -12,13 +13,13 @@
                 { data: '_Fun' },
             ],
             columnDefs: [
-				{ targets: [3], render: function (data, type, full, meta) {
+				{ targets: [4], render: function (data, type, full, meta) {
                     return _date.dtsToUiDate(data);
                 }},
-				{ targets: [4], render: function (data, type, full, meta) {
+				{ targets: [5], render: function (data, type, full, meta) {
                     return _date.dtsToUiDt2(data);
                 }},
-				{ targets: [5], render: function (data, type, full, meta) {
+				{ targets: [6], render: function (data, type, full, meta) {
                     return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                 }},
             ],

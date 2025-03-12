@@ -74,8 +74,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * return {bool}
      */
     this.isNewRow = function (row) {
-        //return _str.isEmpty(row[this.kid]);
-        return _edit.isNewKey(row[this.kid]);
+        return _edit.isNewRow(row);
     };
 
     /**
@@ -84,8 +83,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * return {bool}
      */
     this.isNewTr = function (tr) {
-        var id = _itext.get(this.kid, tr);
-        return _edit.isNewKey(id);
+        return (_itext.get(_edit.IsNew, tr) == '1');
     };
 
     /**
@@ -382,8 +380,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
             //add new row if empty key
             var tr = $(item);
             var key = _input.get(me.kid, tr);
-            if (_edit.isNewKey(key)) {
-                //var row2 = me.getRow(tr);
+            //if (_edit.isNewKey(key)) {
+            if (me.isNewTr(tr)) {
                 var row2 = _form.toRow(tr);
                 row2[me.DataFkeyFid] = upKey;   //write anyway !!
                 rows.push(row2);

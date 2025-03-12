@@ -1,4 +1,5 @@
-﻿
+﻿/* 右側工作區上方功能名稱 */
+
 /* prog path, razor 只支援 inline style */
 .xg-prog-path {
     height: 38px;
@@ -21,7 +22,7 @@
 }
 
 .xg-prog {
-    margin: 5px 10px 10px 10px;
+    margin: 5px 15px 10px 15px;
     padding: 15px;
     border: 1px solid #ddd !important;
     border-radius: 4px;

@@ -15,27 +15,28 @@ namespace HrAdm.Services
         {
             return new EditDto
             {
-				Table = "dbo.[CustInput]",
+				Table = "dbo.CustInput",
                 PkeyFid = "Id",
                 Col4 = null,
-                Items = new EitemDto[] 
-				{
-					new() { Fid = "Id" },
-                    new() { Fid = "FldCheck", Required = true },
-                    new() { Fid = "FldDate", Required = true },
-                    new() { Fid = "FldDt", Required = true },
-                    new() { Fid = "FldDec", Required = true },
-                    new() { Fid = "FldInt", Required = true },
-                    new() { Fid = "FldFile", Required = true },
-                    new() { Fid = "FldHtml", Required = true, IsHtml = true },
+                AutoIdLen = 0,  //表示新增時可傳入主key
+                Items =
+                [
+                    new() { Fid = "Id" },
+                    new() { Fid = "FldCheck" },
+                    new() { Fid = "FldDate" },
+                    new() { Fid = "FldDt" },
+                    new() { Fid = "FldDec" },
+                    new() { Fid = "FldInt" },
+                    new() { Fid = "FldFile" },
+                    new() { Fid = "FldHtml", IsHtml = true },
                     //new() { Fid = "FldLink", Col = "FldFile" },
-					new() { Fid = "FldRadio", Required = true },
+					new() { Fid = "FldRadio" },
                     new() { Fid = "FldRead", Col = "FldText" },
-                    new() { Fid = "FldSelect", Required = true },
+                    new() { Fid = "FldSelect" },
                     new() { Fid = "FldTextarea", Required = true },
                     new() { Fid = "FldText", Required = true },
 					//new() { Fid = "FldColor", Required = true },
-                },
+                ],
             };
         }
 
