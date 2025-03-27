@@ -61,7 +61,9 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         this.hasEform = _str.notEmpty(eformId);
         if (this.hasEform) {
             this.eform = $('#' + eformId);     //edit form object
-            this.rowsBox = this.eform.find('tbody'); //use tbody(in table)
+            this.rowsBox = this.eform.find('tbody');    //use tbody(in table)
+            if (this.rowsBox.length == 0)
+                this.rowsBox = this.eform; 
         }
 
         this.deletedRows = [];  //deleted key string array
@@ -197,6 +199,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
+     * 系統自動呼叫, PG不可呼叫, 否則會產生無窮迴圈 !!
      * load this json rows into UI, also set old values !!
      * param json {json} 
      */
@@ -322,8 +325,9 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * param id {string} row id
      * return {object} row box
      */
-    this.idToRowBox = function (id) {
-        return this.eform.find(_input.fidFilter(id)).parent();
+    this.idToRowBox = function (value) {
+        var filter = _input.fidFilter(this.kid) + `[value='${value}']`;
+        return this.eform.find(filter).parent();
     };
 
     /**

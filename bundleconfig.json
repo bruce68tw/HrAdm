@@ -40,7 +40,6 @@
     "sourceMap": false
   },
 
-  /*
   {
     "outputFileName": "wwwroot/js/my.js",
     "inputFiles": [
@@ -53,7 +52,6 @@
     },
     "sourceMap": false
   },
-  */
 
   /* locale */
   {

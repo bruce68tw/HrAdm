@@ -6,9 +6,9 @@
  * param mLine {EditMany}
  * return {Flow}
  */ 
-function Flow(boxId, mNode, mLine) {
+function FlowForm(boxId, mNode, mLine) {
     /**
-     flowBox: FlowBox instance
+     flowBase: flowBase instance
     */
 
     /**
@@ -152,7 +152,7 @@ function Flow(boxId, mNode, mLine) {
         */
 
         //set instance first
-        this.flowBox = new FlowBox(boxId, (nodeId, x, y) => this.onMoveNode(nodeId, x, y));
+        this.flowBase = new FlowBase(boxId, (nodeId, x, y) => this.onMoveNode(nodeId, x, y));
 
         //set event
         this._setFlowEvent();
@@ -160,7 +160,7 @@ function Flow(boxId, mNode, mLine) {
 
     this.onMoveNode = function (nodeId, x, y) {
         var rowElm = this.mNode.idToRowBox(nodeId);
-        _form.loadRow(rowElm, { PosX: x, PosY: y });
+        _form.loadRow(rowElm, { PosX: Math.floor(x), PosY: Math.floor(y) });    //座標取整數
     };
 
     /**
@@ -169,7 +169,7 @@ function Flow(boxId, mNode, mLine) {
      *   2.mouse down to hide context menu
      */
     this._setFlowEvent = function () {
-        var flowBox = this.flowBox;
+        var flowBase = this.flowBase;
         var me = this;
 
         // bind a click listener to each connection; the connection is deleted. you could of course
@@ -177,7 +177,7 @@ function Flow(boxId, mNode, mLine) {
         // happening.
         //(定義)Notification a Connection was clicked.
         /*
-        flowBox.bind('click', function (c) {
+        flowBase.bind('click', function (c) {
             //this.showNodeProp();
             this.modalNodeProp.modal('show');
         });
@@ -185,7 +185,7 @@ function Flow(boxId, mNode, mLine) {
 
         /* todo: temp remark
         //line(connection) show context menu
-        flowBox.bind('contextmenu', function (elm, event) {
+        flowBase.bind('contextmenu', function (elm, event) {
             //"this" not work here !!
             me.showPopupMenu(elm, event, false);
         });
@@ -194,15 +194,15 @@ function Flow(boxId, mNode, mLine) {
         /*
         //event: before build connection
         //info: connection        
-        //flowBox.bind('connection', function (info) {
-        flowBox.bind('beforeDrop', function (info) {
+        //flowBase.bind('connection', function (info) {
+        flowBase.bind('beforeDrop', function (info) {
             //if (this.loading)
             //    return true;
 
             //if connection existed, return false for stop 
             //info.source did not work here !!
             var conn = info.connection;
-            if (flowBox.getConnections({ source: conn.source, target: conn.target }).length > 0)
+            if (flowBase.getConnections({ source: conn.source, target: conn.target }).length > 0)
                 return false;
 
             //get source node & type
@@ -246,14 +246,14 @@ function Flow(boxId, mNode, mLine) {
     this._setNodeEvent = function (nodeObj) {
         //set source & target property
         var nodeType = _itext.get('NodeType', nodeObj);
-        var flowBox = this.flowBox;
+        var flowBase = this.flowBase;
         var me = this;
 
         //event: move node (update x,y)
         //initialise draggable elements.
         //must put before makeSource/makeTarget !!
         var nodeElm = nodeObj[0];
-        flowBox.draggable(nodeElm, {
+        flowBase.draggable(nodeElm, {
             grid: [10, 10],
             //update node position
             stop: function (params) {
@@ -265,11 +265,11 @@ function Flow(boxId, mNode, mLine) {
         });
 
         //build line(connection)
-        //must put after flowBox.draggable() !!
+        //must put after flowBase.draggable() !!
         if (nodeType != FlowNode.TypeEnd)
-            flowBox.makeSource(nodeElm, this.StartNodeCfg);
+            flowBase.makeSource(nodeElm, this.StartNodeCfg);
         if (nodeType != FlowNode.TypeStart)
-            flowBox.makeTarget(nodeElm, this.EndNodeCfg);
+            flowBase.makeTarget(nodeElm, this.EndNodeCfg);
 
         //event: show node menu
         //this._setNodeEvent(nodeObj);
@@ -284,24 +284,25 @@ function Flow(boxId, mNode, mLine) {
      * load nodes into UI
      * param rows {json} 後端傳回的完整json
      */
-    this.loadNodes = function (json) {
-        //this.flowBox.reset();
+    this.loadNodes = function (rows) {
+        //this.flowBase.reset();
 
         //stop drawing
         //jsPlumb.setSuspendDrawing(true);
 
         //empty all nodes first
-        var box = this.divFlowBox;
+        //var box = this.divFlowBox;
 
         //set nodes class
-        var rows = _crudE.getRowsByJson(json);
+        //var rows = _crudE.getRowsByJson(json);
         //for (var i = 0; i < rows.length; i++)
         //    this._setNodeClass(rows[i]);
 
         //3rd param reset=false, coz box has other objects, cannot reset
-        this.mNode.loadRowsByBox(box, rows, false);
+        this.mNode.loadRowsByBox(this.mNode.eform, rows, true);
+        //this.mNode.loadJson(json);
 
-        this.flowBox.loadNodes(rows);
+        this.flowBase.loadNodes(rows);
 
         /*
         //set nodes event
@@ -330,9 +331,9 @@ function Flow(boxId, mNode, mLine) {
         //    this._renderLine(rows[i]);
 
         //load editMany lines
-        this.mLine.loadRowsByBox(this.divLinesBox, rows, false);
+        this.mLine.loadRowsByBox(this.mLine.eform, rows, true);
 
-        this.flowBox.loadLines(rows);
+        this.flowBase.loadLines(rows);
 
         //start drawing
         //jsPlumb.setSuspendDrawing(false, true);
@@ -423,9 +424,9 @@ function Flow(boxId, mNode, mLine) {
 
     this.deleteNode = function (nodeElm) {
         //delete from & to lines
-        var flowBox = this.flowBox;
-        this.deleteLines(flowBox.getConnections({ source: nodeElm }));
-        this.deleteLines(flowBox.getConnections({ target: nodeElm }));
+        var flowBase = this.flowBase;
+        this.deleteLines(flowBase.getConnections({ source: nodeElm }));
+        this.deleteLines(flowBase.getConnections({ target: nodeElm }));
 
         //add deleted row of node
         var node = $(nodeElm);
@@ -447,7 +448,7 @@ function Flow(boxId, mNode, mLine) {
         //param 2(reference object) not work here !!
         var prop = this.getLineProp(row.CondStr);    //get line style & label
         //debugger;
-        var conn = this.flowBox.connect({
+        var conn = this.flowBase.connect({
             //type: 'basic',
             source: this._idToNode(row.StartNode),
             target: this._idToNode(row.EndNode),
@@ -537,7 +538,7 @@ function Flow(boxId, mNode, mLine) {
         this.mLine.deleteRow(json.Id);
 
         //delete conn
-        this.flowBox.deleteConnection(conn);
+        this.flowBase.deleteConnection(conn);
     };
     this.deleteLines = function (conns) {
         for (var i = 0; i < conns.length; i++) {

@@ -29,12 +29,12 @@
         //initial edit one/many
         //_me.edit0 = new EditOne();
         //debugger; 
-        _me.mNode = new EditMany('Id', null, 'tplNode', '.xd-node');
-        _me.mLine = new EditMany('Id', null, 'tplLine', '.xd-line', 'Sort');
+        _me.mNode = new EditMany('Id', 'eformNode', 'tplNode', '.xd-node');
+        _me.mLine = new EditMany('Id', 'eformLine', 'tplLine', '.xd-line', 'Sort');
         _crudR.init(config, [null, _me.mNode, _me.mLine]);
 
         //initial flow(jsplumb)
-        _me.flow = new Flow('divEdit', _me.mNode, _me.mLine);
+        _me.flowForm = new FlowForm('divEdit', _me.mNode, _me.mLine);
 
         //custom function
         //_me.edit0.fnAfterSwap = _me.edit0_afterSwap;
@@ -66,7 +66,7 @@
     //reset when create
     fnAfterOpenEdit: function (fun, json) {
         if (fun === _fun.FunC) {
-            _me.flow.reset();
+            _me.flowForm.reset();
         }
     },
 
@@ -94,12 +94,16 @@
     //#region mNode/mLine custom function
     //load nodes
     mNode_loadJson: function (json) {
-        _me.flow.loadNodes(json);
+        //_me.mNode.loadJson(json);
+        _me.flowForm.loadNodes(_crudE.getRowsByJson(json));
+
+        //this.flowBox.loadNodes(rows);
+
     },
 
     //getUpdJson
     mNode_getUpdJson: function (upKey) {
-        return _me.mNode.getUpdJson(upKey, _me.flow.divFlowBox);
+        return _me.mNode.getUpdJson(upKey, _me.mNode.eform);
     },
 
     //return boolean
@@ -111,13 +115,13 @@
         //debugger;
         //_me.divEdit.show();
         //await _time.sleepA(10000);
-        var rows = _crudE.getRowsByJson(json);
-        _me.flow.loadLines(rows);
+        //_me.mNode.loadJson(json);
+        _me.flowForm.loadLines(_crudE.getRowsByJson(json));
     },
 
     //getUpdJson
     mLine_getUpdJson: function (upKey) {
-        return _me.mLine.getUpdJson(upKey, _me.flow.divLinesBox);
+        return _me.mLine.getUpdJson(upKey, _me.flowForm.divLinesBox);
     },
 
     //return boolean
