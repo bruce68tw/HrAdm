@@ -127,8 +127,8 @@ var _crudE = {
      * param fun {string} C,U,V
      */ 
     _setEditStatus: function(fun) {
-        if (fun === _me._nowFun)
-            return;
+        //if (fun === _me._nowFun)
+        //    return;
 
         /*
         var isView = (fun == _fun.FunV);
