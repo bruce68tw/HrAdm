@@ -79,7 +79,7 @@ from dbo.XpCode
 where Type='SignStatus'
 and Ext='1'
 order by Sort";
-            return await _Db.SqlToCodesA(sql, db);
+            return await _Db.SqlToCodesA(sql, null, db);
         }
         #endregion
 
