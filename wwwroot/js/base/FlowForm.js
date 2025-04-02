@@ -299,7 +299,7 @@ function FlowForm(boxId, mNode, mLine) {
         //    this._setNodeClass(rows[i]);
 
         //3rd param reset=false, coz box has other objects, cannot reset
-        this.mNode.loadRowsByBox(this.mNode.eform, rows, true);
+        this.mNode.loadRowsByRsb(rows, true, this.mNode.eform);
         //this.mNode.loadJson(json);
 
         this.flowBase.loadNodes(rows);
@@ -331,7 +331,7 @@ function FlowForm(boxId, mNode, mLine) {
         //    this._renderLine(rows[i]);
 
         //load editMany lines
-        this.mLine.loadRowsByBox(this.mLine.eform, rows, true);
+        this.mLine.loadRowsByRsb(rows, true, this.mLine.eform);
 
         this.flowBase.loadLines(rows);
 

@@ -26,9 +26,7 @@
 
         _me.divEditTbar = $('#divEditTbar');
 
-        //initial edit one/many
-        //_me.edit0 = new EditOne();
-        //debugger; 
+        //initial edit one/many, rowsBox 使用 eform
         _me.mNode = new EditMany('Id', 'eformNode', 'tplNode', '.xd-node');
         _me.mLine = new EditMany('Id', 'eformLine', 'tplLine', '.xd-line', 'Sort');
         _crudR.init(config, [null, _me.mNode, _me.mLine]);
@@ -103,7 +101,7 @@
 
     //getUpdJson
     mNode_getUpdJson: function (upKey) {
-        return _me.mNode.getUpdJson(upKey, _me.mNode.eform);
+        return _me.mNode.getUpdJsonByRsb(upKey, _me.mNode.eform);
     },
 
     //return boolean

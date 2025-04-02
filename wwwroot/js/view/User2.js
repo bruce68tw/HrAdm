@@ -21,7 +21,7 @@
         };
 
         //initial
-        _me.mCms = new EditMany('Id', 'eformCms', 'tplCms', 'tr');
+        _me.mCms = new EditMany('Id', 'tbodyCms', 'tplCms', 'tr');
 		_crudR.init(config, [null, _me.mCms]);
     },
 

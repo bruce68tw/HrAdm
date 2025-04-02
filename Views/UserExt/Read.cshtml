@@ -33,11 +33,11 @@
             };
 
             //initial
-            _me.mUserJob = new EditMany('Id', 'eformUserJob', 'tplUserJob', 'tr');
-            _me.mUserSchool = new EditMany('Id', 'eformUserSchool', 'tplUserSchool', 'tr');
-            _me.mUserLang = new EditMany('Id', 'eformUserLang', 'tplUserLang', 'tr', 'Sort');
-            _me.mUserLicense = new EditMany('Id', 'eformUserLicense', 'tplUserLicense', 'tr');
-            _me.mUserSkill = new EditMany('Id', 'eformUserSkill', 'tplUserSkill', 'tr', 'Sort');
+            _me.mUserJob = new EditMany('Id', 'tbodyUserJob', 'tplUserJob', 'tr');
+            _me.mUserSchool = new EditMany('Id', 'tbodyUserSchool', 'tplUserSchool', 'tr');
+            _me.mUserLang = new EditMany('Id', 'tbodyUserLang', 'tplUserLang', 'tr', 'Sort');
+            _me.mUserLicense = new EditMany('Id', 'tbodyUserLicense', 'tplUserLicense', 'tr');
+            _me.mUserSkill = new EditMany('Id', 'tbodyUserSkill', 'tplUserSkill', 'tr', 'Sort');
             _crudR.init(config, [null, _me.mUserJob, _me.mUserSchool, _me.mUserLang, _me.mUserLicense, _me.mUserSkill]);
         },
 
