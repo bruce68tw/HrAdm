@@ -3,13 +3,15 @@
  *   資料儲存在 html input
  * notice:
  *   1.set data-fkeyFid when save
+ * 自定函數:
+ *   void fnLoadJson(json)：show json to form, use loadJson instead of loadRows for more situation !!
+ *   json fnGetUpdJson(upKey)：get updated json by form
+ *   bool fnValid()：validate check
+ *   void fnReset()：reset
  *   
  * param-1 kid {string} pkey field id(single key)
  * param-2 eformId {string} (optional) edit form id
- *   if empty, you must write below functions:
- *     1.void fnLoadJson(json): show json to form, use loadJson instead of loadRows for more situation !!
- *     2.json fnGetUpdJson(upKey): get updated json by form
- *     3.bool fnValid(): (optional) validate check
+ *   if empty, you must write functions: fnLoadJson、fnGetUpdJson、fnValid
  *   if not empty, system will load UI & prepare saving rows,
  *     and rows container tag is fixed to 'tbody'
  * param-3 tplRowId {string} (optional) row template id
@@ -93,11 +95,19 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * param rowsBox {object} optional
      */
     this.reset = function (rowsBox) {
-        rowsBox = this.getRowsBox(rowsBox);
-        if (rowsBox != null)
-            rowsBox.empty();   //empty rows ui first
+        if (this.fnReset) {
+            this.fnReset();
+        } else {
+            rowsBox = this.getRowsBox(rowsBox);
+            if (rowsBox != null)
+                rowsBox.empty();   //empty rows ui first
 
-        //reset variables
+            this._resetVar();
+        }
+    };
+
+    //reset variables
+    this._resetVar = function () {
         this.newIndex = 0;
         this.resetDeleted();
     };
@@ -112,6 +122,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     /**
      * (urm: UserRole Mode), load json rows into UI by urm
      * param json {json} 
+     * param rowsBox {object} 
+     * param fids {string[]} 
      */
     this.urmLoadJson = function (json, rowsBox, fids) {
         //reset form first
@@ -155,6 +167,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
                 if (_icheck.checkedO(obj)) {
                     //new row
                     var row = {};
+                    row[_edit.IsNew] = '1';     //new row flag
                     row[fids[0]] = ++newIdx;            //Id, base 1 !!
                     row[fids[1]] = _icheck.getO(obj);   //RoleId
                     me.rowSetFkey(row, upKey);  //set foreign key value
@@ -173,6 +186,16 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         json[_crudE.Deletes] = this.getDeletedStr();
         return json;
     },
+
+    this.urmReset = function (rowsBox) {
+        this._resetVar();
+
+        rowsBox.find(':checkbox').each(function () {
+            var obj = $(this);
+            _icheck.setO(obj, 0);
+        });
+    }
+
 
     /**
      * single form load one row, also set field old value,
@@ -591,6 +614,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     this.boxSetNewId = function (box) {
         this.newIndex++;
         _itext.set(this.kid, this.newIndex, box);
+        _edit.addIsNew(box);    //增加_IsNew隱藏欄位
         return this.newIndex;
     };
 
