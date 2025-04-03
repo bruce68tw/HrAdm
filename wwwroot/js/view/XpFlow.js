@@ -38,11 +38,11 @@
         //_me.edit0.fnAfterSwap = _me.edit0_afterSwap;
         //_me.edit0.fnAfterOpenEdit = _me.edit0_afterOpenEdit;
         //
-        _me.mNode.fnLoadJson = _me.mNode_loadJson;
+        _me.mNode.fnLoadRows = _me.mNode_loadRows;
         _me.mNode.fnGetUpdJson = _me.mNode_getUpdJson;
         _me.mNode.fnValid = _me.mNode_valid;
         //
-        _me.mLine.fnLoadJson = _me.mLine_loadJson;
+        _me.mLine.fnLoadRows = _me.mLine_loadRows;
         _me.mLine.fnGetUpdJson = _me.mLine_getUpdJson;
         _me.mLine.fnValid = _me.mLine_valid;
 
@@ -91,12 +91,10 @@
 
     //#region mNode/mLine custom function
     //load nodes
-    mNode_loadJson: function (json) {
-        //_me.mNode.loadJson(json);
-        _me.flowForm.loadNodes(_crudE.getRowsByJson(json));
+    mNode_loadRows: function (rows) {
+        _me.flowForm.loadNodes(rows);
 
         //this.flowBox.loadNodes(rows);
-
     },
 
     //getUpdJson
@@ -109,12 +107,8 @@
         return true;
     },
 
-    mLine_loadJson: function (json) {
-        //debugger;
-        //_me.divEdit.show();
-        //await _time.sleepA(10000);
-        //_me.mNode.loadJson(json);
-        _me.flowForm.loadLines(_crudE.getRowsByJson(json));
+    mLine_loadRows: function (rows) {
+        _me.flowForm.loadLines(rows);
     },
 
     //getUpdJson

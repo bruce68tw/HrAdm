@@ -59,8 +59,8 @@
     }
 </style>
 
-<script src="~/js/lib/svg-3.1.2.min.js"></script>
-<script src="~/js/lib/svg.draggable-3.0.0.min.js"></script>
+<script src="~/js/svg-3.1.2.min.js"></script>
+<script src="~/js/svg.draggable-3.0.0.min.js"></script>
 <script src="~/js/view/XpFlow.js"></script>
 <script type="text/javascript">
     $(function () {
@@ -208,7 +208,7 @@
                 <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="eformLine" class="form-horizontal xg-form" style="padding:0 10px;">
+                <form class="form-horizontal xg-form" style="padding:0 10px;">
                     <vc:xi-read dto='new() { Title = "起始節點 :", Fid = "StartNode", Cols = cols }' />
                     <vc:xi-read dto='new() { Title = "結束節點 :", Fid = "EndNode", Cols = cols }' />
                     <vc:xi-int dto='new() { Title = R["RunOrder"].Value + " :", Fid = "Sort", Required = true, Cols = "4,2" }' />
@@ -229,7 +229,7 @@
                                     <th width="85px"></th>
                                 </tr>
                             </thead>
-                            <tbody id="divLineConds"></tbody>
+                            <tbody id="tbodyLineCond"></tbody>
                         </table>
                     </div>
                 </form>

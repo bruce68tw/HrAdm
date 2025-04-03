@@ -616,7 +616,8 @@ var _chart = {
 }; //class
 /**
  * crud edit function
- * _me properties:
+ *   合併 _edit.js
+ * 寫入 _me properties:
  *   fnAfterSwap:
  *   fnAfterOpenEdit:
  *   fnUpdateOrViewA: see _updateOrViewA
@@ -635,8 +636,22 @@ var _crudE = {
     Childs: '_childs',
     Deletes: '_deletes',
 
+    //edit form mode
+    ModeBase: 'Base',
+    ModeUR: 'UR',   //user role mode
+
+    //server side fid for file input collection, must pre '_'
+    //key-value of file serverFid vs row key
+    FileJson: '_fileJson',
+
+    //data property name for keep old value
+    DataOld: '_old',
+
+    //前後端欄位: isNew, new row flag
+    IsNew: '_IsNew',
+
     /**
-     * initial crud edit
+     * initial crud edit, 寫入 _me 變數
      * param1 edits {object Array} for edit form
      *   1.null: means one table, get eform
      *   2.many edit object, if ary0 is null, then call new EditOne()
@@ -718,12 +733,14 @@ var _crudE = {
         //load master(single) row
         var edit = _me.edit0;
         edit.loadRow(json);
+        edit.dataJson = json;
 
         //load childs rows(只需載入第一層)
         var childLen = _crudE._getEditChildLen(edit);
         for (var i = 0; i < childLen; i++) {
             var edit2 = _crudE._getEditChild(edit, i);
-            edit2.loadJson(_crudE._getChildJson(json, i));
+            edit2.dataJson = _crudE._getChildJson(json, i);
+            edit2.loadRows(_crudE.jsonGetRows(edit2.dataJson));
         }
 
         //call fnAfterLoadJson() if existed
@@ -761,19 +778,19 @@ var _crudE = {
         var eform = _me.edit0.eform;
         var items = box.find('input, textarea, select, button');
         if (fun == _fun.FunV) {
-            _edit.removeIsNew(eform);
+            _crudE.removeIsNew(eform);
             items.prop('disabled', true)
             box.find('#btnToRead').prop('disabled', false);
             _ihtml.setEdits(box, '', false);
         } else if (fun == _fun.FunC) {
-            _edit.addIsNew(eform);    //增加_IsNew隱藏欄位
+            _crudE.addIsNew(eform);    //增加_IsNew隱藏欄位
             var dataEdit = '[data-edit=U]';
             items.prop('disabled', false)
             items.filter(dataEdit).prop('disabled', true)
             _ihtml.setEdits(box, '', true);
             _ihtml.setEdits(box, dataEdit, false);
         } else if (fun == _fun.FunU) {
-            _edit.removeIsNew(eform);
+            _crudE.removeIsNew(eform);
             var dataEdit = '[data-edit=C]';
             items.prop('disabled', false)
             items.filter(dataEdit).prop('disabled', true)
@@ -839,7 +856,7 @@ var _crudE = {
                 _json.copy(fileJson2, fileJson);
             }
 
-            var childJson = edit2.getUpdJsonByCrud(key);
+            var childJson = edit2.getUpdJson(key);
             if (childJson == null)
                 continue;
 
@@ -860,7 +877,7 @@ var _crudE = {
         }
         if (!_json.isEmpty(fileJson)) {
             hasData = true;
-            data[_edit.FileJson] = fileJson;
+            data[_crudE.FileJson] = fileJson;
         }
 
         if (!hasData)
@@ -989,8 +1006,13 @@ var _crudE = {
         return (edit[fid] == null) ? 0 : edit[fid].length;
     },
 
-    //get rows of json
-    getRowsByJson: function (json) {
+    /**
+     * getRowsByJson -> jsonGetRows
+     * get rows of json 
+     * @param {any} json
+     * @returns
+     */
+    jsonGetRows: function (json) {
         return (json == null || json[_crudE.Rows] == null)
             ? null
             : json[_crudE.Rows];
@@ -1007,36 +1029,32 @@ var _crudE = {
     //get child rows
     getChildRows: function (upJson, childIdx) {
         var child = _crudE._getChildJson(upJson, childIdx);
-        return _crudE.getRowsByJson(child);
+        return _crudE.jsonGetRows(child);
     },
 
     /**
      * set child rows
-     * param upRow {json}
+     * param upJson {json}
      * param childIdx {int}
      * param rows {jsons}
      * return {json} child object
      */
-    setChildRows: function (upRow, childIdx, rows) {
+    setChildRows: function (upJson, childIdx, rows) {
         var fid = _crudE.Childs;
-        if (upRow == null)
-            upRow = {};
-        if (upRow[fid] == null)
-            upRow[fid] = [];
-        if (upRow[fid].length <= childIdx)
-            upRow[fid][childIdx] = {};
+        if (upJson == null)
+            upJson = {};
+        if (upJson[fid] == null)
+            upJson[fid] = [];
+        if (upJson[fid].length <= childIdx)
+            upJson[fid][childIdx] = {};
 
-        var child = upRow[fid][childIdx];
+        var child = upJson[fid][childIdx];
         child[_crudE.Rows] = rows;
         return child;
     },
 
     /**
-     * 將目前畫面資料為新資料
-     * param upRow {json}
-     * param childIdx {int}
-     * param rows {jsons}
-     * return {json} child object
+     * 將目前畫面資料轉變為新資料
      */
     editToNew: function () {
         var fun = _fun.FunC;
@@ -1044,6 +1062,258 @@ var _crudE = {
         _me.edit0.resetKey();
         _prog.setPath(fun);
     },
+
+    //=== move from _edit.js start
+    /**
+     * 增加隱藏欄位 _IsNew, 同時設為1
+     * param obj {box} jquery object
+     */
+    addIsNew: function (box) {
+        var fid = _crudE.IsNew;
+        var field = box.find(_input.fidFilter(fid));
+        if (field.length == 0)
+            field = box.append(`<input type="hidden" data-fid="${fid}" name="${fid}" value="1" >`);
+        else
+            field.val(value);
+    },
+
+    /**
+     * 刪除隱藏欄位 _IsNew
+     * param obj {box} jquery object
+     */
+    removeIsNew: function (box) {
+        var fid = _crudE.IsNew;
+        var field = box.find(_input.fidFilter(fid));
+        if (field.length > 0)
+            field.remove();
+    },
+
+    /**
+     * get old value 
+     * param obj {object} input jquery object
+     * return {string}
+     */
+    getOld: function (obj) {
+        return obj.data(_crudE.DataOld);
+    },
+
+    /**
+     * set old value
+     * param obj {object} input jquery object
+     * param value {int/string}
+     */
+    setOld: function (obj, value) {
+        obj.data(_crudE.DataOld, value);
+    },
+
+    /*
+    zz_loadRowByArg: function (box, row, fidTypes) {
+        _form.loadRow(box, row);
+
+        //set old value for each field
+        //var fidLen = fidTypes.length;
+        for (var i = 0; i < fidTypes.length; i = i + 2) {
+            fid = fidTypes[i];
+            var obj = _obj.get(fid, box);
+            obj.data(_crudE.DataOld, row[fid]);
+        }
+    },
+    */
+
+    /**
+     * get one updated row for New/Updated
+     * 只讀取有異動的欄位
+     * called by: EditOne.js, DbAdm MyCrud.js(使用變形的 form !!)
+     * param kid {string} key fid
+     * param fidTypes {id-value array}
+     * param box {object} form object
+     * return json row
+     */
+    getUpdRow: function (kid, fidTypes, box) {
+        //if key empty then return row
+        var row = _form.toRow(box);
+        var key = _input.get(kid, box);
+        if (_str.isEmpty(key))
+            return row;
+
+        //讀取有異動的欄位
+        var diff = false;
+        var result = {};
+        var fid, ftype, value, obj, old;
+        for (var j = 0; j < fidTypes.length; j = j + 2) {
+            //skip read only type
+            ftype = fidTypes[j + 1];
+            //if (ftype === 'link' || ftype === 'read')
+            //    continue;
+
+            fid = fidTypes[j];
+            //obj = (ftype === 'radio') ? _iradio.getObj(fid, box) : _obj.get(fid, box);
+            obj = _input.getObj(fid, box, ftype);
+            //value = _input.getO(obj, box, ftype);
+            value = row[fid];
+            old = obj.data(_crudE.DataOld);
+            //if fully compare, string will not equal numeric !!
+            if (value != old) {
+                //date/dt old value has more length
+                if ((ftype === 'date' || ftype === 'dt') &&
+                    _date.dtsToValue(value) === _date.dtsToValue(old))
+                    continue;
+
+                result[fid] = value;
+                diff = true;
+            }
+        }
+        if (!diff)
+            return null;
+
+        result[kid] = key;
+        return result;
+    },
+
+    /**
+     * setFidTypeVars -> setFidTypes
+     * set fid-type variables: fidTypes, fidTypeLen
+     * param me {object} EditOne/EditMany object
+     * param box {object} container
+     * return void
+     */
+    setFidTypes: function (me, box) {
+        var fidTypes = [];
+        box.find(_input.fidFilter()).each(function (i, item) {
+            var obj = $(item);
+            var j = i * 2;
+            fidTypes[j] = _input.getFid(obj);
+            fidTypes[j + 1] = _input.getType(obj);
+        });
+        me.fidTypes = fidTypes;
+        me.fidTypeLen = me.fidTypes.length;
+    },
+
+    /**
+     * set file variables: fileFids, fileLen, hasFile
+     * called by EditOne/EditMany init()
+     * param me {edit} EditOne/EditMany variables
+     * param box {object} form or row object
+     * return void
+     */
+    setFileVars: function (me, box) {
+        //var me = this;  //use outside .each()
+        me.fileFids = [];      //upload file fid array
+        box.find('[data-type=file]').each(function (index, item) {
+            me.fileFids[index] = _input.getFid($(item));
+        });
+        me.fileLen = me.fileFids.length;
+        me.hasFile = me.fileFids.length > 0; //has input file or not
+    },
+
+    /**
+     * getServerFid -> getFileSid
+     * get server side variables name for file field
+     * param tableId {string} 
+     * param fid {string} ui file id
+     * return {string} format: Table_Fid
+     */
+    getFileSid: function (levelStr, fid) {
+        return 't' + levelStr + '_' + fid;
+    },
+
+    /**
+     * formData set fileJson field
+     * param data {formData}
+     * param fileJson {json}
+     * return void
+     */
+    dataSetFileJson: function (data, fileJson) {
+        if (_json.isEmpty(fileJson))
+            return;
+
+        var fid = _crudE.FileJson
+        if (data.has(fid)) {
+            var json = data.get(fid);
+            fileJson = _json.copy(fileJson, json);
+        }
+        data.set(fid, fileJson);
+    },
+
+    /**
+     * isNewKey(key) -> isNewRow(row)
+     * check a new key or not, parseInt(ABC123) will get int, cannot use it!!
+     * param key {string}
+     */
+    isNewRow: function (row) {
+        var fid = _crudE.IsNew;
+        return (row[fid] != null || row[fid] == '1');
+    },
+    /*
+    isNewKey: function (key) {
+        key = key.toString();   //convert to string for checking
+        var len = key.length;
+        if (len >= 6)
+            return false;
+
+        var val = parseInt(key);
+        return (!Number.isNaN(val) && (val.toString().length == len));
+    },
+    */
+
+    /**
+     * onclick viewFile
+     * param table {string} table name
+     * param fid {string}
+     * param elm {element} link element
+     * param key {string} row key
+     */
+    viewFile: function (table, fid, elm, key) {
+        if (_crudE.isNewKey(key)) {
+            _tool.msg(_BR.NewFileNotView);
+        } else {
+            var ext = _file.getFileExt(elm.innerText);
+            if (_file.isImageExt(ext))
+                _tool.showImage(elm.innerHTML, _str.format('ViewFile?table={0}&fid={1}&key={2}&ext={3}', table, fid, key, ext));
+        }
+    },
+
+    //#region remark code
+    /**
+     * get field info array by box object & row filter
+     * box {object} form/div container
+     * trFilter {string} (optional 'tr')
+     * return json array
+     */
+    /*
+    getFidTypesByDid: function (box, trFilter) {
+        //trFilter = trFilter || 'tr';
+        //var trObj = box.find(trFilter + ':first');
+
+        var fidTypes = [];
+        box.find('[data-id]').each(function (i, item) {
+            var obj = $(item);
+            var j = i * 2;
+            fidTypes[j] = obj.data('id');
+            fidTypes[j + 1] = _input.getType(obj);
+        });
+        return fidTypes;
+    },
+    */
+
+    /*
+    //for EditMany.js
+    getFidTypesById: function (box) {
+        //return _crudE._getFidTypes(box, '[id]');
+        var fidTypes = [];
+        box.find('[id]').each(function (i, item) {
+            var obj = $(item);
+            var j = i * 2;
+            fidTypes[j] = obj.attr('id');
+            fidTypes[j + 1] = _input.getType(obj);
+        });
+        return fidTypes;
+    },
+    */
+
+    //=== move from _edit.js end
+    //#endregion
+
 
     //=== event start ===
     /**
@@ -1062,7 +1332,7 @@ var _crudE = {
      * return {bool}
      */
     onUpdateA: async function(key) {
-        _edit.removeIsNew(_me.edit0.eform);    //增加_IsNew隱藏欄位
+        _crudE.removeIsNew(_me.edit0.eform);    //增加_IsNew隱藏欄位
         return await _crudE._updateOrViewA(_fun.FunU, key);
     },
 
@@ -1765,285 +2035,6 @@ var _date = {
     },
 
 }; //class
-
-//for EditOne.js, EditMany.js
-var _edit = {
-
-    //server side fid for file input collection, must pre '_'
-    //key-value of file serverFid vs row key
-    FileJson: '_fileJson',
-
-    //data property name for keep old value
-    DataOld: '_old',
-
-    //前後端欄位: isNew
-    IsNew: '_IsNew',
-
-    /**
-     * 增加隱藏欄位 _IsNew, 同時設為1
-     * param obj {box} jquery object
-     */
-    addIsNew: function (box, value) {
-        var fid = _edit.IsNew;
-        var field = box.find(_input.fidFilter(fid));
-        if (value == null)
-            value = '1';
-        if (field.length == 0)
-            field = box.append(`<input type="hidden" data-fid="${fid}" name="${fid}" value="${value}" >`);
-        else
-            field.val(value);
-    },
-
-    /**
-     * 刪除隱藏欄位 _IsNew
-     * param obj {box} jquery object
-     */
-    removeIsNew: function (box) {
-        var fid = _edit.IsNew;
-        var field = box.find(_input.fidFilter(fid));
-        if (field.length > 0)
-            field.remove();
-    },
-
-    /**
-     * get old value 
-     * param obj {object} input jquery object
-     * return {string}
-     */
-    getOld: function (obj) {
-        return obj.data(_edit.DataOld);
-    },
-
-    /**
-     * set old value
-     * param obj {object} input jquery object
-     * param value {int/string}
-     */
-    setOld: function (obj, value) {
-        obj.data(_edit.DataOld, value);
-    },
-
-    /*
-    zz_loadRowByArg: function (box, row, fidTypes) {
-        _form.loadRow(box, row);
-
-        //set old value for each field
-        //var fidLen = fidTypes.length;
-        for (var i = 0; i < fidTypes.length; i = i + 2) {
-            fid = fidTypes[i];
-            var obj = _obj.get(fid, box);
-            obj.data(_edit.DataOld, row[fid]);
-        }
-    },
-    */
-
-    /**
-     * get one updated row for New/Updated
-     * called by: EditOne.js, DbAdm MyCrud.js
-     * param kid {string} key fid
-     * param fidTypes {id-value array}
-     * param box {object} form object
-     * return json row
-     */ 
-    getUpdRow: function (kid, fidTypes, box) {
-        //if key empty then return row
-        var row = _form.toRow(box);
-        var key = _input.get(kid, box);
-        if (_str.isEmpty(key))
-            return row;
-
-        var diff = false;
-        var result = {};
-        var fid, ftype, value, obj, old;
-        for (var j = 0; j < fidTypes.length; j = j + 2) {
-            //skip read only type
-            ftype = fidTypes[j + 1];
-            //if (ftype === 'link' || ftype === 'read')
-            //    continue;
-
-            fid = fidTypes[j];
-            //obj = (ftype === 'radio') ? _iradio.getObj(fid, box) : _obj.get(fid, box);
-            obj = _input.getObj(fid, box, ftype);
-            //value = _input.getO(obj, box, ftype);
-            value = row[fid];
-            old = obj.data(_edit.DataOld);
-            //if fully compare, string will not equal numeric !!
-            if (value != old) {
-                //date/dt old value has more length
-                if ((ftype === 'date' || ftype === 'dt') &&
-                    _date.dtsToValue(value) === _date.dtsToValue(old))
-                    continue;
-
-                result[fid] = value;
-                diff = true;
-            }
-        }
-        if (!diff)
-            return null;
-
-        result[kid] = key;
-        return result;
-    },
-
-    /**
-     * set fid-type related variables: fidTypes, fidTypeLen
-     * param box {object} container
-     * return void
-     */
-    setFidTypeVars: function (me, box) {
-        var fidTypes = [];
-        box.find(_input.fidFilter()).each(function (i, item) {
-            var obj = $(item);
-            var j = i * 2;
-            fidTypes[j] = _input.getFid(obj);
-            fidTypes[j + 1] = _input.getType(obj);
-        });
-        me.fidTypes = fidTypes;
-        me.fidTypeLen = me.fidTypes.length;
-    },
-
-    /**
-     * set file related variables: fileFids, fileLen, hasFile
-     * called by EditOne/EditMany init()
-     * param me {edit} EditOne/EditMany variables
-     * param box {object} form or row object
-     * return void
-     */
-    setFileVars: function (me, box) {
-        //var me = this;  //use outside .each()
-        me.fileFids = [];      //upload file fid array
-        box.find('[data-type=file]').each(function (index, item) {
-            me.fileFids[index] = _input.getFid($(item));
-        });
-        me.fileLen = me.fileFids.length;
-        me.hasFile = me.fileFids.length > 0; //has input file or not
-    },
-
-    /**
-     * get server side var name for file field
-     * param tableId {string} 
-     * param fid {string} ui file id
-     * return {string} format: Table_Fid
-     */
-    getServerFid: function (levelStr, fid) {
-        return 't' + levelStr + '_' + fid;
-    },
-
-    /**
-     * formData set fileJson field
-     * param data {formData}
-     * param fileJson {json}
-     * return void
-     */
-    dataSetFileJson: function (data, fileJson) {
-        if (_json.isEmpty(fileJson))
-            return;
-
-        var fid = _edit.FileJson
-        if (data.has(fid)) {
-            var json = data.get(fid);
-            fileJson = _json.copy(fileJson, json);
-        }
-        data.set(fid, fileJson);
-    },
-
-    /**
-     * isNewKey(key) -> isNewRow(row)
-     * check a new key or not, parseInt(ABC123) will get int, cannot use it!!
-     * param key {string}
-     */
-    isNewRow: function (row) {
-        var fid = _edit.IsNew;
-        return (row[fid] != null || row[fid] == '1');
-    },
-    /*
-    isNewKey: function (key) {
-        key = key.toString();   //convert to string for checking
-        var len = key.length;
-        if (len >= 6)
-            return false;
-
-        var val = parseInt(key);
-        return (!Number.isNaN(val) && (val.toString().length == len));
-    },
-    */
-
-    /**
-     * onclick viewFile
-     * param table {string} table name
-     * param fid {string}
-     * param elm {element} link element
-     * param key {string} row key
-     */
-    viewFile: function (table, fid, elm, key) {
-        if (_edit.isNewKey(key)) {
-            _tool.msg(_BR.NewFileNotView);
-            return;
-        } else {
-            var ext = _file.getFileExt(elm.innerText);
-            if (_file.isImageExt(ext))
-                _tool.showImage(elm.innerHTML, _str.format('ViewFile?table={0}&fid={1}&key={2}&ext={3}', table, fid, key, ext));
-        }
-    },
-
-    //#region remark code
-    /**
-     * get field info array by box object & row filter
-     * box {object} form/div container
-     * trFilter {string} (optional 'tr')
-     * return json array
-     */
-    /*
-    getFidTypesByDid: function (box, trFilter) {
-        //trFilter = trFilter || 'tr';
-        //var trObj = box.find(trFilter + ':first');
-
-        var fidTypes = [];
-        box.find('[data-id]').each(function (i, item) {
-            var obj = $(item);
-            var j = i * 2;
-            fidTypes[j] = obj.data('id');
-            fidTypes[j + 1] = _input.getType(obj);
-        });
-        return fidTypes;
-    },
-    */
-
-    /*
-    //for EditMany.js
-    getFidTypesById: function (box) {
-        //return _edit._getFidTypes(box, '[id]');
-        var fidTypes = [];
-        box.find('[id]').each(function (i, item) {
-            var obj = $(item);
-            var j = i * 2;
-            fidTypes[j] = obj.attr('id');
-            fidTypes[j + 1] = _input.getType(obj);
-        });
-        return fidTypes;
-    },
-    */
-
-    /**
-     * get field info array: 0:id, 1:type
-     * param {object} trObj
-     * return {string array}
-     */
-    /*
-    _getFidTypes: function (box, filter) {
-        var fidTypes = [];
-        box.find(filter).each(function (i, item) {
-            var obj = $(item);
-            var j = i * 2;
-            fidTypes[j] = obj.data('id');
-            fidTypes[j + 1] = _input.getType(obj);
-        });
-        return fidTypes;
-    },
-    */
-    //#endregion
-
-};
 var _error = {
 
     log: function (msg) {
@@ -5535,25 +5526,31 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
 
 } //class
 /**
+ * 多筆編輯畫面
  * multiple edit forms
  *   資料儲存在 html input
+ * 
  * notice:
- *   1.set data-fkeyFid when save
+ *   set data-fkeyFid when save
+ *   函數名稱後面ByRsb(表示by RowsBox)為擴充原本函數, 參數rowsBox空白則為this.RowsBox
+ * 
+ * 屬性: 參考 init()
+ * 
  * 自定函數:
- *   void fnLoadJson(json)：show json to form, use loadJson instead of loadRows for more situation !!
+ *   void fnLoadJson(json) -> fnLoadRows(rows)：show json to form, use loadJson instead of loadRows for more situation !!
  *   json fnGetUpdJson(upKey)：get updated json by form
  *   bool fnValid()：validate check
  *   void fnReset()：reset
  *   
  * param-1 kid {string} pkey field id(single key)
- * param-2 eformId {string} (optional) edit form id
- *   if empty, you must write functions: fnLoadJson、fnGetUpdJson、fnValid
- *   if not empty, system will load UI & prepare saving rows,
- *     and rows container tag is fixed to 'tbody'
+ * //param-2 eformId {string} (optional) edit form id
+ * param-2 rowsBoxId {string} (optional) rows box id
+ *   if empty, you must write functions: fnLoadRows、fnGetUpdJson、fnValid
  * param-3 tplRowId {string} (optional) row template id
+ *   tplRowId -> rowTplId
  *   1.if empty, it will log error when call related function.
  *   2.system get fid-type from this variables
- *   3.called by singleFormLoadRow、loadRowsByBox、_renderRow
+ *   3.called by singleFormLoadRow、loadRowsByRsb、_renderRow
  * param-4 rowFilter {string} (optional) jQuery filter for find row object
  *   1.if empty, it will log error when call related function.
  *   2.inside element -> row(onDeleteRow),
@@ -5562,7 +5559,8 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
  * 
  * return {EditMany}
  */
-function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
+//function EditMany(kid, eformId, rowTplId, rowFilter, sortFid) {
+function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
 
     /**
      * initial & and instance variables (this.validator by _valid.init())
@@ -5574,34 +5572,41 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         this.DataFkeyFid = '_fkeyfid';  //data field for fkey fid, lowercase
 
         //variables
+        this.mode = _crudE.ModeBase;    //default value
+        this.modeData = '';             //for different mode
+        this.isUrm = false;             //is urm or not
+
         this.kid = kid;
-        this.hasRowFilter = _str.notEmpty(rowFilter);
         this.rowFilter = rowFilter;
         this.sortFid = sortFid;
         this.systemError = '';
-        this.hasTplRow = _str.notEmpty(tplRowId);
+        this.hasRowTpl = _str.notEmpty(rowTplId);
+        this.hasRowFilter = _str.notEmpty(rowFilter);
+        this.dataJson = null;
 
-        if (this.hasTplRow) {
-            this.tplRow = $('#' + tplRowId).html();
-            var rowObj = $(this.tplRow);
+        if (this.hasRowTpl) {
+            this.rowTpl = $('#' + rowTplId).html();
+            var rowObj = $(this.rowTpl);
 
             //check input & alert error if wrong
             if (_obj.get(kid, rowObj) == null) {
-                this.systemError = 'EditMany.js input kid is wrong (' + kid + ')';
+                this.systemError = `EditMany.js input kid is wrong (${kid})`;
                 alert(this.systemError);
             }
 
-            _edit.setFidTypeVars(this, rowObj);
-            _edit.setFileVars(this, rowObj);
+            _crudE.setFidTypes(this, rowObj);
+            _crudE.setFileVars(this, rowObj);
         }
 
         //has edit form or not
-        this.hasEform = _str.notEmpty(eformId);
+        this.hasEform = _str.notEmpty(rowsBoxId);
         if (this.hasEform) {
-            this.eform = $('#' + eformId);     //edit form object
-            this.rowsBox = this.eform.find('tbody');    //use tbody(in table)
-            if (this.rowsBox.length == 0)
-                this.rowsBox = this.eform; 
+            this.rowsBox = $('#' + rowsBoxId);
+            this.eform = this.rowsBox.closest('form');     //edit form object
+            if (this.rowsBox.length == 0) {
+                this.systemError = `EditMany.js rowsBoxId is wrong (${rowsBoxId})`;
+                alert(this.systemError);
+            }
         }
 
         this.deletedRows = [];  //deleted key string array
@@ -5609,35 +5614,36 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
-     * check is a new row or not
-     * param row {json} 
-     * return {bool}
-     */
-    this.isNewRow = function (row) {
-        return _edit.isNewRow(row);
+     * initial urm, 參考 XpUser Read.cshmtl
+     * param fids: 要傳到後端的欄位id array
+     */ 
+    this.initUrm = function (fids) {
+        this.mode = _crudE.ModeUR;
+        this.modeData = fids;
+        this.isUrm = true;
     };
 
     /**
+     * isNewTr -> _isNewBox
      * check is a new tr or not
      * param tr {object} 
      * return {bool}
      */
-    this.isNewTr = function (tr) {
-        return (_itext.get(_edit.IsNew, tr) == '1');
+    this._isNewBox = function (box) {
+        return (_itext.get(_crudE.IsNew, box) == '1');
     };
 
     /**
      * reset edit form
      * param rowsBox {object} optional
      */
-    this.reset = function (rowsBox) {
+    this.reset = function () {
         if (this.fnReset) {
             this.fnReset();
-        } else {
-            rowsBox = this.getRowsBox(rowsBox);
-            if (rowsBox != null)
-                rowsBox.empty();   //empty rows ui first
-
+        } else if (this.isUrm) {
+            this._urmReset();
+        } else if (this.hasEform) {
+            this.rowsBox.empty();   //empty rows ui first
             this._resetVar();
         }
     };
@@ -5645,37 +5651,37 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     //reset variables
     this._resetVar = function () {
         this.newIndex = 0;
-        this.resetDeleted();
+        this._resetDeletes();
     };
 
     /**
+     * resetDeleted -> _resetDeletes
      * reset deleted rows
      */
-    this.resetDeleted = function () {
+    this._resetDeletes = function () {
         this.deletedRows = [];
     };
 
     /**
+     * urmLoadJson -> urmLoadRows
      * (urm: UserRole Mode), load json rows into UI by urm
      * param json {json} 
      * param rowsBox {object} 
      * param fids {string[]} 
      */
-    this.urmLoadJson = function (json, rowsBox, fids) {
-        //reset form first
-        var objs = rowsBox.find(':checkbox');
-        _icheck.setO(objs, 0);
-        objs.data('key', '');
+    this._urmLoadRows = function (rows) {
+        this._urmReset();
 
         //check
-        var rows = _crudE.getRowsByJson(json);
+        //var rows = _crudE.jsonGetRows(json);
         if (rows == null)
             return;
 
         //set checked sign & old value
+        var fids = this.modeData;
         for (var i = 0; i < rows.length; i++) {
             var row = rows[i];
-            var obj = rowsBox.find(_input.fidFilter(row[fids[1]]));   //fid map to dataFid
+            var obj = this.rowsBox.find(_input.fidFilter(row[fids[1]]));   //fid map to dataFid
             _icheck.setO(obj, 1);
             obj.data('key', row[fids[0]]);
         }
@@ -5690,20 +5696,21 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * param dataFid {string} data fid, ex: RoleId
      * return {json} modified columns only
      */
-    this.urmGetUpdJson = function (upKey, rowsBox, fids) {
+    this._urmGetUpdJson = function (upKey) {
         var json = {};
         var rows = [];
         var me = this;
         var newIdx = 0;
-        this.resetDeleted();    //reset first
-        rowsBox.find(':checkbox').each(function () {
+        var fids = this.modeData;   //string array
+        this._resetDeletes();    //reset first
+        this.rowsBox.find(':checkbox').each(function () {
             var obj = $(this);
             var key = obj.data('key');
             if (_str.isEmpty(key)) {
                 if (_icheck.checkedO(obj)) {
                     //new row
                     var row = {};
-                    row[_edit.IsNew] = '1';     //new row flag
+                    row[_crudE.IsNew] = '1';     //new row flag
                     row[fids[0]] = ++newIdx;            //Id, base 1 !!
                     row[fids[1]] = _icheck.getO(obj);   //RoleId
                     me.rowSetFkey(row, upKey);  //set foreign key value
@@ -5719,72 +5726,83 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
 
         if (rows.length > 0)
             json[_crudE.Rows] = rows;
-        json[_crudE.Deletes] = this.getDeletedStr();
+        json[_crudE.Deletes] = this.getDeletes();
         return json;
-    },
+    };
 
-    this.urmReset = function (rowsBox) {
+    this._urmReset = function () {
         this._resetVar();
 
-        rowsBox.find(':checkbox').each(function () {
-            var obj = $(this);
-            _icheck.setO(obj, 0);
-        });
-    }
-
+        var objs = this.rowsBox.find(':checkbox');
+        _icheck.setO(objs, 0);
+        objs.data('key', '');
+    };
 
     /**
-     * single form load one row, also set field old value,
+     * loadJson(json) -> loadRows(rows)
+     * 系統自動呼叫, 不可在 fnXXX 呼叫, 否則會產生無窮迴圈 !!
+     * load this json rows into UI, also set old values !!
+     * param json {json} 
+     */
+    this.loadRows = function (rows) {
+        if (this.fnLoadRows) {
+            this.fnLoadRows(rows);
+        } else if (this.isUrm) {
+            this._urmLoadRows(rows, _me.divRoles, _me.mUserRoleFids);
+        } else {
+            //var rows = (json == null || json[_crudE.Rows] == null)
+            //    ? null : json[_crudE.Rows];
+            this.loadRowsByRsb(rows, true);
+        }
+    };
+
+    /**
+     * singleFormLoadRow -> loadRowByBox
+     * box 與 rsb(rowsBox) 有些不同, 所以用不同名 !!
+     * load one row, also set field old value,
      * ex: DbAdm/MyCrud.js Etable is a single form but has multiple rows property !!
      * param rowBox {object}
      * param row {json}
-     * param index {int}
+     * param index {int} 資料序號 base 0
      */
-    this.singleFormLoadRow = function (rowBox, row, index) {
-        if (!this.checkTplRow())
-            return;
+    this.loadRowByBox = function (rowBox, row, index) {
+        //if (!this._checkRowTpl())
+        //    return;
 
-        var form = $(Mustache.render(this.tplRow, { Index: index }));
-        _form.loadRow(form, row);   //use name field
+        row.Index = index;
+        var box = $(Mustache.render(this.rowTpl, row)); //for 顯示欄位
 
         //set old value for each field
         for (var i = 0; i < this.fidTypeLen; i = i + 2) {
             fid = this.fidTypes[i];
-            var obj = _obj.get(fid, form);
-            obj.data(_edit.DataOld, row[fid]);
+            _crudE.setOld(_obj.get(fid, box), row[fid]);
         }
 
-        rowBox.append(form);
+        //set date input
+        _idate.init(box);
+
+        //one row into UI for 輸入欄位
+        _form.loadRow(box, row);    
+
+        //rowBox.append(box);
+        box.appendTo(rowBox);
     };
 
     /**
-     * 系統自動呼叫, PG不可呼叫, 否則會產生無窮迴圈 !!
-     * load this json rows into UI, also set old values !!
-     * param json {json} 
-     */
-    //todo: 未完成
-    this.loadJson = function (json) {
-        if (this.fnLoadJson) {
-            this.fnLoadJson(json);
-        } else {
-            var rows = (json == null || json[_crudE.Rows] == null)
-                ? null : json[_crudE.Rows];
-            this.loadRowsByBox(this.rowsBox, rows);
-        }
-    };
-
-    /**
-     * load rows with rowsBox
+     * loadRowsByBox(rowsBox, rows, reset) -> loadRowsByRsb(rows, reset, rowsBox)
+     * load rows by rowsBox also set old value
      * param rowsBox {object} rows box object
      * param rows {jsons}
      * param reset {bool} (default true) reset rowsBox first.
+     * param rowsBox {object} (optional) rows box object, default this.rowsBox
      */ 
-    this.loadRowsByBox = function (rowsBox, rows, reset) {
-        if (!this.checkTplRow())
+    this.loadRowsByRsb = function (rows, reset, rowsBox) {
+        if (!this._checkRowTpl())
             return;
 
         //reset if need
         //use "reset || true"" will cause wrong result !!
+        rowsBox = this._getRowsBox(rowsBox);
         if (_var.isEmpty(reset) || reset)
             this.reset(rowsBox);
 
@@ -5795,14 +5813,16 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
 
         //render rows
         for (var i = 0; i < rowLen; i++) {
+            this.loadRowByBox(rowsBox, rows[i], i);
+            /*
             var row = rows[i];
-            var box = $(Mustache.render(this.tplRow, row));
+            var box = $(Mustache.render(this.rowTpl, row));
             //box.data(this.DataIndex, i);    //set row index
 
             //set old value for each field
             for (var j = 0; j < this.fidTypeLen; j += 2) {
                 fid = this.fidTypes[j];
-                _edit.setOld(_obj.get(fid, box), row[fid]);
+                _crudE.setOld(_obj.get(fid, box), row[fid]);
             }
 
             //set date input
@@ -5813,6 +5833,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
 
             //into rows box
             box.appendTo(rowsBox);
+            */
         }        
     };
 
@@ -5820,17 +5841,18 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * validate form
      */
     this.valid = function () {
-        return (this.hasEform) ? this.eform.validTable(this.validator) :
-            (this.fnValid == null) ? true : this.fnValid();
+        return this.fnValid ? this.fnValid() :
+            this.hasEform ? this.eform.validTable(this.validator) :
+            true;
     };
 
     /**
      * get row key
-     * param tr {object} row box
+     * param rowBox {object} row box
      * return {string} key value
      */
-    this.getKey = function (tr) {
-        return _input.get(this.kid, tr);
+    this.getKey = function (rowBox) {
+        return _input.get(this.kid, rowBox);
     };
 
     /**
@@ -5851,8 +5873,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         return row;
     };
     */
-
-    this.checkRowFilter = function () {
+    
+    this._checkRowFilter = function () {
         if (this.hasRowFilter)
             return true;
 
@@ -5860,11 +5882,12 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         return false;
     };
 
-    this.checkTplRow = function () {
-        if (this.hasTplRow)
+    //checkTplRow -> _checkRowTpl
+    this._checkRowTpl = function () {
+        if (this.hasRowTpl)
             return true;
 
-        _log.error('EditMany.js this.tplRow is empty.');
+        _log.error('EditMany.js this.rowTpl is empty.');
         return false;
     };
 
@@ -5873,14 +5896,15 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * param elm {element/object}
      * return {object}
      */
-    this.elmToRowBox = function (elm) {
-        return this.checkRowFilter()
+    this._elmToRowBox = function (elm) {
+        return this._checkRowFilter()
             ? $(elm).closest(this.rowFilter)
             : null;
     };
 
     /**
      * get row box by id
+     * called Flow.js
      * param id {string} row id
      * return {object} row box
      */
@@ -5890,27 +5914,29 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
-     * get updated json, called by crud.js only !!
+     * getUpdJsonByCrud -> getUpdJson
+     * 系統自動呼叫, 不可在 fnXXX 呼叫, 否則會產生無窮迴圈 !!
+     * get updated json, called by crudE.js only !!
      * param upKey {string}
      * return {json} modified columns only
      */
-    this.getUpdJsonByCrud = function (upKey) {
-        return (this.hasEform)
-            ? this.getUpdJson(upKey, this.rowsBox)
-            : this.fnGetUpdJson(upKey);
+    this.getUpdJson = function (upKey) {
+        return this.fnGetUpdJson ? this.fnGetUpdJson(json) :
+            this.isUrm ? this._urmGetUpdJson(upKey) :
+            this.getUpdJsonByRsb(upKey, this.rowsBox);
     };
 
     /**
-     * get updated json, called by crud.js only
+     * getUpdJson -> getUpdJsonByRsb
+     * get updated json by rowsBox, called by crud.js only
      * param upKey {string}
      * param rowsBox {object}
      * return {json} modified columns only
      */
-    this.getUpdJson = function (upKey, rowsBox) {
-        rowsBox = this.getRowsBox(rowsBox);
+    this.getUpdJsonByRsb = function (upKey, rowsBox) {
         var json = {};
-        json[_crudE.Rows] = this.getUpdRows(upKey, rowsBox);
-        json[_crudE.Deletes] = this.getDeletedStr();
+        json[_crudE.Rows] = this.getUpdRows(upKey, this._getRowsBox(rowsBox));
+        json[_crudE.Deletes] = this.getDeletes();
         return json;
     };
 
@@ -5923,17 +5949,18 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      */
 
     /**
+     * public for myCrud.js
      * (need this.rowFilter !!) get updated rows(not include _childs, _deletes)
      * will also set fkeyFid
-     * param rowsBox {object} (optional) rows container
+     * param rowsBox {object} (optional) rows box, default this.rowsBox
      * return {jsons} null if empty
      */ 
     this.getUpdRows = function (upKey, rowsBox) {
-        if (!this.checkRowFilter())
+        if (!this._checkRowFilter())
             return;
 
         //set sort field
-        rowsBox = this.getRowsBox(rowsBox);
+        rowsBox = this._getRowsBox(rowsBox);
         this.setSort(rowsBox);
 
         //debugger;
@@ -5941,18 +5968,18 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         var me = this;  //this is not work inside each() !!
         rowsBox.find(me.rowFilter).each(function (idx, item) {
             //add new row if empty key
-            var tr = $(item);
-            var key = _input.get(me.kid, tr);
-            //if (_edit.isNewKey(key)) {
-            if (me.isNewTr(tr)) {
-                var row2 = _form.toRow(tr);
+            var box = $(item);
+            var key = _input.get(me.kid, box);
+            //if (_crudE.isNewKey(key)) {
+            if (me._isNewBox(box)) {
+                var row2 = _form.toRow(box);
                 row2[me.DataFkeyFid] = upKey;   //write anyway !!
                 rows.push(row2);
                 return;     //continue;
             }
 
             //add modified fields
-            //var key = tr.data(_fun.DataKey);
+            //var key = box.data(_fun.DataKey);
             //var oldRow = me.getOldRow(key);
             var diffRow = {};
             var diff = false;
@@ -5964,10 +5991,10 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
                     continue;
 
                 fid = me.fidTypes[j];
-                obj = _obj.get(fid, tr);
-                value = _input.getO(obj, tr, ftype);
+                obj = _obj.get(fid, box);
+                value = _input.getO(obj, box, ftype);
                 //if totally compare, string is not equal to numeric !!
-                if (value != _edit.getOld(obj)) {
+                if (value != _crudE.getOld(obj)) {
                     diffRow[fid] = value;
                     diff = true;
                 }
@@ -5990,10 +6017,12 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /** 
-     * get deleted rows(key array "string" !!)
+     * getDeletedStr -> getDeletes
+     * get deleted rows key list字串 for 傳回後端
+     * public for MyCrud.js
      * return {string} null for empty.
      */ 
-    this.getDeletedStr = function () {
+    this.getDeletes = function () {
         return (this.deletedRows.length === 0)
             ? null : this.deletedRows.join();
     };    
@@ -6002,21 +6031,20 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * onclick addRow button
      */
     this.onAddRow = function () {
-        var row = this.addRow();
-        _edit.addIsNew(row);    //增加_IsNew隱藏欄位
+        this.addRow();
     };
 
     /**
      * add one row(or empty) into UI
      * param {object} (optional) row
-     * param {object} (optional) rowsBox
-     * return {object} row jquery object(with UI)
+     * param {object} (optional) rowsBox, default this.rowsBox
+     * return {object} row
      */
     this.addRow = function (row, rowsBox) {
         row = row || {};
-        rowsBox = this.getRowsBox(rowsBox);
-        var obj = this._renderRow(rowsBox, row);
-        this.boxSetNewId(obj);
+        rowsBox = this._getRowsBox(rowsBox);
+        var obj = this._renderRow(row, rowsBox);
+        this.setNewIdByBox(obj);
         return obj;
     };
 
@@ -6025,14 +6053,14 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * param btn {element}
      */
     this.onDeleteRow = function (btn) {        
-        var box = this.elmToRowBox(btn);
+        var box = this._elmToRowBox(btn);
         this.deleteRow(_itext.get(this.kid, box), box);
     };
 
     /**
      * add deleted row & remove UI row
      * param key {string} row key
-     * param rowBox {object} (optional) row box object
+     * param rowBox {object} (optional) rows box, default this.rowsBox
      */ 
     this.deleteRow = function (key, rowBox) {
         var deletes = this.deletedRows;
@@ -6062,8 +6090,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * param elm {element} link element
      */
     this.onViewFile = function (table, fid, elm) {
-        var key = this.getKey(this.elmToRowBox(elm));
-        _edit.viewFile(table, fid, elm, key);
+        var key = this.getKey(this._elmToRowBox(elm));
+        _crudE.viewFile(table, fid, elm, key);
     };
 
     /**
@@ -6072,12 +6100,12 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * param row {json}
      * return {object} row object
      */ 
-    this._renderRow = function (rowsBox, row) {
-        if (!this.checkTplRow())
+    this._renderRow = function (row, rowsBox) {
+        if (!this._checkRowTpl())
             return null;
 
-        rowsBox = this.getRowsBox(rowsBox);
-        var obj = $(Mustache.render(this.tplRow, row));
+        rowsBox = this._getRowsBox(rowsBox);
+        var obj = $(Mustache.render(this.rowTpl, row));
         _form.loadRow(obj, row);
         obj.appendTo(rowsBox);
         return obj;
@@ -6087,17 +6115,14 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * (need this.rowFilter !!) formData add upload files
      * param levelStr {string}
      * param data {FormData}
-     * param rowsBox {object} (optional) use EditMany setting if empty
+     * param rowsBox {object} (optional) default this.rowsBox
      * return {json} file json
      */ 
     this.dataAddFiles = function (levelStr, data, rowsBox) {
-        if (!this.hasFile)
-            return null;
+        if (!this.hasFile) return null;
+        if (!this._checkRowFilter()) return null;
 
-        if (!this.checkRowFilter())
-            return null;
-
-        rowsBox = this.getRowsBox(rowsBox);
+        rowsBox = this._getRowsBox(rowsBox);
         var me = this;
         var fileJson = {};
         var fileIdx = {};   //fileFid map index
@@ -6105,7 +6130,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
             var tr = $(item);
             for (var i = 0; i < me.fileLen; i++) {
                 var fid = me.fileFids[i];
-                var serverFid = _edit.getServerFid(levelStr, fid);
+                var serverFid = _crudE.getFileSid(levelStr, fid);
                 if (_ifile.dataAddFile(data, fid, serverFid, tr)) {
                     fileIdx[fid] = (fileIdx[fid] == null) ? 0 : fileIdx[fid] + 1;
                     //set fileJson
@@ -6113,7 +6138,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
                 }
             }
         });
-        //_edit.dataSetFileJson(data, fileJson);
+        //_crudE.dataSetFileJson(data, fileJson);
         return fileJson;
     };
 
@@ -6123,7 +6148,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * param fkeyFid {string}
      */
     this.rowSetFkey = function (row, fkey) {
-        if (row != null && this.isNewRow(row))
+        if (row != null && _crudE.isNewRow(row))
             row[this.DataFkeyFid] = fkey;
     };
 
@@ -6136,27 +6161,29 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         if (rows != null) {
             for (var i = 0; i < rows.length; i++) {
                 var row = rows[i];
-                if (row != null && this.isNewRow(row))
+                if (row != null && _crudE.isNewRow(row))
                     row[this.DataFkeyFid] = fkey;
             }
         }
     };
 
     /**
+     * boxSetNewId -> setNewIdByBox
      * set new id by row box
+     * public for MyCrud.js, Flow.js
      * param box {object} row box
      * return {int} new key index
      */
-    this.boxSetNewId = function (box) {
+    this.setNewIdByBox = function (box) {
         this.newIndex++;
         _itext.set(this.kid, this.newIndex, box);
-        _edit.addIsNew(box);    //增加_IsNew隱藏欄位
+        _crudE.addIsNew(box);    //增加_IsNew隱藏欄位
         return this.newIndex;
     };
 
     /**
      * set sort field if need
-     * param rowsBox {object}
+     * param rowsBox {object} default this.rowsBox
      */
     this.setSort = function (rowsBox) {
         var sortFid = this.sortFid;
@@ -6164,7 +6191,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
             return;
 
         var me = this;
-        rowsBox = this.getRowsBox(rowsBox);
+        rowsBox = this._getRowsBox(rowsBox);
         rowsBox.find(_input.fidFilter(sortFid)).each(function (i, item) {
             //this did not work in this loop !!
             _itext.set(sortFid, i, $(item).closest(me.rowFilter));
@@ -6172,11 +6199,12 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
+     * getRowsBox -> getTrs
      * get rows box
      * param rowsBox {object} optional, return this.rowsBox if null
      * return {object}
      */
-    this.getRowsBox = function (rowsBox) {
+    this._getRowsBox = function (rowsBox) {
         return rowsBox || this.rowsBox;
     };
 
@@ -6241,13 +6269,19 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
  *   _childs {json array}: child json array
  * 
  * 屬性
- *   validator: jquery vallidation object (EditMany同)
+ *   kid:
+ *   eform:
+ *   fidTypes:
+ *   systemError:
+ *   dataJson: 載入資料後(update/view)自動設定
+ *   hasFile、fileLen、fileFids: 在 _crudE.js setFileVars() 設定
+ *   validator: jquery vallidation object (EditMany同), 在 _crudE.js _initForm() 設定
  * 
- * custom function called by _crudE.js
+ * 自定函數 called by _crudE.js
  *   //void fnAfterLoadJson(json)
  *   //void fnAfterOpenEdit(fun, json): called after open edit form
  *   //void fnAfterSwap(readMode): called after _crudR.swap()
- *   error fnWhenSave()
+ *   error fnWhenSave() ??
  *   void fnAfterSave()
  *   
  * param kid {string} (default 'Id') pkey field id for getKey value & getUpdRow,
@@ -6259,7 +6293,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
  */ 
 function EditOne(kid, eformId) {
 
-    //fileFids, fileLen, hasFile 屬性在外部設定(_edit.js setFileVars())
+    //fileFids, fileLen, hasFile 屬性在外部設定(_crudE.js setFileVars())
 
     /**
      * initial & and instance variables (this.validator is by _valid.init())
@@ -6269,6 +6303,7 @@ function EditOne(kid, eformId) {
         this.kid = kid || 'Id';
         eformId = eformId || 'eform';
         this.eform = $('#' + eformId);     //multiple rows container object
+        this.dataJson = null;
 
         //check input & alert error if wrong
         this.systemError = '';
@@ -6281,8 +6316,8 @@ function EditOne(kid, eformId) {
             //return;   //not return
         }
 
-        _edit.setFidTypeVars(this, this.eform);
-        _edit.setFileVars(this, this.eform);
+        _crudE.setFidTypes(this, this.eform);
+        _crudE.setFileVars(this, this.eform);
     };
 
     /**
@@ -6306,7 +6341,7 @@ function EditOne(kid, eformId) {
      * return {bool}
      */
     this.isNewRow = function () {
-        return (_itext.get(_edit.IsNew, this.eform) == '1');
+        return (_itext.get(_crudE.IsNew, this.eform) == '1');
     };
 
     /**
@@ -6320,7 +6355,7 @@ function EditOne(kid, eformId) {
         for (var i = 0; i < this.fidTypeLen; i = i + 2) {
             fid = this.fidTypes[i];
             var obj = _obj.get(fid, this.eform);
-            obj.data(_edit.DataOld, row[fid]);
+            obj.data(_crudE.DataOld, row[fid]);
         }
     };
 
@@ -6329,7 +6364,7 @@ function EditOne(kid, eformId) {
      * return {json} different column only
      */
     this.getUpdRow = function () {
-        return _edit.getUpdRow(this.kid, this.fidTypes, this.eform);
+        return _crudE.getUpdRow(this.kid, this.fidTypes, this.eform);
     };
 
     /**
@@ -6367,12 +6402,12 @@ function EditOne(kid, eformId) {
         var fileJson = {};
         for (var i = 0; i < this.fileLen; i++) {
             var fid = this.fileFids[i];
-            var serverFid = _edit.getServerFid(levelStr, fid);
+            var serverFid = _crudE.getFileSid(levelStr, fid);
             if (_ifile.dataAddFile(data, fid, serverFid, this.eform)) {
                 fileJson[serverFid] = this.getKey();
             }
         }
-        //_edit.dataSetFileJson(data, fileJson);
+        //_crudE.dataSetFileJson(data, fileJson);
         return fileJson;
     };
 
@@ -6384,7 +6419,7 @@ function EditOne(kid, eformId) {
      */
     this.onViewFile = function (table, fid, elm) {
         var key = this.getKey();
-        _edit.viewFile(table, fid, elm, key);
+        _crudE.viewFile(table, fid, elm, key);
     };
 
     //call last
@@ -7315,13 +7350,12 @@ function FlowForm(boxId, mNode, mLine) {
         //var box = this.divFlowBox;
 
         //set nodes class
-        //var rows = _crudE.getRowsByJson(json);
+        //var rows = _crudE.jsonGetRows(json);
         //for (var i = 0; i < rows.length; i++)
         //    this._setNodeClass(rows[i]);
 
         //3rd param reset=false, coz box has other objects, cannot reset
-        this.mNode.loadRowsByBox(this.mNode.eform, rows, true);
-        //this.mNode.loadJson(json);
+        this.mNode.loadRowsByRsb(rows, true, this.mNode.eform);
 
         this.flowBase.loadNodes(rows);
 
@@ -7347,12 +7381,12 @@ function FlowForm(boxId, mNode, mLine) {
 
 
         //render jsplumb line
-        //var rows = _crudE.getRowsByJson(json);
+        //var rows = _crudE.jsonGetRows(json);
         //for (var i = 0; i < rows.length; i++)
         //    this._renderLine(rows[i]);
 
         //load editMany lines
-        this.mLine.loadRowsByBox(this.mLine.eform, rows, true);
+        this.mLine.loadRowsByRsb(rows, true, this.mLine.eform);
 
         this.flowBase.loadLines(rows);
 
@@ -7493,7 +7527,7 @@ function FlowForm(boxId, mNode, mLine) {
     this.addLine = function (row) {
         var newLine = $(this.tplLine);      //create row object, no need mustache()
         _form.loadRow(newLine, row);        //row objec to UI
-        var key = this.mLine.boxSetNewId(newLine);   //set new key
+        var key = this.mLine.setNewIdByBox(newLine);   //set new key
         this.divLinesBox.append(newLine);   //append row object
         return key;
     };
