@@ -1,4 +1,5 @@
 ﻿/**
+ * 多筆編輯畫面
  * multiple edit forms
  *   資料儲存在 html input
  * notice:
@@ -15,10 +16,12 @@
  *   if not empty, system will load UI & prepare saving rows,
  *     and rows container tag is fixed to 'tbody'
  * param-3 tplRowId {string} (optional) row template id
+ *   tplRowId -> rowTplId
  *   1.if empty, it will log error when call related function.
  *   2.system get fid-type from this variables
  *   3.called by singleFormLoadRow、loadRowsByBox、_renderRow
- * param-4 rowFilter {string} (optional) jQuery filter for find row object
+ * //param-4 rowFilter {string} (optional) jQuery filter for find row object
+ * param-4 改用 trFilter {string} (optional) jQuery filter for find row object
  *   1.if empty, it will log error when call related function.
  *   2.inside element -> row(onDeleteRow),
  *   3.rowsBox -> row(getUpdRows)
@@ -73,6 +76,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
+     * ?? remove
      * check is a new row or not
      * param row {json} 
      * return {bool}
@@ -120,6 +124,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
+     * urmLoadJson -> urmLoadRows
      * (urm: UserRole Mode), load json rows into UI by urm
      * param json {json} 
      * param rowsBox {object} 
@@ -198,11 +203,12 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
 
 
     /**
+     * singleFormLoadRow -> loadRowByTr(tr表示單筆資料的box)
      * single form load one row, also set field old value,
      * ex: DbAdm/MyCrud.js Etable is a single form but has multiple rows property !!
      * param rowBox {object}
      * param row {json}
-     * param index {int}
+     * param index {int} ??
      */
     this.singleFormLoadRow = function (rowBox, row, index) {
         if (!this.checkTplRow())
@@ -222,6 +228,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
+     * loadJson -> loadRows
      * 系統自動呼叫, PG不可呼叫, 否則會產生無窮迴圈 !!
      * load this json rows into UI, also set old values !!
      * param json {json} 
@@ -238,6 +245,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
+     * loadRowsByBox -> loadRowsByRsb(rsb表示rows box)
      * load rows with rowsBox
      * param rowsBox {object} rows box object
      * param rows {jsons}
@@ -316,6 +324,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
     */
 
+    //checkRowFilter -> checkTrFilter
     this.checkRowFilter = function () {
         if (this.hasRowFilter)
             return true;
@@ -324,6 +333,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         return false;
     };
 
+    //checkTplRow -> checkRowTpl
     this.checkTplRow = function () {
         if (this.hasTplRow)
             return true;
@@ -333,6 +343,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
+     * elmToRowBox -> elmToTr
      * get row box by inside element/object
      * param elm {element/object}
      * return {object}
@@ -344,6 +355,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
+     * idToRowBox -> idToTr
      * get row box by id
      * param id {string} row id
      * return {object} row box
@@ -354,7 +366,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
-     * get updated json, called by crud.js only !!
+     * getUpdJsonByCrud -> getUpdJsonForCrud ??
+     * get updated json, called by _crudE.js only !!
      * param upKey {string}
      * return {json} modified columns only
      */
@@ -387,6 +400,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      */
 
     /**
+     * ??
      * (need this.rowFilter !!) get updated rows(not include _childs, _deletes)
      * will also set fkeyFid
      * param rowsBox {object} (optional) rows container
@@ -454,6 +468,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /** 
+     * getDeletedStr -> ??
      * get deleted rows(key array "string" !!)
      * return {string} null for empty.
      */ 
@@ -607,6 +622,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
+     * boxSetNewId -> trSetNewId
      * set new id by row box
      * param box {object} row box
      * return {int} new key index
@@ -636,6 +652,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
+     * getRowsBox -> getTrs
      * get rows box
      * param rowsBox {object} optional, return this.rowsBox if null
      * return {object}
