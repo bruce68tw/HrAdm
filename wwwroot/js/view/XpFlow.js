@@ -12,26 +12,26 @@
             ],
             columnDefs: [
 				{ targets: [2], render: function (data, type, full, meta) {
-                    return _crudR.dtStatusName(data);
+                    return _me.crudR.dtStatusName(data);
                 }},
 				{ targets: [3], render: function (data, type, full, meta) {
                     var html = '<a href="javascript:_me.onOpenTest(\'{0}\');">{1}</a>';
                     return _str.format(html, full.Code, '測試流程');
                 }},
 				{ targets: [4], render: function (data, type, full, meta) {
-                    return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                 }},
             ],
         };
 
         _me.divEditTbar = $('#divEditTbar');
 
-        //initial edit one/many, rowsBox 使用 eform
+        //initial edit one/many, rowsBox(參數2) 使用 eform
         _me.mNode = new EditMany('Id', 'eformNode', 'tplNode', '.xd-node');
         _me.mLine = new EditMany('Id', 'eformLine', 'tplLine', '.xd-line', 'Sort');
-        _crudR.init(config, [null, _me.mNode, _me.mLine]);
+        new CrudR(config, [null, _me.mNode, _me.mLine]);
 
-        //initial flow(jsplumb)
+        //initial flow edit form
         _me.flowForm = new FlowForm('divEdit', _me.mNode, _me.mLine);
 
         //custom function
@@ -71,7 +71,7 @@
     /**
      * auto called !!
      * jsPlumb line container must visible when rendering
-     * see _crudE.js _updateOrViewA()
+     * see _me.crudE.js _updateOrViewA()
      * @param {string} fun
      * @param {string} key
      * @returns {bool}
@@ -81,10 +81,10 @@
             ? 'GetUpdJson' : 'GetViewJson';
         return await _ajax.getJsonA(act, { key: key }, function (json) {
             //show container first
-            _crudR.toEditMode(fun, () => {
-                _crudE._loadJson(json);
-                _crudE._setEditStatus(fun);
-                _crudE._afterOpenEdit(fun, json);
+            _me.crudR.toEditMode(fun, () => {
+                _me.crudE._loadJson(json);
+                _me.crudE._setEditStatus(fun);
+                _me.crudE._afterOpenEdit(fun, json);
             });
         });
     },
@@ -113,7 +113,7 @@
 
     //getUpdJson
     mLine_getUpdJson: function (upKey) {
-        return _me.mLine.getUpdJson(upKey, _me.flowForm.divLinesBox);
+        return _me.mLine.getUpdJsonByRsb(upKey, _me.flowForm.divLinesBox);
     },
 
     //return boolean
@@ -149,7 +149,7 @@
 
     //show Read form or not
     testToRead: function (toRead) {
-        _crudR.swap(toRead, _me.divFlowTest);
+        _me.crudR.swap(toRead, _me.divFlowTest);
     },
 
 }; //class

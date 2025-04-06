@@ -28,7 +28,7 @@
 
             //initial
             //_me.edit0 = new EditOne();
-            _crudR.init(config);
+            new CrudR(config);
 
             //other variables
             _me.eform = $('#eform');
@@ -49,14 +49,14 @@
         onView: async function (flowCode, key) {
             await _ajax.getJsonA('GetViewJson', { flowCode: flowCode, key: key }, function (json) {
                 //consider other flow types
-                _crudE._loadJson(json);
-                _crudR.toEditMode(_fun.FunV);
+                _me.crudE._loadJson(json); //private ??
+                _me.crudR.toEditMode(_fun.FunV);
             });
         },
 
         //onclick viewFile, called by XiFile component
         onViewFile: function (table, fid, elm) {
-            _crudE.viewFile(table, fid, elm, _itext.get('Id', _me.eform));
+            _me.crudE.viewFile(table, fid, elm, _itext.get('Id', _me.eform));
         },
 
     }; //class
@@ -75,8 +75,8 @@
                     @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
                 </div>
             </div>
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Flow"].Value, Fid = "FlowId", Rows = (List<IdStrDto>)ViewBag.Flows, BoxClass = "xg-date-w" })
-            @*await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["FlowStatus"].Value, Fid = "FlowStatus", rows = (List<IdStrDto>)ViewBag.SignStatuses })*@
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Flow"].Value, Fid = "FlowId", Rows = ViewBag.Flows, BoxClass = "xg-date-w" })
+            @*await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["FlowStatus"].Value, Fid = "FlowStatus", rows = ViewBag.SignStatuses })*@
         </form>
 
         <table id="tableRead" class="table xg-table" cellspacing="0">
@@ -111,7 +111,7 @@
         </form>
 
         <div class='xg-center'>
-            <button id='btnToRead' type='button' class='btn xg-btn-size btn-primary' onclick='_crudR.onToRead()'>@R0["ToRead"]<i class='ico-back'></i></button>
+            <button id='btnToRead' type='button' class='btn xg-btn-size btn-primary' onclick='_me.crudR.onToRead()'>@R0["ToRead"]<i class='ico-back'></i></button>
         </div>
     </div>
 </div>

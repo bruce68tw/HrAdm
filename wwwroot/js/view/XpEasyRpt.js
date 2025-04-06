@@ -11,16 +11,16 @@
             ],
             columnDefs: [
 				{ targets: [1], render: function (data, type, full, meta) {
-                    return _crudR.dtStatusName(data);
+                    return _me.crudR.dtStatusName(data);
                 }},
 				{ targets: [3], render: function (data, type, full, meta) {
-                    return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                 }},
             ],
         };
 
         //initial
-        _crudR.init(config);
+        new CrudR(config);
     },
 
 }; //class

@@ -19,19 +19,19 @@
                     return _date.dtsToUiDt2(data);
                 }},
 				{ targets: [3], render: function (data, type, full, meta) {
-                    return _crudR.dtStatusName(data);
+                    return _me.crudR.dtStatusName(data);
                 }},
 				{ targets: [4], render: function (data, type, full, meta) {
                     return _date.dtsToUiDt(data);
                 }},
 				{ targets: [5], render: function (data, type, full, meta) {
-                    return _crudR.dtCrudFun(full.Id, '', true, true, true);
+                    return _me.crudR.dtCrudFun(full.Id, '', true, true, true);
                 }},
             ],
         };
 
         //initial
-        _crudR.init(config);
+        new CrudR(config);
 
         //initial html editor
         _ihtml.init(_me.edit0, 'Html');

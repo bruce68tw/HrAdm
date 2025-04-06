@@ -25,14 +25,14 @@
                     return _date.dtsToUiDt(data);
                 }},
 				{ targets: [8], render: function (data, type, full, meta) {
-                    return _crudR.dtCrudFun(full.Id, 'Leave', true, true, true);
+                    return _me.crudR.dtCrudFun(full.Id, 'Leave', true, true, true);
                 }},
             ],
         };
 
         //initial
         _me.edit0 = new EditOne();
-        _crudR.init(config, [_me.edit0]);
+        new CrudR(config, [_me.edit0]);
 
         //other variables
         _me.divSignRows = $('#divSignRows');

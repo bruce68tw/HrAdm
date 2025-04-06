@@ -15,21 +15,21 @@
             columnDefs: [
 				{ targets: [4], render: function (data, type, full, meta) {
                     return (full.CanSign == 1)
-                        ? _str.format('<button type="button" class="btn btn-outline-secondary btn-sm" onclick="_crudR.onUpdateA(\'{0}\')">審核</button>', full.Id)
+                        ? _str.format('<button type="button" class="btn btn-outline-secondary btn-sm" onclick="_me.crudR.onUpdateA(\'{0}\')">審核</button>', full.Id)
                         : '';
                 }},
 				{ targets: [5], render: function (data, type, full, meta) {
                     return _date.dtsToUiDt(data);
                 }},
 				{ targets: [6], render: function (data, type, full, meta) {
-                    return _crudR.dtCrudFun(full.Id, 'Leave', false, false, true);
+                    return _me.crudR.dtCrudFun(full.Id, 'Leave', false, false, true);
                 }},
             ],
         };
 
         //initial
         _me.edit0 = new EditOne();
-        _crudR.init(config, [_me.edit0], '審核');
+        new CrudR(config, [_me.edit0], '審核');
 
         //other variables
         _me.eform = $('#eform');
@@ -68,7 +68,7 @@
         };
         await _ajax.getJsonA('SignRow', data, function (data) {
             //??
-            _crudE.afterSave(data);
+            _me.crudE.afterSave(data);
         });
     },
 

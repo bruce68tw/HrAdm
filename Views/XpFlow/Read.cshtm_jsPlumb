@@ -177,10 +177,10 @@
             <div class="modal-body">
                 <form id="eformNode" class="form-horizontal xg-form" style="padding:5px 20px;">
                     @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "NodeType" })
-                    @*await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "Node Type :", Fid = "NodeType", rows = (List<IdStrDto>)ViewBag.NodeTypes, cols = cols })*@
-                    @*await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "SignTime :", Fid = "LimitType", rows = (List<IdStrDto>)ViewBag.NodeLimitTypes, cols = cols })*@
+                    @*await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "Node Type :", Fid = "NodeType", rows = ViewBag.NodeTypes, cols = cols })*@
+                    @*await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "SignTime :", Fid = "LimitType", rows = ViewBag.NodeLimitTypes, cols = cols })*@
                     @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["NodeName"].Value, Fid = "Name", MaxLen = 20, Required = true, Cols = cols })
-                    @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["SignerType"].Value, Fid = "SignerType", Rows = (List<IdStrDto>)ViewBag.SignerTypes, Required = true, Cols = cols })
+                    @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["SignerType"].Value, Fid = "SignerType", Rows = ViewBag.SignerTypes, Required = true, Cols = cols })
                     @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["SignerValue"].Value, Fid = "SignerValue", MaxLen = 30, Cols = cols })
                 </form>
             </div>
@@ -206,7 +206,7 @@
                     @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["EndNode"].Value + " :", Fid = "EndNode", Cols = cols })
                     @await Component.InvokeAsync("XiInt", new XiIntDto { Title = R["RunOrder"].Value + " :", Fid = "Sort", Required = true, Cols = "4,2" })
                     @*Html.XiNum("Sort", "", "Run Order :", true, cols, new PropNumModel() { IsDigit = true, MaxValue = 10, Width = "80px" })*@
-                    @*Html.XiRadios("LineType", "0", "Run Type :", (List<IdStrDto>)ViewBag.LineTypes, 9)*@
+                    @*Html.XiRadios("LineType", "0", "Run Type :", ViewBag.LineTypes, 9)*@
                     <div id="divLineCondBox" class="row zz_xg-row">
                         <div class="col-md-12" style="margin:5px 0 2px -10px;">
                             @R["RunCond"]
@@ -238,9 +238,9 @@
 <!-- line condition template -->
 <script id="tplLineCond" type="text/template">
     <tr>
-        <td width="104px">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "AndOr", Value = "{{AndOr}}", Rows = (List<IdStrDto>)ViewBag.AndOrs, InRow = true })</td>
+        <td width="104px">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "AndOr", Value = "{{AndOr}}", Rows = ViewBag.AndOrs, InRow = true })</td>
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Fid", Value = "{{Fid}}", MaxLen = 30, InRow = true })</td>
-        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "Op", Value = "{{Op}}", Rows = (List<IdStrDto>)ViewBag.LineOps, InRow = true })</td>
+        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "Op", Value = "{{Op}}", Rows = ViewBag.LineOps, InRow = true })</td>
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Value", Value = "{{Value}}", MaxLen = 30, InRow = true })</td>
         <td width='100px' class='text-center'>@await Component.InvokeAsync("XgDeleteUpDown", new { fnDeleteRow = "_me.flow.onDeleteLineCond(this)" })</td>
     </tr>

@@ -32,13 +32,13 @@
                         return _date.dtsToUiDt(data);
                     }},
 				    { targets: [7], render: function (data, type, full, meta) {
-                        return _str.format('<button type="button" class="btn btn-outline-secondary btn-sm" onclick="_crudR.onUpdateA(\'{0}\')">@R["Audit"]</button>', full.Id);
+                        return _str.format('<button type="button" class="btn btn-outline-secondary btn-sm" onclick="_me.crudR.onUpdateA(\'{0}\')">@R["Audit"]</button>', full.Id);
                     }},
                 ],
             };
 
             //initial
-            _crudR.init(config, [new EditOne('SignId')], '@R["Audit"]');
+            new CrudR(config, [new EditOne('SignId')], '@R["Audit"]');
             _me.eform = $('#eform');
         },
 
@@ -50,7 +50,7 @@
         //TODO: add your code
         //onclick viewFile, called by XiFile component
         onViewFile: function (table, fid, elm) {
-            _crudE.viewFile(table, fid, elm, _itext.get('LeaveId', _me.eform));
+            _me.crudE.viewFile(table, fid, elm, _itext.get('LeaveId', _me.eform));
         },
 
         onSubmit: async function () {
@@ -61,7 +61,7 @@
                 note: _itext.get('Note', form),
             };
             await _ajax.getJsonA('SignRow', data, function (data) {
-                _crudE.afterSave(data);
+                _me.crudE.afterSave(data);
             });
         },
 
@@ -106,7 +106,7 @@
 
         <div class='xg-center' style="margin-top:10px">
             <button type='button' class='btn xg-btn-size btn-success' onclick='_me.onSubmit()'>@R0["Submit"]</button>
-            <button type='button' class='btn xg-btn-size btn-primary' onclick='_crudR.onToRead()'>@R0["ToRead"]<i class='ico-back'></i></button>
+            <button type='button' class='btn xg-btn-size btn-primary' onclick='_me.crudR.onToRead()'>@R0["ToRead"]<i class='ico-back'></i></button>
         </div>
     </div>
 </div>

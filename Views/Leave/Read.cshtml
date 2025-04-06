@@ -27,8 +27,8 @@
                     @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
                 </div>
             </div>
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["LeaveType"].Value, Fid = "LeaveType", Value = leaveType, Rows = (List<IdStrDto>)ViewBag.LeaveTypes, BoxClass = "xg-date-w" })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["FlowStatus"].Value, Fid = "FlowStatus", Value = flowStatus, Rows = (List<IdStrDto>)ViewBag.SignStatuses, BoxClass = "xg-date-w" })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["LeaveType"].Value, Fid = "LeaveType", Value = leaveType, Rows = ViewBag.LeaveTypes, BoxClass = "xg-date-w" })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["FlowStatus"].Value, Fid = "FlowStatus", Value = flowStatus, Rows = ViewBag.SignStatuses, BoxClass = "xg-date-w" })
         </form>
 
         @if (_Auth.CheckCreate("Leave"))
@@ -58,9 +58,9 @@
     <div id="divEdit" class="xg-hide">
         <form id='eform' class='xg-form'>
             @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Asker"].Value, Fid = "UserId", Rows = (List<IdStrDto>)ViewBag.Users, Required = true })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Agent"].Value, Fid = "AgentId", Rows = (List<IdStrDto>)ViewBag.Users, Required = true })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["LeaveType"].Value, Fid = "LeaveType", Rows = (List<IdStrDto>)ViewBag.LeaveTypes, Required = true })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Asker"].Value, Fid = "UserId", Rows = ViewBag.Users, Required = true })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Agent"].Value, Fid = "AgentId", Rows = ViewBag.Users, Required = true })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["LeaveType"].Value, Fid = "LeaveType", Rows = ViewBag.LeaveTypes, Required = true })
             @await Component.InvokeAsync("XiDt", new XiDtDto { Title = R["StartTime"].Value, Fid = "StartTime", Required = true, Cols = "2,8" })
             @await Component.InvokeAsync("XiDt", new XiDtDto { Title = R["EndTime"].Value, Fid = "EndTime", Required = true, Cols = "2,8" })
             @await Component.InvokeAsync("XiInt", new XiIntDto { Title = R["Hours"].Value, Fid = "Hours", Required = true, Cols = "2,1" })

@@ -12,17 +12,17 @@
             ],
             columnDefs: [
 				{ targets: [3], render: function (data, type, full, meta) {
-                    return _crudR.dtSetStatus(full.Id, data);
+                    return _me.crudR.dtSetStatus(full.Id, data);
                 }},
 				{ targets: [4], render: function (data, type, full, meta) {
-                    return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                 }},
             ],
         };
 
         //initial
         _me.mCms = new EditMany('Id', 'tbodyCms', 'tplCms', 'tr');
-		_crudR.init(config, [null, _me.mCms]);
+		new CrudR(config, [null, _me.mCms]);
     },
 
 }; //class
