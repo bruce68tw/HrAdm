@@ -6,7 +6,7 @@
  *   fnAfterOpenEdit:
  *   fnUpdateOrViewA: see _updateOrViewA
  *   divEdit:
- *   hasEdit:
+ *   //hasEdit:
  *   edit0:
  *   eform0: 
  *   hasChild:
@@ -20,6 +20,7 @@ function CrudE(edits) {
     this.Childs = '_childs';
     this.Deletes = '_deletes';
 
+    /*
     //edit form mode
     this.ModeBase = 'Base';
     this.ModeUR = 'UR';   //user role mode
@@ -33,6 +34,7 @@ function CrudE(edits) {
 
     //前後端欄位: isNew, new row flag
     this.IsNew = '_IsNew';
+    */
 
     /**
      * initial crud edit, 寫入 this 變數
@@ -43,8 +45,8 @@ function CrudE(edits) {
      */
     this._init = function() {
         this.divEdit = $('#divEdit');
-        this.hasEdit = (this.divEdit.length > 0);
-        if (this.hasEdit) {
+        var hasEdit = (this.divEdit.length > 0);
+        if (hasEdit) {
             var Childs = this.Childs;  //constant
             var edit0 = null;  //master edit object
             if (edits == null) {
@@ -80,6 +82,9 @@ function CrudE(edits) {
 
         //set _me
         _me.crudE = this;
+        _me.edit0 = this.edit0;
+        _me.eform0 = this.eform0;
+        _me.hasEdit = hasEdit;
     };
 
     /**
@@ -165,19 +170,19 @@ function CrudE(edits) {
         var eform = this.edit0.eform;
         var items = box.find('input, textarea, select, button');
         if (fun == _fun.FunV) {
-            this.removeIsNew(eform);
+            _edit.removeIsNew(eform);
             items.prop('disabled', true)
             box.find('#btnToRead').prop('disabled', false);
             _ihtml.setEdits(box, '', false);
         } else if (fun == _fun.FunC) {
-            this.addIsNew(eform);    //增加_IsNew隱藏欄位
+            _edit.addIsNew(eform);    //增加_IsNew隱藏欄位
             var dataEdit = '[data-edit=U]';
             items.prop('disabled', false)
             items.filter(dataEdit).prop('disabled', true)
             _ihtml.setEdits(box, '', true);
             _ihtml.setEdits(box, dataEdit, false);
         } else if (fun == _fun.FunU) {
-            this.removeIsNew(eform);
+            _edit.removeIsNew(eform);
             var dataEdit = '[data-edit=C]';
             items.prop('disabled', false)
             items.filter(dataEdit).prop('disabled', true)
@@ -364,12 +369,13 @@ function CrudE(edits) {
         if (_me.fnUpdateOrViewA)
             return await _me.fnUpdateOrViewA(fun, key);
 
+        var me = this;
         var act = (fun == _fun.FunU)
             ? 'GetUpdJson' : 'GetViewJson';
         return await _ajax.getJsonA(act, { key: key }, function (json) {
-            this._loadJson(json);
-            this._setEditStatus(fun);
-            this._afterOpenEdit(fun, json);
+            me._loadJson(json);
+            me._setEditStatus(fun);
+            me._afterOpenEdit(fun, json);
             _me.crudR.toEditMode(fun);
         });
     };
@@ -452,46 +458,22 @@ function CrudE(edits) {
 
     //=== move from _edit.js start
     /**
-     * 增加隱藏欄位 _IsNew, 同時設為1
-     * param obj {box} jquery object
-     */
-    this.addIsNew = function (box) {
-        var fid = this.IsNew;
-        var field = box.find(_input.fidFilter(fid));
-        if (field.length == 0)
-            field = box.append(`<input type="hidden" data-fid="${fid}" name="${fid}" value="1" >`);
-        else
-            field.val(value);
-    };
-
-    /**
-     * 刪除隱藏欄位 _IsNew
-     * param obj {box} jquery object
-     */
-    this.removeIsNew = function (box) {
-        var fid = this.IsNew;
-        var field = box.find(_input.fidFilter(fid));
-        if (field.length > 0)
-            field.remove();
-    };
-
-    /**
      * get old value 
      * param obj {object} input jquery object
      * return {string}
-     */
     this.getOld = function (obj) {
         return obj.data(this.DataOld);
     };
+    */
 
     /**
      * set old value
      * param obj {object} input jquery object
      * param value {int/string}
-     */
     this.setOld = function (obj, value) {
         obj.data(this.DataOld, value);
     };
+     */
 
     /*
     zz_loadRowByArg = function (box, row, fidTypes) {
@@ -563,7 +545,6 @@ function CrudE(edits) {
      * param me {object} EditOne/EditMany object
      * param box {object} container
      * return void
-     */
     this.setFidTypes = function (me, box) {
         var fidTypes = [];
         box.find(_input.fidFilter()).each(function (i, item) {
@@ -575,6 +556,7 @@ function CrudE(edits) {
         me.fidTypes = fidTypes;
         me.fidTypeLen = me.fidTypes.length;
     };
+     */
 
     /**
      * set file variables: fileFids, fileLen, hasFile
@@ -582,7 +564,6 @@ function CrudE(edits) {
      * param me {edit} EditOne/EditMany variables
      * param box {object} form or row object
      * return void
-     */
     this.setFileVars = function (me, box) {
         //var me = this;  //use outside .each()
         me.fileFids = [];      //upload file fid array
@@ -592,6 +573,7 @@ function CrudE(edits) {
         me.fileLen = me.fileFids.length;
         me.hasFile = me.fileFids.length > 0; //has input file or not
     };
+     */
 
     /**
      * getServerFid -> getFileSid
@@ -599,10 +581,10 @@ function CrudE(edits) {
      * param tableId {string} 
      * param fid {string} ui file id
      * return {string} format: Table_Fid
-     */
     this.getFileSid = function (levelStr, fid) {
         return 't' + levelStr + '_' + fid;
     };
+     */
 
     /**
      * formData set fileJson field
@@ -626,11 +608,12 @@ function CrudE(edits) {
      * isNewKey(key) -> isNewRow(row)
      * check a new key or not, parseInt(ABC123) will get int, cannot use it!!
      * param key {string}
-     */
     this.isNewRow = function (row) {
         var fid = this.IsNew;
         return (row[fid] != null || row[fid] == '1');
     };
+     */
+
     /*
     this.isNewKey = function (key) {
         key = key.toString();   //convert to string for checking
@@ -651,13 +634,15 @@ function CrudE(edits) {
      * param key {string} row key
      */
     this.viewFile = function (table, fid, elm, key) {
+        /*
         if (this.isNewKey(key)) {
             _tool.msg(_BR.NewFileNotView);
         } else {
+        */
             var ext = _file.getFileExt(elm.innerText);
             if (_file.isImageExt(ext))
                 _tool.showImage(elm.innerHTML, _str.format('ViewFile?table={0}&fid={1}&key={2}&ext={3}', table, fid, key, ext));
-        }
+        //}
     };
 
     //#region remark code
@@ -719,7 +704,7 @@ function CrudE(edits) {
      * return {bool}
      */
     this.onUpdateA = async function(key) {
-        this.removeIsNew(this.edit0.eform);    //增加_IsNew隱藏欄位
+        _edit.removeIsNew(this.edit0.eform);    //增加_IsNew隱藏欄位
         return await this._updateOrViewA(_fun.FunU, key);
     };
 
@@ -777,6 +762,7 @@ function CrudE(edits) {
         var isNew = edit0.isNewRow();
         var action = isNew ? 'Create' : 'Update';
         var data = null;
+        var me = this;
         if (this._hasFile()) {
             //has files, use formData
             data = formData;
@@ -785,7 +771,7 @@ function CrudE(edits) {
                 data.append('key', edit0.getKey());
 
             await _ajax.getJsonByFdA(action, data, function(result) {
-                this.afterSave(result);
+                me.afterSave(result);
             });
         } else {
             //no file, use json
@@ -794,7 +780,7 @@ function CrudE(edits) {
                 data.key = edit0.getKey();
 
             await _ajax.getJsonA(action, data, function(result) {
-                this.afterSave(result);
+                me.afterSave(result);
             });
         }
     };

@@ -32,14 +32,14 @@
         new CrudR(config, [_me.edit0], '審核');
 
         //other variables
-        _me.eform = $('#eform');
+        //_me.eform = $('#eform');
         _me.divSignRows = $('#divSignRows');
     },
 
     //auto called !!
     fnAfterOpenEdit: async function (fun, json) {
         //reset form
-        var form = _me.eform;
+        var form = _me.eform0;
         _iselect.set('SignStatus', '', form);
         _itext.set('Note', '', form);
 
@@ -54,7 +54,7 @@
     },
 
     onSubmitA: async function () {
-        var form = _me.eform;
+        var form = _me.eform0;
         var status = _iselect.get('SignStatus', form);
         if (_str.isEmpty(status)) {
             _tool.msg('審核結果不可空白。');

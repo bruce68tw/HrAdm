@@ -3,9 +3,9 @@
  * crud read function
  * main for admin Web system
  * this properties:
- *   divEdit
+ *   //divEdit
  *   divRead
- *   hasRead
+ *   //hasRead
  *   rform
  *   rform2
  *   dt
@@ -48,8 +48,8 @@ function CrudR(dtConfig, edits, updName) {
 
         //1.set instance variables
         this.divRead = $('#divRead');
-        this.hasRead = (this.divRead.length > 0);
-        if (this.hasRead) {
+        var hasRead = (this.divRead.length > 0);
+        if (hasRead) {
             this.rform = $('#formRead');
             if (this.rform.length === 0)
                 this.rform = null;
@@ -77,6 +77,7 @@ function CrudR(dtConfig, edits, updName) {
 
         //set _me
         _me.crudR = this;
+        _me.hasRead = hasRead;
     };
 
     /**
@@ -85,7 +86,7 @@ function CrudR(dtConfig, edits, updName) {
      * param editable {bool} [true]
      * //param fid {string} [_icheck.Check0Id] data-fid value
      */
-    this.dtCheck0 = funtion(value, editable) {
+    this.dtCheck0 = function(value, editable) {
         if (_str.isEmpty(value))
             value = 1;
 
@@ -186,11 +187,11 @@ function CrudR(dtConfig, edits, updName) {
     /**
      * change newDiv to active
      * param toRead {bool} show divRead or not
-     * param nowDiv {object} (default this.divEdit) now div to show
+     * param nowDiv {object} (default _me.crudE.divEdit) now div to show
      * param fnCallback {function} (optional) callback function
      */
     this.swap = function (toRead, nowDiv, fnCallback) {
-        if (!this.hasRead || !this.hasEdit) {
+        if (!_me.hasRead || !_me.hasEdit) {
             if (fnCallback)
                 fnCallback();
             return;
@@ -198,7 +199,7 @@ function CrudR(dtConfig, edits, updName) {
 
         var isDefault = _var.isEmpty(nowDiv);
         if (isDefault)
-            nowDiv = this.divEdit;
+            nowDiv = _me.crudE.divEdit;
 
         var oldDiv, newDiv;
         if (toRead) {
@@ -372,10 +373,11 @@ function CrudR(dtConfig, edits, updName) {
      */
     this.onDeleteA  = async function (key, rowName) {
         //_temp.data = { key: key };
+        var me = this;
         _tool.ans(_BR.SureDeleteRow + ' (' + rowName + ')', async function () {
             await _ajax.getJsonA('Delete', { key: key }, function (msg) {
                 _tool.alert(_BR.DeleteOk);
-                this.dt.reload();
+                me.dt.reload();
             });
         });
     };
@@ -397,10 +399,11 @@ function CrudR(dtConfig, edits, updName) {
 
         //刪除多筆資料, 後端固定呼叫 DeleteByKeys()
         //_temp.data = { keys: keys };
+        var me = this;
         _tool.ans(_BR.SureDeleteSelected, async function () {
             await _ajax.getStrA('DeleteByKeys', { keys: keys }, function (msg) {
                 _tool.alert(_BR.DeleteOk);
-                this.dt.reload();
+                me.dt.reload();
             });
         });
     };

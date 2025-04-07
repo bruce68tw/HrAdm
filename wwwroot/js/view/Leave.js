@@ -48,7 +48,7 @@
             //設定初始值
             var eform = _me.edit0.eform;    //get edit form object
             _iselect.set('LeaveType', 'S', eform);          //設定下拉式欄位
-            _idt.set('StartTime', '2022/10/1 9:00', eform); //設定 "日期時間" 欄位
+            //_idt.set('StartTime', '2022/10/1 9:00', eform); //設定 "日期時間" 欄位
         } else {
             await _ajax.getViewA('GetSignRows', { id: _me.edit0.getKey() }, function (html) {
                 box.html(html);

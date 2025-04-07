@@ -39,7 +39,7 @@
 
             //initial
             new CrudR(config, [new EditOne('SignId')], '@R["Audit"]');
-            _me.eform = $('#eform');
+            //_me.eform = $('#eform');
         },
 
         //auto called !!
@@ -50,11 +50,11 @@
         //TODO: add your code
         //onclick viewFile, called by XiFile component
         onViewFile: function (table, fid, elm) {
-            _me.crudE.viewFile(table, fid, elm, _itext.get('LeaveId', _me.eform));
+            _me.crudE.viewFile(table, fid, elm, _itext.get('LeaveId', _me.eform0));
         },
 
         onSubmit: async function () {
-            var form = _me.eform;
+            var form = _me.eform0;
             var data = {
                 id: _itext.get('SignId', form),
                 status: _iselect.get('SignStatus', form),
