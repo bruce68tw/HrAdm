@@ -14,7 +14,7 @@ function FlowForm(boxId, mNode, mLine) {
     /**
      * initial flow
      */ 
-    this.init = function () {
+    this._init = function () {
         //#region constant
         //node types
         //this.StartNode = 'S';
@@ -173,7 +173,7 @@ function FlowForm(boxId, mNode, mLine) {
     };
 
     this.onRightMenu = function (isNode, rowId, mouseX, mouseY) {
-        alert('onRightMenu');
+        alert(`onRightMenu ${isNode}, rowId=${rowId}`);
     };
 
     /**
@@ -842,6 +842,6 @@ function FlowForm(boxId, mNode, mLine) {
     //#endregion (events)
 
     //call last
-    this.init();
+    this._init();
 
 }//class
