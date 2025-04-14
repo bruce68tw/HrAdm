@@ -54,8 +54,7 @@ function EditOne(kid, eformId) {
             //return;   //not return
         }
 
-        _edit.setFidTypes(this, this.eform);
-        _edit.setFileVars(this, this.eform);
+        _edit.initVars(this, this.eform);
     };
 
     /**
@@ -93,7 +92,7 @@ function EditOne(kid, eformId) {
         for (var i = 0; i < this.fidTypeLen; i = i + 2) {
             fid = this.fidTypes[i];
             var obj = _obj.get(fid, this.eform);
-            obj.data(_me.crudE.DataOld, row[fid]);
+            obj.data(_edit.DataOld, row[fid]);
         }
     };
 

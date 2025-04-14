@@ -34,7 +34,7 @@ function FlowBase(boxId) {
 
 		this.fnMoveNode = null;
 		this.fnAddLine = null;
-		this.fnRightMenu = null;
+		this.fnShowMenu = null;
 		//this.onMoveNode = onMoveNode;
 		//this._reset();
 	};
@@ -203,14 +203,14 @@ function FlowNode(flowBase, json) {
 
 		//add 節點文字
 		this.textElm = this.elm.text(nodeName)
-            .addClass(cssClass + '-text')
-            .font({ anchor: 'middle' });
+			.addClass(cssClass + '-text')
+			.font({ anchor: 'middle' });
 
 		this._setSize(startEnd);
 
 		//add 連接點 connector(在文字右側), 小方塊, data-nodeElm 記錄節點元素
 		if (nodeType != _flow.TypeEnd){
-			this.pointElm = this.elm.rect(12, 12).addClass('xf-connector');
+			this.pointElm = this.elm.rect(12, 12).addClass('xf-point');
 			this.pointElm.node.dataset.nodeElm = this.elm;
 		}
 		
@@ -231,6 +231,10 @@ function FlowNode(flowBase, json) {
 			this.height = Math.max(this.MinHeight, bbox.height + this.Padding * 2);
 		}
 		this.boxElm.size(this.width, this.height);
+	};
+
+	this.nodeType = function () {
+		return this.json.NodeType;
 	};
 
 	this.getPos = function () {
@@ -277,8 +281,8 @@ function FlowNode(flowBase, json) {
 		this.elm.node.addEventListener('contextmenu', function (event) {
 			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
 			var flowBase = me.flowBase;
-			if (flowBase.fnRightMenu)
-				flowBase.fnRightMenu(true, me.getId(), event.pageX, event.pageY);
+			if (flowBase.fnShowMenu)
+				flowBase.fnShowMenu(true, me.getId(), event.pageX, event.pageY);
 		});
 
 		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
@@ -470,8 +474,8 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 		this.path2.node.addEventListener('contextmenu', function (event) {
 			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
 			var flowBase = me.flowBase;
-			if (flowBase.fnRightMenu)
-				flowBase.fnRightMenu(false, 'me.getId()', event.pageX, event.pageY);
+			if (flowBase.fnShowMenu)
+				flowBase.fnShowMenu(false, 'me.getId()', event.pageX, event.pageY);
 		});
 	}
 

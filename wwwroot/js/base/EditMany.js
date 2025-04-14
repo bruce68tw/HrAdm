@@ -67,8 +67,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
                 alert(this.systemError);
             }
 
-            _edit.setFidTypes(this, rowObj);
-            _edit.setFileVars(this, rowObj);
+            _edit.initVars(this, rowObj);
         }
 
         //has edit form or not

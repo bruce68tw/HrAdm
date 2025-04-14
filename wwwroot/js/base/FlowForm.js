@@ -156,7 +156,7 @@ function FlowForm(boxId, mNode, mLine) {
         var flowBase = new FlowBase(boxId);
         flowBase.fnMoveNode = (nodeId, x, y) => this.onMoveNode(nodeId, x, y);
         flowBase.fnAddLine = (startId, endId) => this.onAddLine(startId, endId);
-        flowBase.fnRightMenu = (isNode, rowId, mouseX, mouseY) => this.onRightMenu(isNode, rowId, mouseX, mouseY);
+        flowBase.fnShowMenu = (isNode, rowId, mouseX, mouseY) => this.onShowMenu(isNode, rowId, mouseX, mouseY);
         this.flowBase = flowBase;
 
         //set event
@@ -172,8 +172,49 @@ function FlowForm(boxId, mNode, mLine) {
         alert('onAddLine');
     };
 
-    this.onRightMenu = function (isNode, rowId, mouseX, mouseY) {
-        alert(`onRightMenu ${isNode}, rowId=${rowId}`);
+    /**
+     * on show right menu
+     * param isNode {bool} 
+     * param elm {FlowNode/FlowLine} 
+     * param mouseX {int} 
+     * param mouseY {int} 
+     */
+    this.onShowMenu = function (isNode, elm, mouseX, mouseY) {
+        //alert(`onRightMenu ${isNode}, rowId=${rowId}`);
+        //set instance variables
+        this.nowIsNode = isNode;
+        //this.nowElm = isNode ? $(elm).closest(this.NodeFilter)[0] : elm;
+        this.nowElm = elm;
+
+        //set edit status
+        var canEdit = true;
+        var nodeType;
+        if (isNode) {
+            nodeType = this._elmToNodeValue(elm, 'NodeType');
+            //canEdit = (nodeType == this.NormalNode || nodeType == this.AutoNode);
+            canEdit = (nodeType == this.NormalNode);
+        } else {
+            nodeType = this._elmToNodeValue(elm.source, 'NodeType');
+            //canEdit = (nodeType == this.StartNode || nodeType == this.AutoNode);
+            canEdit = (nodeType == FlowNode.TypeStart);
+        }
+        /*
+        //debugger;
+        var item = this.popupMenu.find('.xd-edit');
+        if (canEdit)
+            item.show();
+        else
+            item.hide();
+        */
+
+        // Show contextmenu
+        $(this.MenuFilter).finish()
+            //this.popupMenu.finish()
+            .toggle(100)
+            .css({
+                top: mouseY + 'px',
+                left: mouseX + 'px'
+            });
     };
 
     /**
@@ -559,7 +600,7 @@ function FlowForm(boxId, mNode, mLine) {
     };
     //#endregion (line function)
 
-    /**
+    /** ??
      * show popup menu for node(normal, auto)/line
      * param elm {element} node element or connection
      * param event {event}

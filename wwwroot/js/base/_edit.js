@@ -1,6 +1,6 @@
 ﻿/**
  * 許多函數在初始化執行, 所以無法放在CrudE.js
- * for EditOne.js, EditMany.js only !!
+ * only for CrudE.js, EditOne.js, EditMany.js !!
  * 內容為: 
  *   1.靜態 constant
  *   2.初始化函數
@@ -8,6 +8,11 @@
  *   4.判斷是否為新資料 & 處理
  */ 
 var _edit = {
+
+    //constant with underline
+    Rows: '_rows',
+    Childs: '_childs',
+    Deletes: '_deletes',
 
     //server side fid for file input collection, must pre '_'
     //key-value of file serverFid vs row key
@@ -25,13 +30,15 @@ var _edit = {
 
 
     /**
-     * setFidTypeVars -> setFidTypes
+     * 初始化變數
+     * setFidTypeVars + setFileVars -> initVars
      * set fid-type variables: fidTypes, fidTypeLen
      * param me {object} EditOne/EditMany object
      * param box {object} container
      * return void
      */
-    setFidTypes: function (me, box) {
+    initVars: function (me, box) {
+        //set fid-type variables: fidTypes, fidTypeLen
         var fidTypes = [];
         box.find(_input.fidFilter()).each(function (i, item) {
             var obj = $(item);
@@ -41,17 +48,8 @@ var _edit = {
         });
         me.fidTypes = fidTypes;
         me.fidTypeLen = me.fidTypes.length;
-    },
 
-    /**
-     * set file related variables: fileFids, fileLen, hasFile
-     * called by EditOne/EditMany init()
-     * param me {edit} EditOne/EditMany variables
-     * param box {object} form or row object
-     * return void
-     */
-    setFileVars: function (me, box) {
-        //var me = this;  //use outside .each()
+        //set file related variables: fileFids, fileLen, hasFile
         me.fileFids = [];      //upload file fid array
         box.find('[data-type=file]').each(function (index, item) {
             me.fileFids[index] = _input.getFid($(item));
@@ -66,7 +64,7 @@ var _edit = {
      * return {string}
      */ 
     getOld: function (obj) {
-        return obj.data(this.DataOld);
+        return obj.data(_edit.DataOld);
     },
 
     /**
@@ -75,7 +73,7 @@ var _edit = {
      * param value {int/string}
      */ 
     setOld: function (obj, value) {
-        obj.data(this.DataOld, value);
+        obj.data(_edit.DataOld, value);
     },
 
     /**
@@ -84,7 +82,7 @@ var _edit = {
      * param key {string}
      */
     isNewRow: function (row) {
-        var fid = this.IsNew;
+        var fid = _edit.IsNew;
         return (row[fid] != null || row[fid] == '1');
     },
 
@@ -93,7 +91,7 @@ var _edit = {
      * param obj {box} jquery object
      */
     addIsNew: function (box) {
-        var fid = this.IsNew;
+        var fid = _edit.IsNew;
         var field = box.find(_input.fidFilter(fid));
         if (field.length == 0)
             field = box.append(`<input type="hidden" data-fid="${fid}" name="${fid}" value="1" >`);
@@ -106,21 +104,10 @@ var _edit = {
      * param obj {box} jquery object
      */
     removeIsNew: function (box) {
-        var fid = this.IsNew;
+        var fid = _edit.IsNew;
         var field = box.find(_input.fidFilter(fid));
         if (field.length > 0)
             field.remove();
     },
-
-    /**
-     * getServerFid -> getFileSid
-     * get server side variables name for file field
-     * param tableId {string} 
-     * param fid {string} ui file id
-     * return {string} format: Table_Fid
-    getFileSid: function (levelStr, fid) {
-        return 't' + levelStr + '_' + fid;
-    },
-     */
 
 };
