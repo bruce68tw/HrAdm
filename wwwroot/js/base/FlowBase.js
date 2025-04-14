@@ -280,9 +280,13 @@ function FlowNode(flowBase, json) {
 		var me = this;	//FlowNode
 		this.elm.node.addEventListener('contextmenu', function (event) {
 			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
+			//const rect = this.getBoundingClientRect();
+			//const relatX = event.clientX - rect.left;
+			//const relatY = event.clientY - rect.top;
+
 			var flowBase = me.flowBase;
 			if (flowBase.fnShowMenu)
-				flowBase.fnShowMenu(true, me.getId(), event.pageX, event.pageY);
+				flowBase.fnShowMenu(true, me.getId(), event);
 		});
 
 		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
@@ -417,7 +421,7 @@ function FlowNode(flowBase, json) {
 
 }//class FlowNode
 
-//名詞使用 startNode/endNode
+//名詞使用 fromNode/toNode 比較合理
 function FlowLine(flowBase, fromNode, toNode, lineType) {
 	//Cnt:中心點, Side:節點邊界, 數值20大約1公分
 	this.Max1SegDist = 6;	//2中心點的最大距離, 小於此值可建立1線段(表示在同一水平/垂直位置), 同時用於折線圓角半徑
@@ -475,7 +479,7 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
 			var flowBase = me.flowBase;
 			if (flowBase.fnShowMenu)
-				flowBase.fnShowMenu(false, 'me.getId()', event.pageX, event.pageY);
+				flowBase.fnShowMenu(false, 'me.getId()', event);
 		});
 	}
 

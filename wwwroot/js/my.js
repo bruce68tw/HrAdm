@@ -6800,9 +6800,13 @@ function FlowNode(flowBase, json) {
 		var me = this;	//FlowNode
 		this.elm.node.addEventListener('contextmenu', function (event) {
 			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
+			const rect = this.getBoundingClientRect();
+			const relatX = event.clientX - rect.left;
+			const relatY = event.clientY - rect.top;
+
 			var flowBase = me.flowBase;
 			if (flowBase.fnShowMenu)
-				flowBase.fnShowMenu(true, me.getId(), event.pageX, event.pageY);
+				flowBase.fnShowMenu(true, me.getId(), relatX, relatY);
 		});
 
 		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
@@ -6937,7 +6941,7 @@ function FlowNode(flowBase, json) {
 
 }//class FlowNode
 
-//名詞使用 startNode/endNode
+//名詞使用 fromNode/toNode 比較合理
 function FlowLine(flowBase, fromNode, toNode, lineType) {
 	//Cnt:中心點, Side:節點邊界, 數值20大約1公分
 	this.Max1SegDist = 6;	//2中心點的最大距離, 小於此值可建立1線段(表示在同一水平/垂直位置), 同時用於折線圓角半徑
@@ -7405,7 +7409,7 @@ function FlowForm(boxId, mNode, mLine) {
         var flowBase = new FlowBase(boxId);
         flowBase.fnMoveNode = (nodeId, x, y) => this.onMoveNode(nodeId, x, y);
         flowBase.fnAddLine = (startId, endId) => this.onAddLine(startId, endId);
-        flowBase.fnShowMenu = (isNode, rowId, mouseX, mouseY) => this.onShowMenu(isNode, rowId, mouseX, mouseY);
+        flowBase.fnShowMenu = (isNode, rowId, relatX, relatY) => this.onShowMenu(isNode, rowId, relatX, relatY);
         this.flowBase = flowBase;
 
         //set event
@@ -7428,9 +7432,11 @@ function FlowForm(boxId, mNode, mLine) {
      * param mouseX {int} 
      * param mouseY {int} 
      */
-    this.onShowMenu = function (isNode, elm, mouseX, mouseY) {
+    this.onShowMenu = function (isNode, elm, relatX, relatY) {
         //alert(`onRightMenu ${isNode}, rowId=${rowId}`);
         //set instance variables
+        //event.preventDefault();
+
         this.nowIsNode = isNode;
         //this.nowElm = isNode ? $(elm).closest(this.NodeFilter)[0] : elm;
         this.nowElm = elm;
@@ -7461,8 +7467,8 @@ function FlowForm(boxId, mNode, mLine) {
             //this.popupMenu.finish()
             .toggle(100)
             .css({
-                top: mouseY + 'px',
-                left: mouseX + 'px'
+                top: relatY + 'px',
+                left: relatX + 'px'
             });
     };
 

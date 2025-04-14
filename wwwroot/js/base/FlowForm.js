@@ -156,7 +156,7 @@ function FlowForm(boxId, mNode, mLine) {
         var flowBase = new FlowBase(boxId);
         flowBase.fnMoveNode = (nodeId, x, y) => this.onMoveNode(nodeId, x, y);
         flowBase.fnAddLine = (startId, endId) => this.onAddLine(startId, endId);
-        flowBase.fnShowMenu = (isNode, rowId, mouseX, mouseY) => this.onShowMenu(isNode, rowId, mouseX, mouseY);
+        flowBase.fnShowMenu = (isNode, rowId, event) => this.onShowMenu(isNode, rowId, event);
         this.flowBase = flowBase;
 
         //set event
@@ -179,9 +179,11 @@ function FlowForm(boxId, mNode, mLine) {
      * param mouseX {int} 
      * param mouseY {int} 
      */
-    this.onShowMenu = function (isNode, elm, mouseX, mouseY) {
+    this.onShowMenu = function (isNode, elm, event) {
         //alert(`onRightMenu ${isNode}, rowId=${rowId}`);
         //set instance variables
+        //event.preventDefault();
+
         this.nowIsNode = isNode;
         //this.nowElm = isNode ? $(elm).closest(this.NodeFilter)[0] : elm;
         this.nowElm = elm;
@@ -212,8 +214,9 @@ function FlowForm(boxId, mNode, mLine) {
             //this.popupMenu.finish()
             .toggle(100)
             .css({
-                top: mouseY + 'px',
-                left: mouseX + 'px'
+                position: 'fixed',  // 使用 fixed 定位
+                left: event.clientX + 'px',
+                top: event.clientY + 'px',
             });
     };
 

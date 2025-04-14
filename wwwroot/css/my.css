@@ -362,6 +362,33 @@ span.error {
 	cursor: crosshair; /* 十字形狀 */
 }
 
+/* context menu */
+.xf-menu {
+	display: none;
+	z-index: 1000;
+	position: absolute;
+	overflow: hidden;
+	border: 1px solid #CCC;
+	white-space: nowrap;
+	font-family: sans-serif;
+	background: #FFF;
+	color: #333;
+	border-radius: 5px;
+	padding: 0;
+	min-width: 100px;
+}
+
+	/* Each of the items in the list */
+	.xf-menu li {
+		padding: 6px 15px;
+		cursor: pointer;
+		list-style-type: none;
+		transition: all .3s ease;
+	}
+
+		.xf-menu li:hover {
+			background-color: #DEF;
+		}
 
 /* form without line */
 /* 停用 xg-row */

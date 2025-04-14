@@ -114,10 +114,10 @@
             <!-- add outer div for validate msg layout -->
             <div>
                 <div class="btn-group-vertical" role="group" style="margin-left: 5px;" aria-label="button group vertical">
-                    <button type="button" class="btn btn-default xu-fun" onclick="_me.flow.onAddStartNode()" Title='@R["TipStartNode"]'>@R["StartNode"]</button>
-                    <button type="button" class="btn btn-default xu-fun" onclick="_me.flow.onAddNormalNode()" Title='@R["TipNode"]'>@R["Node"]</button>
-                    @*<button type="button" class="btn btn-default xu-fun" onclick="_me.flow.onAddAutoNode()" Title="New Auto Node">Auto</button>*@
-                    <button type="button" class="btn btn-default xu-fun" onclick="_me.flow.onAddEndNode()" Title='@R["TipEndNode"]'>@R["EndNode"]</button>
+                    <button type="button" class="btn btn-default xu-fun" onclick="_me.flowForm.onAddStartNode()" Title='@R["TipStartNode"]'>@R["StartNode"]</button>
+                    <button type="button" class="btn btn-default xu-fun" onclick="_me.flowForm.onAddNormalNode()" Title='@R["TipNode"]'>@R["Node"]</button>
+                    @*<button type="button" class="btn btn-default xu-fun" onclick="_me.flowForm.onAddAutoNode()" Title="New Auto Node">Auto</button>*@
+                    <button type="button" class="btn btn-default xu-fun" onclick="_me.flowForm.onAddEndNode()" Title='@R["TipEndNode"]'>@R["EndNode"]</button>
                 </div>
             </div>
         </form>
@@ -138,8 +138,9 @@
 
 <!-- context menu for node & line, xf means flow -->
 <ul class='xf-menu'>
-    <li onclick="_me.flow.onMenuEdit()" class="xd-edit">Edit</li>
-    <li onclick="_me.flow.onMenuDelete()">Delete</li>
+    <li onclick="_me.flowForm.onMenuEdit()" class="xd-edit">Edit</li>
+    <li onclick="_me.flowForm.onMenuDelete()" class="xd-delete">Delete</li>
+    <li onclick="_me.flowForm.onMenuView()" class="xd-view">View</li>
 </ul>
 
 <!-- ??flow lines container, for keep saving rows, hide -->
@@ -193,7 +194,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@br.BtnCancel</button>
-                <button type="button" class="btn btn-primary" onclick="_me.flow.onModalNodeOk()">@br.BtnYes</button>
+                <button type="button" class="btn btn-primary" onclick="_me.flowForm.onModalNodeOk()">@br.BtnYes</button>
             </div>
         </div>
     </div>
@@ -217,7 +218,7 @@
                     <div id="divLineCondBox" class="row zz_xg-row">
                         <div class="col-md-12" style="margin:5px 0 2px -10px;">
                             @R["RunCond"]
-                            <button type="button" class="btn btn-sm btn-primary" onclick="_me.flow.onAddLineCond()">@br.BtnAddRow</button>
+                            <button type="button" class="btn btn-sm btn-primary" onclick="_me.flowForm.onAddLineCond()">@br.BtnAddRow</button>
                         </div>
                         <table class="table xg-table" cellspacing="0">
                             <thead>
@@ -236,7 +237,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@br.BtnCancel</button>
-                <button type="button" class="btn btn-primary" onclick="_me.flow.onModalLineOk()">@br.BtnYes</button>
+                <button type="button" class="btn btn-primary" onclick="_me.flowForm.onModalLineOk()">@br.BtnYes</button>
             </div>
         </div>
     </div>
@@ -249,6 +250,6 @@
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Fid", Value = "{{Fid}}", MaxLen = 30, InRow = true })</td>
         <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "Op", Value = "{{Op}}", Rows = ViewBag.LineOps, InRow = true })</td>
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Value", Value = "{{Value}}", MaxLen = 30, InRow = true })</td>
-        <td width='100px' class='text-center'>@await Component.InvokeAsync("XgDeleteUpDown", new { fnDeleteRow = "_me.flow.onDeleteLineCond(this)" })</td>
+        <td width='100px' class='text-center'>@await Component.InvokeAsync("XgDeleteUpDown", new { fnDeleteRow = "_me.flowForm.onDeleteLineCond(this)" })</td>
     </tr>
 </script>
