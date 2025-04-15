@@ -7,9 +7,9 @@
  * return {FlowForm}
  */ 
 function FlowForm(boxId, mNode, mLine) {
-    /**
-     flowBase: flowBase instance
-    */
+
+    //是否可編輯
+    this.isEdit = false;
 
     /**
      * initial flow
@@ -119,38 +119,6 @@ function FlowForm(boxId, mNode, mLine) {
             j++;
         }
 
-        /*
-        //get jsplumb instance
-        var flowBox = jsPlumb.getInstance({
-            Container: boxId,
-            //Connector: 'StateMachine',
-            Connector: 'Flowchart',            
-            Endpoint: ['Dot', { radius: 2 }],
-            HoverPaintStyle: { stroke: '#1e8151', strokeWidth: 3 },
-            ConnectionOverlays: [
-                ['Arrow', {
-                    location: 1,
-                    id: 'arrow',
-                    width: 8,
-                    length: 10,
-                    foldback: 0.8,
-                }],
-                ['Label', {
-                    label: '',
-                    id: 'label',
-                    cssClass: 'xf-line-label',
-                }]
-            ],
-        });
-
-        //set one basic connection style 
-        flowBox.registerConnectionType('basic', {
-            anchor: 'Continuous',
-            connector: 'Flowchart',
-            //connector: 'StateMachine',            
-        });
-        */
-
         //set instance first
         //this.flowBase = new FlowBase(boxId, (nodeId, x, y) => this.onMoveNode(nodeId, x, y));
         var flowBase = new FlowBase(boxId);
@@ -161,6 +129,11 @@ function FlowForm(boxId, mNode, mLine) {
 
         //set event
         this._setFlowEvent();
+    };
+
+    this.setEdit = function (status) {
+        this.isEdit = status;
+        this.flowBase.setEdit(status);
     };
 
     this.onMoveNode = function (nodeId, x, y) {
@@ -180,41 +153,30 @@ function FlowForm(boxId, mNode, mLine) {
      * param mouseY {int} 
      */
     this.onShowMenu = function (isNode, elm, event) {
-        //alert(`onRightMenu ${isNode}, rowId=${rowId}`);
         //set instance variables
-        //event.preventDefault();
-
         this.nowIsNode = isNode;
         //this.nowElm = isNode ? $(elm).closest(this.NodeFilter)[0] : elm;
         this.nowElm = elm;
 
         //set edit status
-        var canEdit = true;
-        var nodeType;
-        if (isNode) {
-            nodeType = this._elmToNodeValue(elm, 'NodeType');
-            //canEdit = (nodeType == this.NormalNode || nodeType == this.AutoNode);
-            canEdit = (nodeType == this.NormalNode);
+        var canEdit = isNode
+            ? (this.isEdit && elm.getNodeType() == _flow.TypeNormal)
+            : this.isEdit;
+
+        var menu = $(this.MenuFilter);
+        if (canEdit) {
+            menu.find('.xd-edit').removeClass('disabled');
+            menu.find('.xd-delete').removeClass('disabled');
         } else {
-            nodeType = this._elmToNodeValue(elm.source, 'NodeType');
-            //canEdit = (nodeType == this.StartNode || nodeType == this.AutoNode);
-            canEdit = (nodeType == FlowNode.TypeStart);
+            menu.find('.xd-edit').addClass('disabled');
+            menu.find('.xd-delete').addClass('disabled');
         }
-        /*
-        //debugger;
-        var item = this.popupMenu.find('.xd-edit');
-        if (canEdit)
-            item.show();
-        else
-            item.hide();
-        */
 
         // Show contextmenu
-        $(this.MenuFilter).finish()
-            //this.popupMenu.finish()
+        menu.finish()
             .toggle(100)
             .css({
-                position: 'fixed',  // 使用 fixed 定位
+                position: 'fixed',  //使用 fixed 定位
                 left: event.clientX + 'px',
                 top: event.clientY + 'px',
             });
@@ -296,48 +258,6 @@ function FlowForm(boxId, mNode, mLine) {
     };
 
     /**
-     * set node event & source/target property
-     * param nodeObj {object} node object
-     */
-    /*
-    this._setNodeEvent = function (nodeObj) {
-        //set source & target property
-        var nodeType = _itext.get('NodeType', nodeObj);
-        var flowBase = this.flowBase;
-        var me = this;
-
-        //event: move node (update x,y)
-        //initialise draggable elements.
-        //must put before makeSource/makeTarget !!
-        var nodeElm = nodeObj[0];
-        flowBase.draggable(nodeElm, {
-            grid: [10, 10],
-            //update node position
-            stop: function (params) {
-                //debugger;
-                //var node = $(params.el);
-                var pos = $(params.el).position();
-                _form.loadRow(nodeObj, { PosX: Math.floor(pos.left), PosY: Math.floor(pos.top) });
-            },
-        });
-
-        //build line(connection)
-        //must put after flowBase.draggable() !!
-        if (nodeType != FlowNode.TypeEnd)
-            flowBase.makeSource(nodeElm, this.StartNodeCfg);
-        if (nodeType != FlowNode.TypeStart)
-            flowBase.makeTarget(nodeElm, this.EndNodeCfg);
-
-        //event: show node menu
-        //this._setNodeEvent(nodeObj);
-        nodeObj.on('contextmenu', function (event) {
-            //"this" is not work here !!
-            me.showPopupMenu(event.target, event, true);
-        });
-    };
-    */
-
-    /**
      * load nodes into UI
      * param rows {json} 後端傳回的完整json
      */
@@ -396,31 +316,6 @@ function FlowForm(boxId, mNode, mLine) {
     };
 
     //#region node function
-    /**
-     * set node class(_NodeClass), template has this field
-     * param row {json} node row
-     * return {json} new row
-     */
-    /*
-    this._setNodeClass = function (row) {
-        switch (row.NodeType) {
-            case this.StartNode:
-                row._NodeClass = this.StartNodeCls;
-                break;
-            case this.EndNode:
-                row._NodeClass = this.EndNodeCls;
-                break;
-            //case this.AutoNode:
-            //    row._NodeClass = this.AutoNodeCls;
-            //    break;
-            default:
-                //normal node
-                break;
-        }
-
-        return row;
-    };
-    */
 
     //add new node
     this.addNode = function (name, nodeType) {
@@ -602,51 +497,6 @@ function FlowForm(boxId, mNode, mLine) {
         }
     };
     //#endregion (line function)
-
-    /** ??
-     * show popup menu for node(normal, auto)/line
-     * param elm {element} node element or connection
-     * param event {event}
-     * param isNode {bool} true(node), false(line)
-     */
-    this.showPopupMenu = function (elm, event, isNode) {
-        //stop default context menu 
-        event.preventDefault();
-
-        //set instance variables
-        this.nowIsNode = isNode;
-        this.nowElm = isNode ? $(elm).closest(this.NodeFilter)[0] : elm;
-
-        //set edit status
-        var canEdit = true;
-        var nodeType;
-        if (isNode) {
-            nodeType = this._elmToNodeValue(elm, 'NodeType');
-            //canEdit = (nodeType == this.NormalNode || nodeType == this.AutoNode);
-            canEdit = (nodeType == this.NormalNode);
-        } else {
-            nodeType = this._elmToNodeValue(elm.source, 'NodeType');
-            //canEdit = (nodeType == this.StartNode || nodeType == this.AutoNode);
-            canEdit = (nodeType == FlowNode.TypeStart);
-        }
-        /*
-        //debugger;
-        var item = this.popupMenu.find('.xd-edit');
-        if (canEdit)
-            item.show();
-        else
-            item.hide();
-        */
-
-        // Show contextmenu
-        $(this.MenuFilter).finish()
-        //this.popupMenu.finish()
-            .toggle(100)
-            .css({
-                top: event.pageY + 'px',
-                left: event.pageX + 'px'
-            });
-    };
 
     //convert condiction string to label string
     this._condStrToLabel = function (str) {

@@ -63,9 +63,11 @@
     //auto called !!
     //reset when create
     fnAfterOpenEdit: function (fun, json) {
-        if (fun === _fun.FunC) {
+        var isAdd = (fun === _fun.FunC);
+        if (isAdd) {
             _me.flowForm.reset();
         }
+        _me.flowForm.setEdit(isAdd || (fun === _fun.FunU));
     },
 
     /**

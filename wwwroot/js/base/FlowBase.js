@@ -28,6 +28,9 @@ function FlowBase(boxId) {
 	 onMoveNode: event onMoveNode(node)
 	*/
 
+	//是否可編輯
+	this.isEdit = false;
+
 	this._init = function (boxId) {
 		this.boxElm = document.getElementById(boxId);
 		this.svg = SVG().addTo(this.boxElm).size('100%', '100%');
@@ -35,8 +38,11 @@ function FlowBase(boxId) {
 		this.fnMoveNode = null;
 		this.fnAddLine = null;
 		this.fnShowMenu = null;
-		//this.onMoveNode = onMoveNode;
 		//this._reset();
+	};
+
+	this.setEdit = function (status) {
+		this.isEdit = status;
 	};
 
 	//清除全部UI元件
@@ -153,8 +159,6 @@ function FlowNode(flowBase, json) {
 		this.lines = [];
 
 		this._render();		//draw node first
-		//this._setNodeDrag();	//set node draggable
-		//this._setEventJoint();   //讓connector可拖拉
 	};
 
 	//繪製完整節點, called by initial
@@ -257,43 +261,35 @@ function FlowNode(flowBase, json) {
 	this._setChildPos = function (startEnd) {
 		//文字
 		let bbox = this.textElm.bbox();
-		//let centerX = this.elm.x() + this.width / 2;
-		//let centerY = this.elm.y() + this.height / 2;
-		//var box = this.boxElm;
-		//let centerX = box.cx();
-		//let centerY = box.cy();
 		let center = this.getCenter();
 		let size = this.getSize();
-		//let centerY = box.cy();
-        //this.textElm.move(centerX - bbox.width / 2, centerY - bbox.height / 2);
-		//this.textElm.move(bbox.width / 2, bbox.height / 2)
-		//	.center(centerX, centerY);
 		this.textElm.move(size.w / 2, size.h / 2).center(center.x, center.y);
 
-        //連接點
+        //連接點 右移3px
 		if (this.pointElm)
 			this.pointElm.move(center.x + bbox.width / 2 + 3, center.y - 5);
 	};
 
 	this._setEvent = function () {
 		//enable right click menu
-		var me = this;	//FlowNode
+		let me = this;	//FlowNode
+		let flowBase = this.flowBase;
+
 		this.elm.node.addEventListener('contextmenu', function (event) {
 			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
-			//const rect = this.getBoundingClientRect();
-			//const relatX = event.clientX - rect.left;
-			//const relatY = event.clientY - rect.top;
-
-			var flowBase = me.flowBase;
 			if (flowBase.fnShowMenu)
-				flowBase.fnShowMenu(true, me.getId(), event);
+				flowBase.fnShowMenu(true, me, event);
 		});
 
 		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
 		this.elm.draggable().on(this.DragMove, () => {
+			if (!flowBase.isEdit) return;
+
 			this._setChildPos(this._isStartEnd());
 			this.lines.forEach(line => line.render());
 		}).on(this.DragEnd, (event) => {
+			if (!flowBase.isEdit) return;
+
 			let { x, y } = event.detail.box;
 			//console.log(`x=${x}, y=${y}`);
 
@@ -315,21 +311,27 @@ function FlowNode(flowBase, json) {
 		let startElm, startX, startY;
 		let tempLine;
 		let endElm = null;
+		let me = this;
+		let flowBase = this.flowBase;
 
 		// 啟用 pointElm 的拖拽功能, 使用箭頭函數時 this 會指向類別實例 !!, 使用 function則會指向 pointElm !!
 		this.pointElm.draggable().on(this.DragStart, (event) => {
+			if (!flowBase.isEdit) return;
+
 			// 初始化線條
-			let { x, y } = this.pointElm.rbox(this.svg); // 使用SVG畫布的座標系
+			let { x, y } = me.pointElm.rbox(me.svg); // 使用SVG畫布的座標系
 			startX = x;
 			startY = y;
-			startElm = this.self.elm;	//this.self指向這個FlowNode
+			startElm = me.self.elm;	//this.self指向這個FlowNode
 
-			tempLine = this.svg.line(startX, startY, startX, startY)
+			tempLine = me.svg.line(startX, startY, startX, startY)
 				.addClass('xf-line off');
 				
-			this.flowBase.drawLineStart(this.self);
+			flowBase.drawLineStart(me.self);
 				
 		}).on(this.DragMove, (event) => {
+			if (!flowBase.isEdit) return;
+
 			//阻止 connector 移動
 			event.preventDefault();
 			
@@ -344,7 +346,7 @@ function FlowNode(flowBase, json) {
 			// 檢查座標值是否有效
 			if (isFinite(endX) && isFinite(endY)) {
 				// 將 SVG 座標轉換為檢視座標
-				let svgRect = this.svg.node.getBoundingClientRect();
+				let svgRect = me.svg.node.getBoundingClientRect();
 				let viewPortX = endX + svgRect.x;
 				let viewPortY = endY + svgRect.y;
 
@@ -355,27 +357,29 @@ function FlowNode(flowBase, json) {
 					let overElm = overDom.instance;	//svg element
 					if (endElm !== overElm) {
 						if (endElm) 
-							this._markNode(endElm, false);
+							me._markNode(endElm, false);
 						endElm = overElm;
-						this._markNode(endElm, true);
+						me._markNode(endElm, true);
 					}
 				} else if (endElm) {
-					this._markNode(endElm, false);
+					me._markNode(endElm, false);
 					endElm = null;
 				}
 			}
 			
 		}).on(this.DragEnd, (event) => {
+			if (!flowBase.isEdit) return;
+
 			// 檢查座標值是否有效
 			if (endElm) {
-				this._markNode(endElm, false);					
-				//this.flowBase.drawLineEnd(this.flowBase.findNode(endElm.node.dataset.id));
-				var line = this.flowBase.drawLineEnd(this.flowBase.findNode(this._getIdByElm(endElm)));
+				me._markNode(endElm, false);					
+				//me.flowBase.drawLineEnd(me.flowBase.findNode(endElm.node.dataset.id));
+				var line = flowBase.drawLineEnd(flowBase.findNode(me._getIdByElm(endElm)));
 				endElm = null;
 
 				//trigger event
-				if (this.flowBase.fnAddLine)
-					this.flowBase.fnAddLine(line.startNode.getId(), line.endNode.getId());
+				if (flowBase.fnAddLine)
+					flowBase.fnAddLine(line.startNode.getId(), line.endNode.getId());
 			}
 			tempLine.remove();
 		});
@@ -477,9 +481,8 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 		var me = this;	//FlowLine
 		this.path2.node.addEventListener('contextmenu', function (event) {
 			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
-			var flowBase = me.flowBase;
-			if (flowBase.fnShowMenu)
-				flowBase.fnShowMenu(false, 'me.getId()', event);
+			if (me.flowBase.fnShowMenu)
+				me.flowBase.fnShowMenu(false, me, event);
 		});
 	}
 
@@ -500,9 +503,7 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 		//=== from Node ===
 		// 位置和尺寸, x/y為左上方座標
 		const fromPos = this.fromNode.getPos();
-		//const fromY = this.fromNode.boxElm.y();
 		const fromSize = this.fromNode.getSize();
-		//const fromHeight = this.fromNode.height;
 		const fromCntX = fromPos.x + fromSize.w / 2;		//中心點
 		const fromCntY = fromPos.y + fromSize.h / 2;
 		// 四個邊的中間點
@@ -513,9 +514,7 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 
 		//=== to Node ===
 		const toPos = this.toNode.getPos();
-		//const toY = this.toNode.elm.y();
 		const toSize = this.toNode.getSize();
-		//const toHeight = this.toNode.height;
 		const toCntX = toPos.x + toSize.w / 2;
 		const toCntY = toPos.y + toSize.h / 2;
 		// 四個邊的中間點
@@ -553,7 +552,6 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 				fromPnt = fromUp;
 				toPnt = toDown;
 			}
-			//pathStr = `M ${fromPnt.x} ${fromPnt.y} V ${toPnt.y}`;	//取垂直線
 			points = [fromPnt, { x: fromPnt.x, y: toPnt.y }];
 		} else if (!this.isTypeV && match1SegDistV && match2NodeDistH) {
 			//1線段-水平
@@ -564,19 +562,16 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 				fromPnt = fromLeft;
 				toPnt = toRight;
 			}
-			//pathStr = `M ${fromPnt.x} ${fromPnt.y} H ${toPnt.x}`;	//取水平線
 			points = [fromPnt, { x: toPnt.x, y: fromPnt.y }];
 		} else if (!this.isTypeV && match2NodeDistH && match2SegDistOut) {
 			//2線段-水平
 			fromPnt = isEndRight ? fromRight : fromLeft;
 			toPnt = isEndDown ? toUp : toDown;
-			//pathStr = `M ${fromPnt.x} ${fromPnt.y} H ${toPnt.x} V ${toPnt.y}`;
 			points = [fromPnt, { x: toPnt.x, y: fromPnt.y }, toPnt];
 		} else if (!this.isTypeH && match2NodeDistV && match2SegDistIn) {
 			//2線段-垂直
 			fromPnt = isEndDown ? fromDown : fromUp;
 			toPnt = isEndRight ? toLeft : toRight;
-			//pathStr = `M ${fromPnt.x} ${fromPnt.y} V ${toPnt.y} H ${toPnt.x}`;
 			points = [fromPnt, { x: fromPnt.x, y: toPnt.y }, toPnt];
 		} else if (!this.isTypeH && match2NodeDistV) {
 			//3線段-垂直(2節點內側)
@@ -589,7 +584,6 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 			}
 
 			let midY = (fromPnt.y + toPnt.y) / 2;
-			//pathStr = `M ${fromPnt.x} ${fromPnt.y} V ${midY} H ${toPnt.x} V ${toPnt.y}`;
 			points = [fromPnt, { x: fromPnt.x, y: midY }, { x: toPnt.x, y: midY }, toPnt];
 		} else if (!this.isTypeV && match2NodeDistH) {
 			//3線段-水平(2節點內側)
@@ -602,7 +596,6 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 			}
 
 			let midX = (fromPnt.x + toPnt.x) / 2;
-			//pathStr = `M ${fromPnt.x} ${fromPnt.y} H ${midX} V ${toPnt.y} H ${toPnt.x}`;
 			points = [fromPnt, { x: midX, y: fromPnt.y }, { x: midX, y: toPnt.y }, toPnt];
 		} else if (!this.isTypeV) {
 			//3線段-水平(2節點外側)
@@ -614,7 +607,6 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 				toPnt = toLeft;
 			}
 			let midX = isEndRight ? Math.max(fromPnt.x, toPnt.x) + this.Min2NodeDist : Math.min(fromPnt.x, toPnt.x) - this.MinSideSide;
-			//pathStr = `M ${fromPnt.x} ${fromPnt.y} H ${midX} V ${toPnt.y} H ${toPnt.x}`;
 			points = [fromPnt, { x: midX, y: fromPnt.y }, { x: midX, y: toPnt.y }, toPnt];
 		} else {
 			//其他狀況: 用直線(非折線)連接起迄點
@@ -635,13 +627,11 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 					toPnt = toRight;
 				}
 			}
-			//pathStr = `M ${fromPnt.x} ${fromPnt.y} L ${toPnt.x} ${toPnt.y}`;
 			points = [fromPnt, toPnt];
 		}
 
 		// 繪製流程線
 		this._drawLine(points);
-		//this.path.plot(pathStr);
 	};
 
 	/**
@@ -689,19 +679,12 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 			}
 		}
 
-		// 繪製流程線
+		// 繪製流程線, path2 for 增加右鍵功能表點擊區域
 		this.path.plot(pathStr);
 		this.path2.plot(pathStr);
 
 		//畫末端箭頭
 		this._drawArrow(points[pntLen - 2], points[pntLen - 1]);
-		/*
-		// 繪製帶有圓角的折線
-		const path = svg.path(pathStr)
-		  .stroke({ width: 2, color: '#000', linecap: 'round', linejoin: 'round' })
-		  .fill('none');
-		*/
-
 	};
 
 	/**
