@@ -122,11 +122,11 @@
             </div>
         </form>
 
-        <!-- for flow nodes -->
+        <!-- flowNodes editMany -->
         <form id='eformNode' class='xg-hide'>
         </form>
 
-        <!-- for flow lines -->
+        <!-- flowLines editMany -->
         <form id='eformLine' class='xg-hide'>
         </form>
     </div>
@@ -168,10 +168,22 @@
         @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "Id" })
         @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "FlowId" })
         @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "CondStr" })
-        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "StartNode" })
-        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "EndNode" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "FromNodeId" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "ToNodeId" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "FromType" })
         @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "Sort" })
     </div>
+</script>
+
+<!-- line condition template -->
+<script id="tplLineCond" type="text/template">
+    <tr>
+        <td width="104px">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "AndOr", Value = "{{AndOr}}", Rows = ViewBag.AndOrs, InRow = true })</td>
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Fid", Value = "{{Fid}}", MaxLen = 30, InRow = true })</td>
+        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "Op", Value = "{{Op}}", Rows = ViewBag.LineOps, InRow = true })</td>
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Value", Value = "{{Value}}", MaxLen = 30, InRow = true })</td>
+        <td width='100px' class='text-center'>@await Component.InvokeAsync("XgDeleteUpDown", new { fnDeleteRow = "_me.flowForm.onDeleteLineCond(this)" })</td>
+    </tr>
 </script>
 
 <!-- node property modal -->
@@ -205,14 +217,14 @@
     <div class="modal-dialog" style="max-width:620px;">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title">@R["LineProp"]</div>
+                <div class="modal-title">流程線屬性設定</div>
                 <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal xg-form" style="padding:0 10px;">
-                    <vc:xi-read dto='new() { Title = "起始節點 :", Fid = "StartNode", Cols = cols }' />
-                    <vc:xi-read dto='new() { Title = "結束節點 :", Fid = "EndNode", Cols = cols }' />
-                    <vc:xi-int dto='new() { Title = R["RunOrder"].Value + " :", Fid = "Sort", Required = true, Cols = "4,2" }' />
+                    <vc:xi-read dto='new() { Title = "起始節點 :", Fid = "FromNodeName", Cols = cols }' />
+                    <vc:xi-read dto='new() { Title = "結束節點 :", Fid = "ToNodeName", Cols = cols }' />
+                    <vc:xi-int dto='new() { Title = "執行順序" + " :", Fid = "Sort", Required = true, Cols = "4,2" }' />
                     @*Html.XiNum("Sort", "", "Run Order :", true, cols, new PropNumModel() { IsDigit = true, MaxValue = 10, Width = "80px" })*@
                     @*Html.XiRadios("LineType", "0", "Run Type :", ViewBag.LineTypes, 9)*@
                     <div id="divLineCondBox" class="row zz_xg-row">
@@ -242,14 +254,3 @@
         </div>
     </div>
 </div>
-
-<!-- line condition template -->
-<script id="tplLineCond" type="text/template">
-    <tr>
-        <td width="104px">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "AndOr", Value = "{{AndOr}}", Rows = ViewBag.AndOrs, InRow = true })</td>
-        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Fid", Value = "{{Fid}}", MaxLen = 30, InRow = true })</td>
-        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "Op", Value = "{{Op}}", Rows = ViewBag.LineOps, InRow = true })</td>
-        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Value", Value = "{{Value}}", MaxLen = 30, InRow = true })</td>
-        <td width='100px' class='text-center'>@await Component.InvokeAsync("XgDeleteUpDown", new { fnDeleteRow = "_me.flowForm.onDeleteLineCond(this)" })</td>
-    </tr>
-</script>

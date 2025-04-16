@@ -10,9 +10,10 @@ var _flow = {
 };
 
 /**
- * 自定函數:
+ * 自定函數(由flow內部觸發):
  * void fnMoveNode(node, x, y): after move node to (x,y)
- * void fnAddLine(startNodeId, endNodeId): when add line
+ * void fnAddLine(startNode, endNode): when add line
+ * void fnShowMenu(isNode, flowItem, event);
  * void fnDropLineEnd(oldNode, newNode): after drop line end point
  */
 //控制 FlowNode、FlowLine for 外部程式
@@ -20,7 +21,7 @@ function FlowBase(boxId) {
 
 	/**
 	 屬性:
-	 boxElm: box element
+	 //boxElm: box element
 	 svg: svg
 	 nodes: nodes
 	 lines: lines
@@ -32,8 +33,8 @@ function FlowBase(boxId) {
 	this.isEdit = false;
 
 	this._init = function (boxId) {
-		this.boxElm = document.getElementById(boxId);
-		this.svg = SVG().addTo(this.boxElm).size('100%', '100%');
+		let boxDom = document.getElementById(boxId);
+		this.svg = SVG().addTo(boxDom).size('100%', '100%');
 
 		this.fnMoveNode = null;
 		this.fnAddLine = null;
@@ -78,7 +79,7 @@ function FlowBase(boxId) {
 		return node;
 	};
 	
-	//addLine(startNode, endNode, id, lineType) {
+	//addLine(startNode, endNode, id, fromType) {
 	this.addLine = function (json) {
 		//this.lineCount++;
 		//if (id == null)
@@ -87,6 +88,9 @@ function FlowBase(boxId) {
 		let endNode = this.findNode(json.EndNode);
 		return new FlowLine(this, startNode, endNode, json.Id, 'A');
 	};
+	
+	//this.deleteNode
+	//this.deleteLine
 	
 	this.drawLineStart = function (startNode) {
 		this.startNode = startNode;
@@ -120,7 +124,7 @@ function FlowNode(flowBase, json) {
 	 self: this
 	 flowBase: FlowBase object
 	 svg: svg
-	 json: node json, 欄位與後端XgFlowE相同: Id, FlowId, NodeType, Name, PosX, PosY, Width, Height
+	 json: node json, 欄位與後端XgFlowE相同: Id, FlowId, NodeType, Name(外面可更新), PosX, PosY, Width(外面可更新), Height(外面可更新)
 	 elm: svg group element(與 html element不同)
 	 boxElm: border element
 	 textElm: text element
@@ -295,7 +299,7 @@ function FlowNode(flowBase, json) {
 
 			//trigger event
 			if (this.flowBase.fnMoveNode)
-				this.flowBase.fnMoveNode(this.getId(), x, y);
+				this.flowBase.fnMoveNode(this, x, y);
 		});
 
 		//set connector draggable
@@ -379,7 +383,7 @@ function FlowNode(flowBase, json) {
 
 				//trigger event
 				if (flowBase.fnAddLine)
-					flowBase.fnAddLine(line.startNode.getId(), line.endNode.getId());
+					flowBase.fnAddLine(line.startNode, line.endNode);
 			}
 			tempLine.remove();
 		});
@@ -425,8 +429,8 @@ function FlowNode(flowBase, json) {
 
 }//class FlowNode
 
-//名詞使用 fromNode/toNode 比較合理
-function FlowLine(flowBase, fromNode, toNode, lineType) {
+//相關名詞使用 fromNode/toNode 比較合理
+function FlowLine(flowBase, fromNode, toNode, fromType) {
 	//Cnt:中心點, Side:節點邊界, 數值20大約1公分
 	this.Max1SegDist = 6;	//2中心點的最大距離, 小於此值可建立1線段(表示在同一水平/垂直位置), 同時用於折線圓角半徑
 	this.Min2NodeDist = 25;	//2節點的最小距離, 大於此值可建立line(1,3線段)
@@ -437,22 +441,23 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 	this.ArrowWidth = 5; 	//寬度	
 
 	//line type, 起點位置
-	this.TypeAuto = 'A';	//自動
-	this.TypeV = 'V';	//垂直(上下)
-	this.TypeH = 'H';	//水平(左右)
+	this.FromTypeAuto = 'A';	//自動
+	this.FromTypeV = 'V';	//垂直(上下)
+	this.FromTypeH = 'H';	//水平(左右)
 
 	/**
 	 flowBase: FlowBase object
 	 svg: svg
 	 path: line path
+	 path2: for right menu
 	 fromNode: from node
 	 toNode: to node
-	 lineType: 起點位置, A(auto),U(上下),L(左右)
-	 isTypeAuto:
-	 isTypeV:
-	 isTypeH:
+	 fromType: 起點位置, A(auto),V(上下),H(左右)
+	 //isFromTypeAuto:
+	 isFromTypeV:
+	 isFromTypeH:
 	*/
-	this._init = function (flowBase, fromNode, toNode, lineType) {
+	this._init = function (flowBase, id, fromNode, toNode, fromType) {
 		this.flowBase = flowBase;
 		this.svg = flowBase.svg;
 		this.fromNode = fromNode;
@@ -473,7 +478,7 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 		fromNode.addLine(this);
 		toNode.addLine(this);
 		this._setEvent();
-		this._setType(lineType);
+		this._setFromTypeVars(fromType);
 		this.render();
 	};
 
@@ -486,14 +491,18 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 		});
 	}
 
-	this._setType = function (lineType) {
-		lineType = lineType || this.TypeAuto;
-		this.lineType = lineType;
-		this.isTypeV = (lineType == this.TypeV);
-		this.isTypeH = (lineType == this.TypeH);
-		//this.isTypeAuto = (!this.isTypeV && !this.isTypeH) || (lineType == this.TypeAuto);
+	this._setFromTypeVars = function (fromType) {
+		fromType = fromType || this.FromTypeAuto;
+		this.fromType = fromType;
+		this.isFromTypeV = (fromType == this.FromTypeV);
+		this.isFromTypeH = (fromType == this.FromTypeH);
+		//this.isFromTypeAuto = (!this.isFromTypeV && !this.isFromTypeH) || (fromType == this.FromTypeAuto);
 	};
 
+	this.setLabel = function (label) {
+		//todo
+	};
+	
 	/**
 	 * 依次考慮使用1線段、2線段、3線段
 	 * public for FlowBase.js
@@ -543,7 +552,7 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 		let fromPnt, toPnt;
 		let points;
 		//let pathStr;
-		if (!this.isTypeH && match1SegDistH && match2NodeDistV) {
+		if (!this.isFromTypeH && match1SegDistH && match2NodeDistV) {
 			//1線段-垂直
 			if (isEndDown) {
 				fromPnt = fromDown;
@@ -553,7 +562,7 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 				toPnt = toDown;
 			}
 			points = [fromPnt, { x: fromPnt.x, y: toPnt.y }];
-		} else if (!this.isTypeV && match1SegDistV && match2NodeDistH) {
+		} else if (!this.isFromTypeV && match1SegDistV && match2NodeDistH) {
 			//1線段-水平
 			if (isEndRight) {
 				fromPnt = fromRight;
@@ -563,17 +572,17 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 				toPnt = toRight;
 			}
 			points = [fromPnt, { x: toPnt.x, y: fromPnt.y }];
-		} else if (!this.isTypeV && match2NodeDistH && match2SegDistOut) {
+		} else if (!this.isFromTypeV && match2NodeDistH && match2SegDistOut) {
 			//2線段-水平
 			fromPnt = isEndRight ? fromRight : fromLeft;
 			toPnt = isEndDown ? toUp : toDown;
 			points = [fromPnt, { x: toPnt.x, y: fromPnt.y }, toPnt];
-		} else if (!this.isTypeH && match2NodeDistV && match2SegDistIn) {
+		} else if (!this.isFromTypeH && match2NodeDistV && match2SegDistIn) {
 			//2線段-垂直
 			fromPnt = isEndDown ? fromDown : fromUp;
 			toPnt = isEndRight ? toLeft : toRight;
 			points = [fromPnt, { x: fromPnt.x, y: toPnt.y }, toPnt];
-		} else if (!this.isTypeH && match2NodeDistV) {
+		} else if (!this.isFromTypeH && match2NodeDistV) {
 			//3線段-垂直(2節點內側)
 			if (isEndDown) {
 				fromPnt = fromDown;
@@ -585,7 +594,7 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 
 			let midY = (fromPnt.y + toPnt.y) / 2;
 			points = [fromPnt, { x: fromPnt.x, y: midY }, { x: toPnt.x, y: midY }, toPnt];
-		} else if (!this.isTypeV && match2NodeDistH) {
+		} else if (!this.isFromTypeV && match2NodeDistH) {
 			//3線段-水平(2節點內側)
 			if (isEndRight) {
 				fromPnt = fromRight;
@@ -597,7 +606,7 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 
 			let midX = (fromPnt.x + toPnt.x) / 2;
 			points = [fromPnt, { x: midX, y: fromPnt.y }, { x: midX, y: toPnt.y }, toPnt];
-		} else if (!this.isTypeV) {
+		} else if (!this.isFromTypeV) {
 			//3線段-水平(2節點外側)
 			if (isEndRight) {
 				fromPnt = fromRight;
@@ -612,18 +621,18 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 			//其他狀況: 用直線(非折線)連接起迄點
 			if (isEndDown) {
 				if (isEndRight) {
-					fromPnt = !this.isTypeH ? fromDown : fromRight;
+					fromPnt = !this.isFromTypeH ? fromDown : fromRight;
 					toPnt = toLeft;
 				} else {
-					fromPnt = !this.isTypeH ? fromDown : fromLeft;
+					fromPnt = !this.isFromTypeH ? fromDown : fromLeft;
 					toPnt = toRight;
 				}
 			} else {
 				if (isEndRight) {
-					fromPnt = !this.isTypeH ? fromUp : fromRight;
+					fromPnt = !this.isFromTypeH ? fromUp : fromRight;
 					toPnt = toLeft;
 				} else {
-					fromPnt = !this.isTypeH ? fromUp : fromLeft;
+					fromPnt = !this.isFromTypeH ? fromUp : fromLeft;
 					toPnt = toRight;
 				}
 			}
@@ -709,7 +718,12 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 		//this.arrowPath1.plot(`M ${fromPnt.x} ${fromPnt.y} L ${toPnt.x} ${toPnt.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
 	};
 
+	//id記錄在 path !!
+	this.getId = function () {
+		return this.path.node.dataset.id;
+	};
+
 	//call last
-	this._init(flowBase, fromNode, toNode, lineType);
+	this._init(flowBase, fromNode, toNode, fromType);
 
 }//class FlowLine

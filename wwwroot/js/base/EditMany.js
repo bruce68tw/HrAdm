@@ -379,8 +379,8 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * param id {string} row id
      * return {object} row box
      */
-    this.idToRowBox = function (value) {
-        var filter = _input.fidFilter(this.kid) + `[value='${value}']`;
+    this.idToRowBox = function (id) {
+        var filter = _input.fidFilter(this.kid) + `[value='${id}']`;
         return this.eform.find(filter).parent();
     };
 
@@ -505,7 +505,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
     };
 
     /**
-     * add one row(or empty) into UI
+     * add one row(or empty) into UI, 同時設定新id
      * param {object} (optional) row
      * param {object} (optional) rowsBox, default this.rowsBox
      * return {object} row
