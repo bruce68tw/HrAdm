@@ -241,7 +241,7 @@ function FlowNode(flowBase, json) {
 		this.boxElm.size(this.width, this.height);
 	};
 
-	this.nodeType = function () {
+	this.getNodeType = function () {
 		return this.json.NodeType;
 	};
 

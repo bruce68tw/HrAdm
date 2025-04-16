@@ -299,18 +299,18 @@ function FlowForm(boxId, mNode, mLine) {
     this._idToNode = function (id) {
         return this.divFlowBox.find('.xf-node [value=' + id + ']').closest('.xf-node');
     };
-     */ 
+     */
 
     /**
      * inside element to node object
     this._elmToNode = function (elm) {
         return $(elm).closest(this.NodeFilter);
     };
-     */ 
     this._elmToNodeValue = function (elm, fid) {
         var node = this._elmToNode(elm);
         return this._boxGetValue(node, fid);
     };
+     */
 
     /**
      * node get field value
@@ -607,7 +607,7 @@ function FlowForm(boxId, mNode, mLine) {
     //context menu event
     this.onMenuEdit = function () {
         if (this.nowIsNode)
-            this.showNodeProp(this._elmToNodeValue(this.nowFlowItem, 'NodeType'));
+            this.showNodeProp(this.nowFlowItem.getNodeType());
         else
             this.showLineProp(this.nowFlowItem);
     };
