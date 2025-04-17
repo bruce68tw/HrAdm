@@ -2,7 +2,6 @@
 using Base.Models;
 using Base.Services;
 using Newtonsoft.Json.Linq;
-using System.Threading.Tasks;
 
 namespace HrAdm.Services
 {
@@ -27,11 +26,11 @@ join dbo.XpCode c on c.Type='LeaveType' and l.LeaveType=c.Value
 join dbo.XpCode c2 on c2.Type='FlowStatus' and l.FlowStatus=c2.Value
 order by l.Id
 ",
-                Items = new QitemDto[] {
+                Items = [
                     new() { Fid = "StartTime", Type = QitemTypeEnum.Date },
                     new() { Fid = "LeaveType" },
                     new() { Fid = "FlowStatus" },
-                },
+                ],
             };
         }
 

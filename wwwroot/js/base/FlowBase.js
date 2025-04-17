@@ -89,8 +89,15 @@ function FlowBase(boxId) {
 		return new FlowLine(this, startNode, endNode, json.Id, 'A');
 	};
 	
-	//this.deleteNode
-	//this.deleteLine
+	this.deleteNode = function (node) {
+		let id = node.getId();
+		this.svg.findOne(`g[data-id="${id}"]`);
+	};
+	
+	this.deleteLine = function (line) {
+		let id = line.getId();
+		this.svg.find(`path[data-id="${id}"]`);	//含path2(data-id相同)
+	};
 	
 	this.drawLineStart = function (startNode) {
 		this.startNode = startNode;
@@ -224,6 +231,10 @@ function FlowNode(flowBase, json) {
 		
 		this._setChildPos(startEnd);
 		this._setEvent();
+	};
+
+	this.getLines = function () {
+		return this.lines;
 	};
 
 	//是否為起迄節點
@@ -430,7 +441,21 @@ function FlowNode(flowBase, json) {
 }//class FlowNode
 
 //相關名詞使用 fromNode/toNode 比較合理
-function FlowLine(flowBase, fromNode, toNode, fromType) {
+/**
+ 屬性:
+ flowBase: FlowBase object
+ svg: svg
+ path: line path
+ path2: for right menu
+ fromNode: from node
+ toNode: to node
+ fromType: 起點位置, A(auto),V(上下),H(左右)
+ label: 流程線上的文字, 一般是執行條件
+ //isFromTypeAuto:
+ isFromTypeV:
+ isFromTypeH:
+*/
+function FlowLine(flowBase, fromNode, toNode, fromType, label) {
 	//Cnt:中心點, Side:節點邊界, 數值20大約1公分
 	this.Max1SegDist = 6;	//2中心點的最大距離, 小於此值可建立1線段(表示在同一水平/垂直位置), 同時用於折線圓角半徑
 	this.Min2NodeDist = 25;	//2節點的最小距離, 大於此值可建立line(1,3線段)
@@ -445,26 +470,20 @@ function FlowLine(flowBase, fromNode, toNode, fromType) {
 	this.FromTypeV = 'V';	//垂直(上下)
 	this.FromTypeH = 'H';	//水平(左右)
 
-	/**
-	 flowBase: FlowBase object
-	 svg: svg
-	 path: line path
-	 path2: for right menu
-	 fromNode: from node
-	 toNode: to node
-	 fromType: 起點位置, A(auto),V(上下),H(左右)
-	 //isFromTypeAuto:
-	 isFromTypeV:
-	 isFromTypeH:
-	*/
-	this._init = function (flowBase, id, fromNode, toNode, fromType) {
+	this._init = function (flowBase, id, fromNode, toNode, fromType, label) {
 		this.flowBase = flowBase;
 		this.svg = flowBase.svg;
 		this.fromNode = fromNode;
 		this.toNode = toNode;
-		this.path = this.svg.path('').addClass('xf-line');
+		this.label = label || '';
+
+		//path
+		this.path = this.svg.path('')
+			.attr('data-id', id)
+			.addClass('xf-line');
 		// 透明的寬線作為觸發區域（放在下面）
 		this.path2 = this.svg.path('')
+			.attr('data-id', id)
 			.fill('none')
 			.stroke({ width: 10, color: 'transparent' }) // 注意：透明但可接收事件
 			.attr({ 'pointer-events': 'stroke' });       // 只針對 stroke 有事件
@@ -499,10 +518,14 @@ function FlowLine(flowBase, fromNode, toNode, fromType) {
 		//this.isFromTypeAuto = (!this.isFromTypeV && !this.isFromTypeH) || (fromType == this.FromTypeAuto);
 	};
 
-	this.setLabel = function (label) {
-		//todo
+	this.getLabel = function () {
+		return this.label;
 	};
 	
+	this.setLabel = function (label) {
+		this.label = label;
+	};
+
 	/**
 	 * 依次考慮使用1線段、2線段、3線段
 	 * public for FlowBase.js
@@ -724,6 +747,6 @@ function FlowLine(flowBase, fromNode, toNode, fromType) {
 	};
 
 	//call last
-	this._init(flowBase, fromNode, toNode, fromType);
+	this._init(flowBase, fromNode, toNode, fromType, label);
 
 }//class FlowLine

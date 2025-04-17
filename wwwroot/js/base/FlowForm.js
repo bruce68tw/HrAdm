@@ -184,64 +184,10 @@ function FlowForm(boxId, mNode, mLine) {
      *   2.mouse down to hide context menu
      */
     this._setFlowEvent = function () {
-        var flowBase = this.flowBase;
+
+        //hide context menu
         var me = this;
-
-        // bind a click listener to each connection; the connection is deleted. you could of course
-        // just do this: jsPlumb.bind('click', jsPlumb.detach), but I wanted to make it clear what was
-        // happening.
-        //(定義)Notification a Connection was clicked.
-        /*
-        flowBase.bind('click', function (c) {
-            //this.showNodeProp();
-            this.modalNodeProp.modal('show');
-        });
-        */
-
-        /* todo: temp remark
-        //line(connection) show context menu
-        flowBase.bind('contextmenu', function (elm, event) {
-            //"this" not work here !!
-            me.showPopupMenu(elm, event, false);
-        });
-        */
-
-        /*
-        //event: before build connection
-        //info: connection        
-        //flowBase.bind('connection', function (info) {
-        flowBase.bind('beforeDrop', function (info) {
-            //if (this.loading)
-            //    return true;
-
-            //if connection existed, return false for stop 
-            //info.source did not work here !!
-            var conn = info.connection;
-            if (flowBase.getConnections({ source: conn.source, target: conn.target }).length > 0)
-                return false;
-
-            //get source node & type
-            var prop = me.getLineProp('');
-
-            //set conn style & label
-            conn.setPaintStyle(prop.style);    //real connection
-            me._setLineLabel(conn, prop.label);
-
-            //add parameters(line model) into connection
-            var row = {
-                StartNode: me._elmToNodeValue(conn.source, 'Id'),
-                EndNode: me._elmToNodeValue(conn.target, 'Id'),
-                CondStr: '',
-                Sort: 9,
-            };
-            me._setLineKey(conn, me.addLine(row));
-
-            return true;
-        });
-        */
-
-        //hide context menu (jsPlumb no mousedown event !!)
-        $(document).bind('mousedown', function (e) {
+        $(document).on('mousedown', function (e) {
             //if (_obj.isShow(me.popupMenu))
             //    me.popupMenu.hide(100);
             
@@ -278,20 +224,17 @@ function FlowForm(boxId, mNode, mLine) {
 
     //add new node
     this.addNode = function (name, nodeType) {
-        //json row initial value
+        //mNode新筆一筆資料, 會產生新id
         var json = {
             Name: name,
             NodeType: nodeType,
             PosX: 100,
             PosY: 100,
         };
-
-		//mNode新筆一筆資料, 會產生新id
         var row = this.mNode.addRow(this._setNodeClass(json));
 		
 		//flow add node
 		this.flowBase.addNode(row);
-        //this._setNodeEvent(node);   //set node event
     };
 
     /**
@@ -317,17 +260,16 @@ function FlowForm(boxId, mNode, mLine) {
      * param node {object} node object
      * param fid {string} field id
      * return {string}
-     */ 
     this._boxGetValue = function (node, fid) {
         return _itext.get(fid, node);
     };
+     */
 
     /**
      * node get field values
      * param node {object} node object
      * param fids {strings} field id array
      * return {json}
-     */ 
     this._boxGetValues = function (node, fids) {
         var json = {};
         for (var i = 0; i < fids.length; i++) {
@@ -336,19 +278,19 @@ function FlowForm(boxId, mNode, mLine) {
         }
         return json;
     };
+     */
 
-    this.deleteNode = function (nodeElm) {
-        //delete from & to lines
-        var flowBase = this.flowBase;
-        this.deleteLines(flowBase.getConnections({ source: nodeElm }));
-        this.deleteLines(flowBase.getConnections({ target: nodeElm }));
+    this.deleteNode = function (node) {
+        //delete mNode
+        this.mNode.deleteRow(node.getId());
 
-        //add deleted row of node
-        var node = $(nodeElm);
-        this.mNode.deleteRow(this._getObjKey(node));
+        //delete mLine
+        node.getLines().forEach(line => {
+            this.mLine.deleteRow(line.getId());
+        });
 
-        //delete node 
-        $(nodeElm).remove();
+        //delete flowNode(自動刪除相關流程線) 
+        this.flowBase.deleteNode();
     };
     //#endregion (node function)
 
@@ -377,7 +319,7 @@ function FlowForm(boxId, mNode, mLine) {
         //set label
         this._setLineLabel(conn, prop.label);
     };
-     */ 
+     */
 
     /**
      * add flow line into hide UI for crud
@@ -394,7 +336,6 @@ function FlowForm(boxId, mNode, mLine) {
 
     /**
      * set connection key
-     */ 
     this._setLineKey = function (conn, key) {
         var row = {};
         row['Id'] = key;
@@ -406,11 +347,11 @@ function FlowForm(boxId, mNode, mLine) {
         //return (sourceType == this.StartNode || sourceType == this.AutoNode);
         return (sourceType == this.StartNode);
     };
+     */
 
-    /**
+    /** ??
      * get line property: style, label
      * return {json} 
-     */ 
     this.getLineProp = function (condStr) {
         return {
             //type: type,
@@ -418,16 +359,18 @@ function FlowForm(boxId, mNode, mLine) {
             label: this._condStrToLabel(condStr),
         }
     };
+     */
 
+    /*
     this._getLineElmKey = function (conn) {
         return conn.getParameters()['Id'];
     };
+    */
 
     /**
      * get object(node/line) key
      * param obj {object}
      * return {string} key value
-     */
     this._getObjKey = function (obj) {
         return _itext.get('Id', obj);
     };
@@ -439,35 +382,40 @@ function FlowForm(boxId, mNode, mLine) {
         obj.setLabel(label);
         //conn.getOverlay('label').setLabel(label);
     };
+     */
 
+    /*
     //delete line with warning msg
     this.deleteLineWithMsg = function (conn) {
         _tool.ans('delete this line ?', function () {
             this.deleteLine(conn);
         });
     };
-    //delete line without warning msg
-    this.deleteLine = function (conn) {
-        //add deleted row
-        var json = conn.getParameters();    //model
-        this.mLine.deleteRow(json.Id);
+    */
 
-        //delete conn
-        this.flowBase.deleteConnection(conn);
+    //delete line without warning msg
+    this.deleteLine = function (line) {
+        //delete mLine
+        this.mLine.deleteRow(line.getId());
+
+        //delete flowLine
+        this.flowBase.deleteLine(line);
     };
-    this.deleteLines = function (conns) {
-        for (var i = 0; i < conns.length; i++) {
-            this.deleteLine(conns[i]);
+    /*
+    this.deleteLines = function (lines) {
+        for (var i = 0; i < lines.length; i++) {
+            this.deleteLine(lines[i]);
         }
     };
+    */
     //#endregion (line function)
 
-    //convert condiction string to label string
+    //將Db的條件內容轉換為顯示內容
     this._condStrToLabel = function (str) {
         if (_str.isEmpty(str))
             return '';
 
-        var hasOr = str.indexOf(this.OrSep) > 0;
+        var hasOr = str.indexOf(this.OrSep) > 0;    //先判斷
         for (var i = 0; i < this.condOpExprs.length; i++)
             str = str.replace(this.condOpExprs[i], this.condOpShows[i]);
         if (hasOr)
@@ -475,33 +423,34 @@ function FlowForm(boxId, mNode, mLine) {
         return str;
     };
 
-    //convert condStr to List<Cond>
+    //convert condStr to List<Cond> for 顯示編輯畫面
     this._condStrToList = function (str) {
         if (_str.isEmpty(str))
             return null;
 
-        var list = [];
-        var k = 0;
         var orList = str.split(this.OrSep);
         var orLen = orList.length;
         var hasOr = (orLen > 1);
+        var result = [];
+        var ary = 0;
         for (var i = 0; i < orLen; i++) {
             var andList = orList[i].split(this.AndSep);
             for (var j = 0; j < andList.length; j++) {
                 var cols = andList[j].split(this.ColSep);
-                list[k] = {
+                result[ary] = {
                     //AndOr: hasOr ? 'O' : 'A',
                     AndOr: hasOr ? this.OrSep : this.AndSep,
                     Fid: cols[0],
                     Op: cols[1],
                     Value: cols[2],
                 };
-                k++;
+                ary++;
             }
         }
-        return list;
+        return result;
     };
 
+    //編輯畫面讀取的是 condStr, flowLine顯示的是 label
     //get line condition string
     this._getLineLabel = function () {
         var me = this;
@@ -517,10 +466,12 @@ function FlowForm(boxId, mNode, mLine) {
         return condStr;
     };
 
-    this.showNodeProp = function (nodeType) {
-        var node = this._elmToNode(this.nowFlowItem);
-        var row = this._boxGetValues(node, ['NodeType', 'Name', 'SignerType', 'SignerValue']);
-        _form.loadRow(this.modalNodeProp, row);
+    this.showNodeProp = function (node) {
+        //var node = this._elmToNode(this.nowFlowItem);
+        //var row = this._boxGetValues(node, ['NodeType', 'Name', 'SignerType', 'SignerValue']);
+        //var id = node.getId();
+        var rowBox = this.mNode.idToRowBox(node.getId());
+        _form.loadRow(this.modalNodeProp, _form.toRow(rowBox));
 
         //show modal
         _modal.showO(this.modalNodeProp);   //.modal('show');
@@ -529,17 +480,16 @@ function FlowForm(boxId, mNode, mLine) {
     //param line {FlowLine} flow line 
     this.showLineProp = function (line) {
         //debugger;
-        var form = this.modalLineProp.find('form');
         //var line = conn.getParameters();   //line model
         //var line = this._connToLine(conn);
         //var lineType = line.LineType;
 
-		var id = line.getId();
-		var rowBox = this.mLine.idToRowBox(id);
+        var rowBox = this.mLine.idToRowBox(line.getId());
 		
         //show fields
         //_iradio.set('LineType', lineType, form);
         //this.onChangeLineType(lineType); //switch input
+        var form = this.modalLineProp.find('form');
         _iread.set('FromNodeName', line.fromNode.getValue('Name'), form);
         _iread.set('ToNodeName', line.toNode.getValue('Name'), form);
         _iselect.set('FromType', line.getValue('FromType'), form);
@@ -552,21 +502,24 @@ function FlowForm(boxId, mNode, mLine) {
         //    line.CondStr = '';
 
         //load line conditions rows
-        this.tbodyLineCond.empty();
-        var condList = this._condStrToList(this._boxGetValue(line, 'CondStr'));
+        var tbody = this.modalLineProp.find('tbody');
+        tbody.empty();
+        var condList = this._condStrToList(line.getLabel());    //??
         if (condList != null) {
             for (var i = 0; i < condList.length; i++) {
                 var newCond = $(this.tplLineCond);
                 _form.loadRow(newCond, condList[i]);
-                this.tbodyLineCond.append(newCond);
+                tbody.append(newCond);
             }
         }
     };
 
+    /*
     //jsplumb connection to line object
     this._connToLine = function (conn) {
         return this._idToLine(this._getLineElmKey(conn));
     };
+    */
 
     //id to line object
     this._idToLine = function (id) {
@@ -607,7 +560,7 @@ function FlowForm(boxId, mNode, mLine) {
     //context menu event
     this.onMenuEdit = function () {
         if (this.nowIsNode)
-            this.showNodeProp(this.nowFlowItem.getNodeType());
+            this.showNodeProp(this.nowFlowItem);
         else
             this.showLineProp(this.nowFlowItem);
     };
