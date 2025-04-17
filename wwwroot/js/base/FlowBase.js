@@ -86,7 +86,7 @@ function FlowBase(boxId) {
 		//	id = (this.lines.length + 1) * (-1);
 		let startNode = this.findNode(json.StartNode);
 		let endNode = this.findNode(json.EndNode);
-		return new FlowLine(this, startNode, endNode, json.Id, 'A');
+		return new FlowLine(this, json.Id, startNode, endNode, 'A');
 	};
 	
 	this.deleteNode = function (node) {
@@ -435,6 +435,14 @@ function FlowNode(flowBase, json) {
 		this.lines.splice(index, 1);
 	};
 
+	this.update = function (json) {
+		//todo
+	};
+
+	this.getValue = function (fid) {
+		return this.json[fid];
+	};
+
 	//call last
 	this._init(flowBase, json);
 
@@ -455,7 +463,7 @@ function FlowNode(flowBase, json) {
  isFromTypeV:
  isFromTypeH:
 */
-function FlowLine(flowBase, fromNode, toNode, fromType, label) {
+function FlowLine(flowBase, id, fromNode, toNode, fromType, label) {
 	//Cnt:中心點, Side:節點邊界, 數值20大約1公分
 	this.Max1SegDist = 6;	//2中心點的最大距離, 小於此值可建立1線段(表示在同一水平/垂直位置), 同時用於折線圓角半徑
 	this.Min2NodeDist = 25;	//2節點的最小距離, 大於此值可建立line(1,3線段)
@@ -746,7 +754,11 @@ function FlowLine(flowBase, fromNode, toNode, fromType, label) {
 		return this.path.node.dataset.id;
 	};
 
+	this.getValue = function (fid) {
+		return this.json[fid];
+	};
+
 	//call last
-	this._init(flowBase, fromNode, toNode, fromType, label);
+	this._init(flowBase, id, fromNode, toNode, fromType, label);
 
 }//class FlowLine

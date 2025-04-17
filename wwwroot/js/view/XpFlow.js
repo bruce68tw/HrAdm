@@ -27,8 +27,8 @@
         _me.divEditTbar = $('#divEditTbar');
 
         //initial edit one/many, rowsBox(參數2) 使用 eform
-        _me.mNode = new EditMany('Id', 'eformNode', 'tplNode', '.xd-node');
-        _me.mLine = new EditMany('Id', 'eformLine', 'tplLine', '.xd-line', 'Sort');
+        _me.mNode = new EditMany('Id', 'eformNodes', 'tplNode', '.xd-node');
+        _me.mLine = new EditMany('Id', 'eformLines', 'tplLine', '.xd-line', 'Sort');
         new CrudR(config, [null, _me.mNode, _me.mLine]);
 
         //initial flow edit form

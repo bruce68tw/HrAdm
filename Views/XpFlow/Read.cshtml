@@ -123,11 +123,11 @@
         </form>
 
         <!-- flowNodes editMany -->
-        <form id='eformNode' class='xg-hide'>
+        <form id='eformNodes' class='xg-hide'>
         </form>
 
         <!-- flowLines editMany -->
-        <form id='eformLine' class='xg-hide'>
+        <form id='eformLines' class='xg-hide'>
         </form>
     </div>
 
@@ -195,7 +195,7 @@
                 <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="eformNode" class="form-horizontal xg-form" style="padding:5px 20px;">
+                <form class="form-horizontal xg-form" style="padding:5px 20px;">
                     <vc:xi-hide dto='new() { Fid="NodeType" }' />
                     @*await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "Node Type :", Fid = "NodeType", rows = ViewBag.NodeTypes, cols = cols })*@
                     @*await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "SignTime :", Fid = "LimitType", rows = ViewBag.NodeLimitTypes, cols = cols })*@
@@ -242,7 +242,7 @@
                                     <th width="85px"></th>
                                 </tr>
                             </thead>
-                            <tbody id="tbodyLineCond"></tbody>
+                            <tbody></tbody>
                         </table>
                     </div>
                 </form>

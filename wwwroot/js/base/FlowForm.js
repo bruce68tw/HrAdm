@@ -79,11 +79,12 @@ function FlowForm(boxId, mNode, mLine) {
         //this.popupMenu = $('.xf-menu');
         //this.divFlowBox = $('#' + boxId);	//??
         this.divLinesBox = $('#divLinesBox');       //??hidden
-        this.tbodyLineCond = $('#tbodyLineCond');     //modalLineProp tbody for line conds
-        this.eformNode = $('#eformNode');           //nodes edit form for editMany
-        this.eformLine = $('#eformLine');           //lines edit form for editMany
+        this.eformNodes = $('#eformNodes');           //nodes edit form for editMany
+        this.eformLines = $('#eformLines');           //lines edit form for editMany
         this.modalNodeProp = $('#modalNodeProp');
         this.modalLineProp = $('#modalLineProp');
+        this.eformNodeProp = this.modalNodeProp.find('form');   //modalNodeProp form
+        this.tbodyLineCond = this.modalLineProp.find('tbody');  //modalLineProp tbody for line conds
 
         //node/line template        
         this.tplNode = $('#tplNode').html();
@@ -222,16 +223,20 @@ function FlowForm(boxId, mNode, mLine) {
 
     //#region node function
 
-    //add new node
-    this.addNode = function (name, nodeType) {
+    /**
+     * add new node
+     * param nodeType {string}
+     * param name {string} only for normalType node
+     */ 
+    this.addNode = function (nodeType, name) {
         //mNode新筆一筆資料, 會產生新id
         var json = {
-            Name: name,
+            Name: (nodeType == _flow.TypeNormal) ? name : '',
             NodeType: nodeType,
             PosX: 100,
             PosY: 100,
         };
-        var row = this.mNode.addRow(this._setNodeClass(json));
+        var row = this.mNode.addRow(json);  //會產生id
 		
 		//flow add node
 		this.flowBase.addNode(row);
@@ -452,7 +457,7 @@ function FlowForm(boxId, mNode, mLine) {
 
     //編輯畫面讀取的是 condStr, flowLine顯示的是 label
     //get line condition string
-    this._getLineLabel = function () {
+    this._getCondStr = function () {
         var me = this;
         var condStr = '';
         this.tbodyLineCond.find('tr').each(function (idx) {
@@ -502,14 +507,14 @@ function FlowForm(boxId, mNode, mLine) {
         //    line.CondStr = '';
 
         //load line conditions rows
-        var tbody = this.modalLineProp.find('tbody');
-        tbody.empty();
-        var condList = this._condStrToList(line.getLabel());    //??
+        this.tbodyLineCond.empty();
+        var condStr = _itext.get('CondStr', rowBox)
+        var condList = this._condStrToList(condStr);
         if (condList != null) {
             for (var i = 0; i < condList.length; i++) {
                 var newCond = $(this.tplLineCond);
                 _form.loadRow(newCond, condList[i]);
-                tbody.append(newCond);
+                this.tbodyLineCond.append(newCond);
             }
         }
     };
@@ -519,7 +524,6 @@ function FlowForm(boxId, mNode, mLine) {
     this._connToLine = function (conn) {
         return this._idToLine(this._getLineElmKey(conn));
     };
-    */
 
     //id to line object
     this._idToLine = function (id) {
@@ -527,25 +531,26 @@ function FlowForm(boxId, mNode, mLine) {
     };
 
     this._idToLineBox = function (id) {
-        return this.eformLine.find('.xd-line [value=' + id + ']').closest('.xd-line');
+        return this.eformLines.find('.xd-line [value=' + id + ']').closest('.xd-line');
     };
+    */
 
     //#region events
     //on add start node
     this.onAddStartNode = function () {
         //check, only one start node allow
-        if (this.eformNode.find(this.StartNodeFilter).length > 0) {
+        if (this.eformNodes.find(this.StartNodeFilter).length > 0) {
             //_tool.msg(this.R.StartNodeExist);
             _tool.msg('Start Node Already Existed !');
             return;
         }
 
         //add node
-        this.addNode('Start', this.StartNode);
+        this.addNode(_flow.TypeStart);
     };
     //on add end node
     this.onAddEndNode = function () {
-        this.addNode('End', this.EndNode);
+        this.addNode(_flow.TypeEnd);
     };
     /*
     this.onAddAutoNode = function () {
@@ -554,7 +559,7 @@ function FlowForm(boxId, mNode, mLine) {
     */
     //on add normal node
     this.onAddNormalNode = function () {
-        this.addNode('Node', this.NormalNode);
+        this.addNode(this.NormalNode, '節點');
     };
 
     //context menu event
@@ -568,11 +573,11 @@ function FlowForm(boxId, mNode, mLine) {
     this.onMenuDelete = function () {
         var me = this;
         if (me.nowIsNode) {
-            _tool.ans('delete this node ?', function () {
+            _tool.ans('是否確定刪除這個節點和流程線?', function () {
                 me.deleteNode(me.nowFlowItem);
             });
         } else {
-            _tool.ans('delete this line ?', function () {
+            _tool.ans('是否確定刪除這一條流程線?', function () {
                 me.deleteLine(me.nowFlowItem);
             });
         }
@@ -597,20 +602,25 @@ function FlowForm(boxId, mNode, mLine) {
     this.onModalNodeOk = function () {
         //check input
 
+        //set new value
+        var row = _form.toRow(this.eformNodeProp);
+
+        //update node display name
+        var node = this.nowFlowItem;
+        var rowBox = this.mNode.idToRowBox(node.getId());
+        _form.loadRow(rowBox, row);
+
+        node.update(row);
+
         //hide modal
         _modal.hideO(this.modalNodeProp);
 
-        //set new value
-        var row = _form.toRow(this.eformNode);
-
-        //update node display name
-        var nodeObj = $(this.nowFlowItem);
-        nodeObj.find('.xd-name').text(row.Name);
-
+        /*
         //update node form fields
         _itext.set('Name', row.Name, nodeObj);
         _itext.set('SignerType', row.SignerType, nodeObj);
         _itext.set('SignerValue', row.SignerValue, nodeObj);
+        */
 
         //change node style, has xf-ep div at the end !!
         //var html = row.Name + '<div class="xf-ep" action="begin"></div>';
@@ -628,37 +638,36 @@ function FlowForm(boxId, mNode, mLine) {
     //line prop click ok
     this.onModalLineOk = function () {
         //check input
-		var form = this.modalLineProp;
+		//var form = this.modalLineProp;
 		
-        //var lineType = _iradio.get('LineType', this.eformLine);
+        //var lineType = _iradio.get('LineType', this.eformLines);
         //_assert.inArray(lineType, ['0','1','2']);
 
         //conds to string
-        //var condStr = this._getLineLabel();
+        //var condStr = this._getCondStr();
 
         //set new value
         //write into line, this.nowFlowItem is line connection
-        //var form = this.eformLine;
+        //var form = this.eformLines;
         //var conn = this.nowFlowItem;
         //conn.setParameter('LineType', lineType);
 		
 		//update mLine
-		var flowLine = this.nowFlowItem;
         var row = {
-            CondStr: this._getLineLabel(),
-            Sort: _itext.get('Sort', form),
+            CondStr: this._getCondStr(),
+            Sort: _itext.get('Sort', this.eformLineProp),
         };
         //var line = this._connToLine(conn);
         //_form.loadRow(line, row);
-		var id = flowLine.getId();
-		var lineBox = this._idToLineBox(id);
-        _form.loadRow(lineBox, row);
+        var line = this.nowFlowItem;
+        var rowBox = this.mLine.idToRowBox(line.getId());
+        _form.loadRow(rowBox, row);
 		
 		//update flowLine
-		flowLine.setLabel(row.CondStr);
+        line.setLabel(this._condStrToLabel(row.CondStr));
 		
         //hide modal
-        _modal.hideO(form);
+        _modal.hideO(this.modalLineProp);
 
 		/*
         //change line label
