@@ -12,7 +12,7 @@ var _flow = {
 /**
  * 自定函數(由flow內部觸發):
  * void fnMoveNode(node, x, y): after move node to (x,y)
- * void fnAddLine(startNode, endNode): when add line
+ * void fnAddLine(fromNode, toNode): when add line
  * void fnShowMenu(isNode, flowItem, event);
  * void fnDropLineEnd(oldNode, newNode): after drop line end point
  */
@@ -84,9 +84,9 @@ function FlowBase(boxId) {
 		//this.lineCount++;
 		//if (id == null)
 		//	id = (this.lines.length + 1) * (-1);
-		let startNode = this.findNode(json.StartNode);
-		let endNode = this.findNode(json.EndNode);
-		return new FlowLine(this, json.Id, startNode, endNode, 'A');
+		//let startNode = this.idToNode(json.StartNodeId);
+		//let endNode = this.idToNode(json.EndNodeId);
+		return new FlowLine(this, json);
 	};
 	
 	this.deleteNode = function (node) {
@@ -99,18 +99,18 @@ function FlowBase(boxId) {
 		this.svg.find(`path[data-id="${id}"]`);	//含path2(data-id相同)
 	};
 	
-	this.drawLineStart = function (startNode) {
-		this.startNode = startNode;
+	this.drawLineStart = function (fromNode) {
+		this.fromNode = fromNode;
 	};
 
 	//return new line
-	this.drawLineEnd = function (endNode) {
+	this.drawLineEnd = function (toNode) {
 		var line = new FlowLine(this, this.startNode, endNode);
 		this.startNode = null;
 		return line;
 	};
 	
-	this.findNode = function (id) {
+	this.idToNode = function (id) {
 		//elm.node 指向dom
 		return this.nodes.find(node => node.getId() == id);
 	};
@@ -131,7 +131,7 @@ function FlowNode(flowBase, json) {
 	 self: this
 	 flowBase: FlowBase object
 	 svg: svg
-	 json: node json, 欄位與後端XgFlowE相同: Id, FlowId, NodeType, Name(外面可更新), PosX, PosY, Width(外面可更新), Height(外面可更新)
+	 json: node json, 欄位與後端XgFlowE相同: Id(不變), NodeType(不變), Name(外面可更新), PosX, PosY, Width(外面可更新), Height(外面可更新)
 	 elm: svg group element(與 html element不同)
 	 boxElm: border element
 	 textElm: text element
@@ -388,8 +388,8 @@ function FlowNode(flowBase, json) {
 			// 檢查座標值是否有效
 			if (endElm) {
 				me._markNode(endElm, false);					
-				//me.flowBase.drawLineEnd(me.flowBase.findNode(endElm.node.dataset.id));
-				var line = flowBase.drawLineEnd(flowBase.findNode(me._getIdByElm(endElm)));
+				//me.flowBase.drawLineEnd(me.flowBase.idToNode(endElm.node.dataset.id));
+				var line = flowBase.drawLineEnd(flowBase.idToNode(me._getIdByElm(endElm)));
 				endElm = null;
 
 				//trigger event
@@ -439,8 +439,12 @@ function FlowNode(flowBase, json) {
 		//todo
 	};
 
-	this.getValue = function (fid) {
-		return this.json[fid];
+	this.getName = function () {
+		return this.textElm.text();
+	};
+
+	this.setName = function (name) {
+		return this.textElm.text(name);
 	};
 
 	//call last
@@ -450,20 +454,21 @@ function FlowNode(flowBase, json) {
 
 //相關名詞使用 fromNode/toNode 比較合理
 /**
- 屬性:
- flowBase: FlowBase object
- svg: svg
- path: line path
- path2: for right menu
- fromNode: from node
- toNode: to node
- fromType: 起點位置, A(auto),V(上下),H(左右)
- label: 流程線上的文字, 一般是執行條件
- //isFromTypeAuto:
- isFromTypeV:
- isFromTypeH:
+  屬性:
+  flowBase: FlowBase object
+  json: flowLine json, 欄位與後端XgFlowE相同: Id(不變), FromNodeId, ToNodeId, FromType(不變), Label
+  svg: svg
+  path: line path
+  path2: for right menu
+  fromNode: from node
+  toNode: to node
+  //fromType: 起點位置, A(auto),V(上下),H(左右)
+  //label: 流程線上的文字, 一般是執行條件
+  //isFromTypeAuto:
+  isFromTypeV:
+  isFromTypeH:
 */
-function FlowLine(flowBase, id, fromNode, toNode, fromType, label) {
+function FlowLine(flowBase, json, fromNode, toNode) {
 	//Cnt:中心點, Side:節點邊界, 數值20大約1公分
 	this.Max1SegDist = 6;	//2中心點的最大距離, 小於此值可建立1線段(表示在同一水平/垂直位置), 同時用於折線圓角半徑
 	this.Min2NodeDist = 25;	//2節點的最小距離, 大於此值可建立line(1,3線段)
@@ -478,12 +483,17 @@ function FlowLine(flowBase, id, fromNode, toNode, fromType, label) {
 	this.FromTypeV = 'V';	//垂直(上下)
 	this.FromTypeH = 'H';	//水平(左右)
 
-	this._init = function (flowBase, id, fromNode, toNode, fromType, label) {
+	this._init = function (flowBase, json, fromNode, toNode) {
+		json = json || {};
+		json.FromType = json.FromType || this.FromTypeAuto;
+		json.Label = json.Label || '';
+
 		this.flowBase = flowBase;
+		this.json = json;
 		this.svg = flowBase.svg;
-		this.fromNode = fromNode;
-		this.toNode = toNode;
-		this.label = label || '';
+		this.fromNode = fromNode || this.flowBase.idToNode(json.FromNodeId);
+		this.toNode = toNode || this.flowBase.idToNode(json.ToNodeId);
+		//this.label = label || '';
 
 		//path
 		this.path = this.svg.path('')
@@ -495,7 +505,6 @@ function FlowLine(flowBase, id, fromNode, toNode, fromType, label) {
 			.fill('none')
 			.stroke({ width: 10, color: 'transparent' }) // 注意：透明但可接收事件
 			.attr({ 'pointer-events': 'stroke' });       // 只針對 stroke 有事件
-
 
 		// 用來儲存箭頭的路徑
 		this.arrowPath = this.svg.path('').addClass('xf-arrow');

@@ -495,8 +495,8 @@ function FlowForm(boxId, mNode, mLine) {
         //_iradio.set('LineType', lineType, form);
         //this.onChangeLineType(lineType); //switch input
         var form = this.modalLineProp.find('form');
-        _iread.set('FromNodeName', line.fromNode.getValue('Name'), form);
-        _iread.set('ToNodeName', line.toNode.getValue('Name'), form);
+        _iread.set('FromNodeName', line.fromNode.getName(), form);
+        _iread.set('ToNodeName', line.toNode.getName(), form);
         _iselect.set('FromType', line.getValue('FromType'), form);
         _itext.set('Sort', _itext.get('Sort', rowBox), form);
 
