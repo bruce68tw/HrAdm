@@ -67,6 +67,10 @@
 	stroke: red;
 }
 
+.xf-line-text {
+	fill: black;	
+}
+
 /* 流程線末端箭頭 */
 .xf-arrow {
 	stroke: #898484;

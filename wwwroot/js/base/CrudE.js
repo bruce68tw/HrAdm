@@ -1,7 +1,7 @@
 ﻿/**
  * crud edit function
  *   合併 _edit.js
- * 寫入 this properties:
+ * 寫入 _me properties:
  *   fnAfterSwap:
  *   fnAfterOpenEdit:
  *   fnUpdateOrViewA: see _updateOrViewA
@@ -143,7 +143,8 @@ function CrudE(edits) {
     //call fnAfterOpenEdit() if existed
     // _afterOpenEdit -> _afterOpen
     this._afterOpenEdit = function(fun, json) {
-        if (_fun.hasValue(_me.fnAfterOpenEdit))
+        //if (_fun.hasValue(_me.fnAfterOpenEdit))
+        if (_me.fnAfterOpenEdit)
             _me.fnAfterOpenEdit(fun, json);
     };
 

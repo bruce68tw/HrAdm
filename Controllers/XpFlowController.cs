@@ -21,6 +21,7 @@ namespace HrAdm.Controllers
                 ViewBag.SignerTypes = await _XpCode.SignerTypesA(locale0, db);
                 ViewBag.AndOrs = await _XpCode.AndOrsA(locale0, db);
                 ViewBag.LineOps = await _XpCode.LineOpsA(locale0, db);
+                ViewBag.LineFromTypes = await _XpCode.LineFromTypesA(locale0, db);
             }
             return View();
         }

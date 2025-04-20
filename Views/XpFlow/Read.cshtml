@@ -6,9 +6,6 @@
     var cols = "4,6";
 }
 
-<!--
-<link href="~/css/lib/jsplumbtoolkit-defaults-2.15.6.css" rel="stylesheet">
--->
 <style>
     .xu-prog {
         height: 100%;
@@ -73,7 +70,7 @@
         @await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuXpFlow"].Value } })
     </div>
     <div class="col-md-6" id="divEditTbar" style="padding-top: 6px; display:none">
-        <vc:xg-save-back align="right" />
+        <vc:xg-save-back align="right me-3" />
     </div>
 </div>
 
@@ -105,7 +102,7 @@
     </div>
 
     <!-- edit form -->
-    <div id="divEdit" class="xg-hide jtk-surface jtk-surface-nopan">
+    <div id="divEdit" class="xg-hide">
         <form id='eform' class='xg-form'>
             <vc:xi-hide dto='new() { Fid = "Id" }' />
             <vc:xi-text dto='new() { Fid = "Code" , MaxLen = 20, Required = true, BoxClass = "xu-text" , InputTip = "流程代碼" }' />
@@ -225,9 +222,10 @@
                     <vc:xi-read dto='new() { Title = "起始節點 :", Fid = "FromNodeName", Cols = cols }' />
                     <vc:xi-read dto='new() { Title = "結束節點 :", Fid = "ToNodeName", Cols = cols }' />
                     <vc:xi-int dto='new() { Title = "執行順序" + " :", Fid = "Sort", Required = true, Cols = "4,2" }' />
+                    <vc:xi-select dto='new() { Title = "起點位置" + " :", Fid = "FromType", Rows = ViewBag.LineFromTypes, Cols = "4,4" }' />
                     @*Html.XiNum("Sort", "", "Run Order :", true, cols, new PropNumModel() { IsDigit = true, MaxValue = 10, Width = "80px" })*@
                     @*Html.XiRadios("LineType", "0", "Run Type :", ViewBag.LineTypes, 9)*@
-                    <div id="divLineCondBox" class="row zz_xg-row">
+                    <div class="row">
                         <div class="col-md-12" style="margin:5px 0 2px -10px;">
                             @R["RunCond"]
                             <button type="button" class="btn btn-sm btn-primary" onclick="_me.flowForm.onAddLineCond()">@br.BtnAddRow</button>

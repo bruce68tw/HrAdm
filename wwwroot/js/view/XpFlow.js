@@ -24,6 +24,7 @@
             ],
         };
 
+        //save, back button
         _me.divEditTbar = $('#divEditTbar');
 
         //initial edit one/many, rowsBox(參數2) 使用 eform
@@ -101,7 +102,7 @@
 
     //getUpdJson
     mNode_getUpdJson: function (upKey) {
-        return _me.mNode.getUpdJsonByRsb(upKey, _me.mNode.eform);
+        return _me.mNode.getUpdJsonByRsb(upKey);
     },
 
     //return boolean
@@ -115,7 +116,7 @@
 
     //getUpdJson
     mLine_getUpdJson: function (upKey) {
-        return _me.mLine.getUpdJsonByRsb(upKey, _me.flowForm.divLinesBox);
+        return _me.mLine.getUpdJsonByRsb(upKey);
     },
 
     //return boolean

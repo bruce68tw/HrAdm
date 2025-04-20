@@ -218,6 +218,11 @@ function FlowForm(boxId, mNode, mLine) {
      */
     this.loadLines = function (rows) {
         this.mLine.loadRowsByRsb(rows, true);
+
+        //set label
+        for (var i = 0; i < rows.length; i++) {
+            rows[i].Label = this._condStrToLabel(rows[i].CondStr);
+        }
         this.flowBase.loadLines(rows);
     };
 
@@ -497,7 +502,7 @@ function FlowForm(boxId, mNode, mLine) {
         var form = this.modalLineProp.find('form');
         _iread.set('FromNodeName', line.fromNode.getName(), form);
         _iread.set('ToNodeName', line.toNode.getName(), form);
-        _iselect.set('FromType', line.getValue('FromType'), form);
+        _iselect.set('FromType', line.getFromType(), form);
         _itext.set('Sort', _itext.get('Sort', rowBox), form);
 
         //show modal
@@ -610,7 +615,7 @@ function FlowForm(boxId, mNode, mLine) {
         var rowBox = this.mNode.idToRowBox(node.getId());
         _form.loadRow(rowBox, row);
 
-        node.update(row);
+        node.setName(row.Name);
 
         //hide modal
         _modal.hideO(this.modalNodeProp);
@@ -639,7 +644,7 @@ function FlowForm(boxId, mNode, mLine) {
     this.onModalLineOk = function () {
         //check input
 		//var form = this.modalLineProp;
-		
+
         //var lineType = _iradio.get('LineType', this.eformLines);
         //_assert.inArray(lineType, ['0','1','2']);
 
@@ -651,11 +656,13 @@ function FlowForm(boxId, mNode, mLine) {
         //var form = this.eformLines;
         //var conn = this.nowFlowItem;
         //conn.setParameter('LineType', lineType);
-		
-		//update mLine
+
+        //update mLine
+        var modal = this.modalLineProp;
         var row = {
             CondStr: this._getCondStr(),
-            Sort: _itext.get('Sort', this.eformLineProp),
+            Sort: _itext.get('Sort', modal),
+            FromType: _iselect.get('FromType', modal),
         };
         //var line = this._connToLine(conn);
         //_form.loadRow(line, row);
@@ -665,9 +672,10 @@ function FlowForm(boxId, mNode, mLine) {
 		
 		//update flowLine
         line.setLabel(this._condStrToLabel(row.CondStr));
+        line.setFromType(row.FromType);
 		
         //hide modal
-        _modal.hideO(this.modalLineProp);
+        _modal.hideO(modal);
 
 		/*
         //change line label

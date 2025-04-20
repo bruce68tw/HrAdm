@@ -48,6 +48,10 @@ order by p.Sort";
         #endregion
 
         #region get from XpCode table
+        public static async Task<List<IdStrDto>?> LineFromTypesA(string locale0, Db? db = null)
+        {
+            return await _Db.TypeToCodesA("LineFromType", db, locale0);
+        }
         public static async Task<List<IdStrDto>?> AuthRangesA(string locale0, Db? db = null)
         {
             return await _Db.TypeToCodesA("AuthRange", db, locale0);
