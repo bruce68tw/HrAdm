@@ -103,18 +103,19 @@
 
     <!-- edit form -->
     <div id="divEdit" class="xg-hide">
-        <form id='eform' class='xg-form'>
+        <!-- eform 在 flowForm 下面, 使用 z-index無效, 改用 width -->
+        <form id='eform' class='xg-form' style="width:100px;">
             <vc:xi-hide dto='new() { Fid = "Id" }' />
-            <vc:xi-text dto='new() { Fid = "Code" , MaxLen = 20, Required = true, BoxClass = "xu-text" , InputTip = "流程代碼" }' />
-            <vc:xi-text dto='new() { Fid = "Name", MaxLen = 30, Required = true, BoxClass = "xu-text", InputTip = "流程名稱" }' />
+            <vc:xi-text dto='new() { Fid = "Code" , MaxLen = 20, Required = true, BoxClass = "xu-text" , InputTip = "流程代碼", Width = "150%" }' />
+            <vc:xi-text dto='new() { Fid = "Name", MaxLen = 30, Required = true, BoxClass = "xu-text", InputTip = "流程名稱", Width = "150%" }' />
 
             <!-- add outer div for validate msg layout -->
             <div>
                 <div class="btn-group-vertical" role="group" style="margin-left: 5px;" aria-label="button group vertical">
-                    <button type="button" class="btn btn-default xu-fun" onclick="_me.flowForm.onAddStartNode()" Title='@R["TipStartNode"]'>@R["StartNode"]</button>
-                    <button type="button" class="btn btn-default xu-fun" onclick="_me.flowForm.onAddNormalNode()" Title='@R["TipNode"]'>@R["Node"]</button>
+                    <button type="button" class="btn btn-default xu-fun" onclick="_me.flowForm.onAddNode(_flow.TypeStart)" Title='@R["TipStartNode"]'>@R["StartNode"]</button>
+                    <button type="button" class="btn btn-default xu-fun" onclick="_me.flowForm.onAddNode(_flow.TypeNode)" Title='@R["TipNode"]'>@R["Node"]</button>
                     @*<button type="button" class="btn btn-default xu-fun" onclick="_me.flowForm.onAddAutoNode()" Title="New Auto Node">Auto</button>*@
-                    <button type="button" class="btn btn-default xu-fun" onclick="_me.flowForm.onAddEndNode()" Title='@R["TipEndNode"]'>@R["EndNode"]</button>
+                    <button type="button" class="btn btn-default xu-fun" onclick="_me.flowForm.onAddNode(_flow.TypeEnd)" Title='@R["TipEndNode"]'>@R["EndNode"]</button>
                 </div>
             </div>
         </form>

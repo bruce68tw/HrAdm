@@ -3,9 +3,9 @@
 var _flow = {
 
 	//靜態屬性 node type enum
-	TypeStart: 'S',
-	TypeEnd: 'E',
-	TypeNode: 'N',
+	TypeStart: 'S',		//startNode
+	TypeEnd: 'E',		//endNode
+	TypeNode: 'N',		//normal node
 	//TypeAuto: 'A',	//auto
 };
 
@@ -25,21 +25,38 @@ function FlowBase(boxId) {
 	 svg: svg
 	 nodes: nodes
 	 lines: lines
-	 startNode: start node
+	 fromNode: drap start node
 	 onMoveNode: event onMoveNode(node)
 	*/
 
 	//是否可編輯
 	this.isEdit = false;
 
+	//新node/line Id, 自動累加
+	//this.newNodeId = 0;
+	this.newLineId = 0;
+
 	this._init = function (boxId) {
 		let boxDom = document.getElementById(boxId);
 		this.svg = SVG().addTo(boxDom).size('100%', '100%');
+		//this.svg.node.style.zIndex = 100;	//在eform上面!! 無效 !!
 
 		this.fnMoveNode = null;
 		this.fnAddLine = null;
 		this.fnShowMenu = null;
 		//this._reset();
+	};
+
+	/*
+	this.newNodeId = function () {
+		this.newNodeId++;
+		return this.newNodeId;
+	};
+	*/
+	//由元件內部發動, 所以必須提供此功能
+	this.getNewLineId = function () {
+		this.newLineId++;
+		return this.newLineId;
 	};
 
 	this.setEdit = function (status) {
@@ -50,7 +67,7 @@ function FlowBase(boxId) {
 	this._reset = function () {
 		this.nodes = [];
 		this.lines = [];
-		this.startNode = null;
+		this.fromNode = null;
 
 		//刪除 svg 裡面的全部子元素
 		Array.from(this.svg.node.childNodes).forEach(node => {
@@ -66,8 +83,10 @@ function FlowBase(boxId) {
 	};
 
 	this.loadLines = function (rows) {
-		for (var i = 0; i < rows.length; i++)
-			this.addLine(rows[i]);
+		if (rows != null) {
+			for (var i = 0; i < rows.length; i++)
+				this.addLine(rows[i]);
+		}
 	};
 
 	this.addNode = function (json) {
@@ -103,11 +122,16 @@ function FlowBase(boxId) {
 		this.fromNode = fromNode;
 	};
 
-	//return new line
+	//return new line json
 	this.drawLineEnd = function (toNode) {
-		var line = new FlowLine(this, this.startNode, endNode);
-		this.startNode = null;
-		return line;
+		var json = {
+			Id: this.newLineId,
+			FromNodeId: this.fromNode.getId(),
+			ToNodeId: toNode.getId(),
+		};
+		new FlowLine(this, json, this.fromNode, toNode);
+		this.fromNode = null;
+		return json;
 	};
 	
 	this.idToNode = function (id) {
@@ -160,10 +184,10 @@ function FlowNode(flowBase, json) {
 		this.json = Object.assign({
 			Name: 'Node',
 			NodeType: _flow.TypeNode,
-			PosX: 50,
-			PosY: 50,
-			Width: 100,	//??
-			Height: 50,	//??
+			PosX: json.PosX || 100,
+			PosY: json.PosY || 100,
+			//Width: 100,	//??
+			//Height: 50,	//??
 		}, json);
 
 		//set instance variables
@@ -174,7 +198,9 @@ function FlowNode(flowBase, json) {
         let nodeText = '';
 
 		// 建立一個 group(有x,y, 沒有大小, 含文字的節點框線), 才能控制文字拖拉
-		this.elm = this.svg.group();
+		this.elm = this.svg
+			.group()
+			.attr('data-id', json.Id)
 
 		let startEnd = this._isStartEnd();
 		if (startEnd) {
@@ -337,10 +363,10 @@ function FlowNode(flowBase, json) {
 		if (!this.pointElm)
 			return;
 		
-		let startElm, startX, startY;
+		let fromDom, startX, startY;
 		let tempLine;
-		let endElm = null;
-		let me = this;
+		let toElm = null;
+		let me = this;	//flowNode
 		let flowBase = this.flowBase;
 
 		// 啟用 pointElm 的拖拽功能, 使用箭頭函數時 this 會指向類別實例 !!, 使用 function則會指向 pointElm !!
@@ -351,7 +377,7 @@ function FlowNode(flowBase, json) {
 			let { x, y } = me.pointElm.rbox(me.svg); // 使用SVG畫布的座標系
 			startX = x;
 			startY = y;
-			startElm = me.self.elm;	//this.self指向這個FlowNode
+			fromDom = me.self.elm.node;	//this.self指向這個FlowNode
 
 			tempLine = me.svg.line(startX, startY, startX, startY)
 				.addClass('xf-line off');
@@ -381,18 +407,18 @@ function FlowNode(flowBase, json) {
 
 				// 檢查是否懸停在節點上
 				let overDom = document.elementsFromPoint(viewPortX, viewPortY)
-					.find(elm => elm != startElm && (elm.classList.contains('xf-node') || elm.classList.contains('xf-end')));
+					.find(dom => dom != fromDom && (dom.classList.contains('xf-node') || dom.classList.contains('xf-end')));
 				if (overDom) {
 					let overElm = overDom.instance;	//svg element
-					if (endElm !== overElm) {
-						if (endElm) 
-							me._markNode(endElm, false);
-						endElm = overElm;
-						me._markNode(endElm, true);
+					if (toElm !== overElm) {
+						if (toElm) 
+							me._markNode(toElm, false);
+						toElm = overElm;
+						me._markNode(toElm, true);
 					}
-				} else if (endElm) {
-					me._markNode(endElm, false);
-					endElm = null;
+				} else if (toElm) {
+					me._markNode(toElm, false);
+					toElm = null;
 				}
 			}
 			
@@ -400,14 +426,15 @@ function FlowNode(flowBase, json) {
 			if (!flowBase.isEdit) return;
 
 			// 檢查座標值是否有效
-			if (endElm) {
-				me._markNode(endElm, false);					
-				var line = flowBase.drawLineEnd(flowBase.idToNode(me.getId()));
-				endElm = null;
+			if (toElm) {
+				me._markNode(toElm, false);
+				var id = toElm.parent().node.dataset.id;
+				var json = flowBase.drawLineEnd(flowBase.idToNode(id));
+				toElm = null;
 
 				//trigger event
 				if (flowBase.fnAddLine)
-					flowBase.fnAddLine(line.startNode, line.endNode);
+					flowBase.fnAddLine(json);
 			}
 			tempLine.remove();
 		});
@@ -506,6 +533,7 @@ function FlowLine(flowBase, json, fromNode, toNode) {
 		json.FromType = json.FromType || this.FromTypeAuto;
 		json.Label = json.Label || '';
 
+		json.Id = json.Id || flowBase.getNewLineId();
 		this.flowBase = flowBase;
 		this.json = json;
 		this.svg = flowBase.svg;
@@ -515,14 +543,14 @@ function FlowLine(flowBase, json, fromNode, toNode) {
 
 		//path
 		this.path = this.svg.path('')
-			//.attr('data-id', id)
+			.attr('data-id', json.Id)
 			.addClass('xf-line');
 		// 透明的寬線作為觸發區域（放在下面）
 		this.path2 = this.svg.path('')
-			//.attr('data-id', id)
+			.attr('data-id', json.Id)
 			.fill('none')
 			.stroke({ width: 10, color: 'transparent' }) // 注意：透明但可接收事件
-			.attr({ 'pointer-events': 'stroke' });       // 只針對 stroke 有事件
+			.attr({ 'pointer-events': 'stroke', 'cursor': 'pointer' });       // 只針對 stroke 有事件
 
 		//label
 		this.textElm = this.svg.text(json.Label)
@@ -784,8 +812,10 @@ function FlowLine(flowBase, json, fromNode, toNode) {
 				};
 
 				// 單位化向量
-				const len1 = Math.sqrt(vec1.x ** 2 + vec1.y ** 2);
-				const len2 = Math.sqrt(vec2.x ** 2 + vec2.y ** 2);
+				//const len1 = Math.sqrt(vec1.x ** 2 + vec1.y ** 2);
+				//const len2 = Math.sqrt(vec2.x ** 2 + vec2.y ** 2);
+				const len1 = Math.sqrt(Math.pow(vec1.x, 2) + Math.pow(vec1.y, 2));
+				const len2 = Math.sqrt(Math.pow(vec2.x, 2) + Math.pow(vec2.y, 2));
 
 				const unitVec1 = { x: vec1.x / len1, y: vec1.y / len1 };
 				const unitVec2 = { x: vec2.x / len2, y: vec2.y / len2 };

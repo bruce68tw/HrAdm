@@ -508,14 +508,16 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * add one row(or empty) into UI, 同時設定新id
      * param {object} (optional) row
      * param {object} (optional) rowsBox, default this.rowsBox
+     * param {int} (optional) newId 新id
      * return {object} row
      */
-    this.addRow = function (row, rowsBox) {
+    this.addRow = function (row, rowsBox, newId) {
         row = row || {};
         rowsBox = this._getRowsBox(rowsBox);
         var obj = this._renderRow(row, rowsBox);
-        this.setNewIdByBox(obj);
-        return obj;
+        newId = this.setNewIdByBox(obj, newId);
+        row[this.kid] = newId;  //寫入新Id for 外面程式 if need
+        return row;
     };
 
     /**
@@ -642,13 +644,17 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * set new id by row box
      * public for MyCrud.js, Flow.js
      * param box {object} row box
+     * param newId {int} 外部傳入newId if any
      * return {int} new key index
      */
-    this.setNewIdByBox = function (box) {
-        this.newIndex++;
-        _itext.set(this.kid, this.newIndex, box);
+    this.setNewIdByBox = function (box, newId) {
+        if (newId == null) {
+            this.newIndex++;
+            newId = this.newIndex;
+        }
+        _itext.set(this.kid, newId, box);
         _edit.addIsNew(box);    //增加_IsNew隱藏欄位
-        return this.newIndex;
+        return newId;
     };
 
     /**

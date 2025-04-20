@@ -120,7 +120,7 @@ function FlowForm(boxId, mNode, mLine) {
         //this.flowBase = new FlowBase(boxId, (nodeId, x, y) => this.onMoveNode(nodeId, x, y));
         var flowBase = new FlowBase(boxId);
         flowBase.fnMoveNode = (node, x, y) => this.onMoveNode(node, x, y);
-        flowBase.fnAddLine = (startNode, endNode) => this.onAddLine(startNode, endNode);
+        flowBase.fnAddLine = (fromNodeId, toNodeId) => this.onAddLine(fromNodeId, toNodeId);
         flowBase.fnShowMenu = (isNode, flowItem, event) => this.onShowMenu(isNode, flowItem, event);
         this.flowBase = flowBase;
 
@@ -133,8 +133,8 @@ function FlowForm(boxId, mNode, mLine) {
         _form.loadRow(rowBox, { PosX: Math.floor(x), PosY: Math.floor(y) });    //座標取整數
     };
 
-    this.onAddLine = function (startNode, endNode) {
-        alert('onAddLine');
+    this.onAddLine = function (json) {
+        this.mLine.addRow(json, null, json.Id);   //不產生新Id, FlowLine已經產生
     };
 
     /**
@@ -151,7 +151,7 @@ function FlowForm(boxId, mNode, mLine) {
 
         //set edit status
         var canEdit = isNode
-            ? (this.isEdit && flowItem.getNodeType() == _flow.TypeNormal)
+            ? (this.isEdit && flowItem.getNodeType() == _flow.TypeNode)
             : this.isEdit;
 
         var menu = $(this.MenuFilter);
@@ -220,8 +220,10 @@ function FlowForm(boxId, mNode, mLine) {
         this.mLine.loadRowsByRsb(rows, true);
 
         //set label
-        for (var i = 0; i < rows.length; i++) {
-            rows[i].Label = this._condStrToLabel(rows[i].CondStr);
+        if (rows != null) {
+            for (var i = 0; i < rows.length; i++) {
+                rows[i].Label = this._condStrToLabel(rows[i].CondStr);
+            }
         }
         this.flowBase.loadLines(rows);
     };
@@ -236,13 +238,14 @@ function FlowForm(boxId, mNode, mLine) {
     this.addNode = function (nodeType, name) {
         //mNode新筆一筆資料, 會產生新id
         var json = {
-            Name: (nodeType == _flow.TypeNormal) ? name : '',
+            Name: (nodeType == _flow.TypeNode) ? name : '',
             NodeType: nodeType,
             PosX: 100,
             PosY: 100,
         };
         var row = this.mNode.addRow(json);  //會產生id
-		
+        row.Name += "-" + row.Id;
+
 		//flow add node
 		this.flowBase.addNode(row);
     };
@@ -540,7 +543,25 @@ function FlowForm(boxId, mNode, mLine) {
     };
     */
 
+    this.onAddNode = function (nodeType) {
+        if (nodeType == _flow.TypeStart) {
+            if (this.eformNodes.find(this.StartNodeFilter).length > 0) {
+                //_tool.msg(this.R.StartNodeExist);
+                _tool.msg('Start Node Already Existed !');
+                return;
+            }
+
+            //add node
+            this.addNode(nodeType);
+        } else if (nodeType == _flow.TypeEnd) {
+            this.addNode(nodeType);
+        } else {
+            this.addNode(_flow.TypeNode, '節點');
+        }
+    };
+
     //#region events
+    /*
     //on add start node
     this.onAddStartNode = function () {
         //check, only one start node allow
@@ -557,15 +578,14 @@ function FlowForm(boxId, mNode, mLine) {
     this.onAddEndNode = function () {
         this.addNode(_flow.TypeEnd);
     };
-    /*
-    this.onAddAutoNode = function () {
-        this.addNode('Auto', this.AutoNode);
-    };
-    */
     //on add normal node
     this.onAddNormalNode = function () {
         this.addNode(this.NormalNode, '節點');
     };
+    this.onAddAutoNode = function () {
+        this.addNode('Auto', this.AutoNode);
+    };
+    */
 
     //context menu event
     this.onMenuEdit = function () {
