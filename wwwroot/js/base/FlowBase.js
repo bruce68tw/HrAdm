@@ -12,9 +12,9 @@ var _flow = {
 /**
  * 自定函數(由flow內部觸發):
  * void fnMoveNode(node, x, y): after move node to (x,y)
- * void fnAddLine(fromNode, toNode): when add line
+ * void fnAfterAddLine(json): when add line
  * void fnShowMenu(isNode, flowItem, event);
- * void fnDropLineEnd(oldNode, newNode): after drop line end point
+ * void fnAfterMoveLineEnd(oldNode, newNode): after drop line end point
  */
 //控制 FlowNode、FlowLine for 外部程式
 function FlowBase(boxId) {	
@@ -42,7 +42,7 @@ function FlowBase(boxId) {
 		//this.svg.node.style.zIndex = 100;	//在eform上面!! 無效 !!
 
 		this.fnMoveNode = null;
-		this.fnAddLine = null;
+		this.fnAfterAddLine = null;
 		this.fnShowMenu = null;
 		//this._reset();
 	};
@@ -98,7 +98,6 @@ function FlowBase(boxId) {
 		return node;
 	};
 	
-	//addLine(startNode, endNode, id, fromType) {
 	this.addLine = function (json) {
 		//this.lineCount++;
 		//if (id == null)
@@ -137,6 +136,12 @@ function FlowBase(boxId) {
 	this.idToNode = function (id) {
 		//elm.node 指向dom
 		return this.nodes.find(node => node.getId() == id);
+	};
+
+	//check has startNode or not
+	this.hasStartNode = function () {
+		//some 用法類似 c# any()
+		return this.nodes.some(node => node.getNodeType() == _flow.TypeStart);
 	};
 
 	//call last
@@ -328,7 +333,7 @@ function FlowNode(flowBase, json) {
 		this.elm.node.addEventListener('contextmenu', function (event) {
 			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
 			if (flowBase.fnShowMenu)
-				flowBase.fnShowMenu(true, me, event);
+				flowBase.fnShowMenu(event, true, me);
 		});
 
 		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
@@ -433,8 +438,8 @@ function FlowNode(flowBase, json) {
 				toElm = null;
 
 				//trigger event
-				if (flowBase.fnAddLine)
-					flowBase.fnAddLine(json);
+				if (flowBase.fnAfterAddLine)
+					flowBase.fnAfterAddLine(json);
 			}
 			tempLine.remove();
 		});
@@ -494,6 +499,7 @@ function FlowNode(flowBase, json) {
     svg: svg
     path: line path
     path2: for right menu
+	arrow: 末端箭頭
 	textElm: 顯示label
     fromNode: from node
     toNode: to node
@@ -558,8 +564,8 @@ function FlowLine(flowBase, json, fromNode, toNode) {
 			.font({ anchor: 'middle' });
 
 		// 用來儲存箭頭的路徑
-		this.arrowPath = this.svg.path('').addClass('xf-arrow');
-		//this.arrowPath2 = this.svg.path('').addClass('xf-arrow');
+		this.arrow = this.svg.path('').addClass('xf-arrow');
+		//this.arrow2 = this.svg.path('').addClass('xf-arrow');
 
 		//add line to from/to node
 		this.fromNode.addLine(this);
@@ -574,7 +580,7 @@ function FlowLine(flowBase, json, fromNode, toNode) {
 		this.path2.node.addEventListener('contextmenu', function (event) {
 			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
 			if (me.flowBase.fnShowMenu)
-				me.flowBase.fnShowMenu(false, me, event);
+				me.flowBase.fnShowMenu(event, false, me);
 		});
 	}
 
@@ -584,6 +590,11 @@ function FlowLine(flowBase, json, fromNode, toNode) {
 		this.isFromTypeV = (fromType == this.FromTypeV);
 		this.isFromTypeH = (fromType == this.FromTypeH);
 		//this.isFromTypeAuto = (!this.isFromTypeV && !this.isFromTypeH) || (fromType == this.FromTypeAuto);
+		var dom = this.path.node;
+		if (fromType == this.FromTypeAuto)
+			dom.classList.remove('xf-way');
+		else
+			dom.classList.add('xf-way');			
 	};
 
 	//?? from text element
@@ -689,17 +700,17 @@ function FlowLine(flowBase, json, fromNode, toNode) {
 			}
 			points = [fromPnt, { x: toPnt.x, y: fromPnt.y }];
 			//isMinCntSide2H
-		} else if (!this.isFromTypeH && isMinSideCnt2V && isMinCntSide2H) {
-			//2線段-垂直(先考慮)
-			fromPnt = isToDown ? fromDown : fromUp;
-			toPnt = isToRight ? toLeft : toRight;
-			points = [fromPnt, { x: fromPnt.x, y: toPnt.y }, toPnt];
 		} else if (!this.isFromTypeV && isMinSideCnt2H && isMinCntSide2V) {
-			//2線段-水平
+			//2線段-水平(先考慮)
 			fromPnt = isToRight ? fromRight : fromLeft;
 			toPnt = isToDown ? toUp : toDown;
 			points = [fromPnt, { x: toPnt.x, y: fromPnt.y }, toPnt];
 			textStartAry = 1;
+		} else if (!this.isFromTypeH && isMinSideCnt2V && isMinCntSide2H) {
+			//2線段-垂直
+			fromPnt = isToDown ? fromDown : fromUp;
+			toPnt = isToRight ? toLeft : toRight;
+			points = [fromPnt, { x: fromPnt.x, y: toPnt.y }, toPnt];
 		} else if (!this.isFromTypeH && isMinSideSide3V && isMinCntCnt3V) {
 			//3線段-垂直(直線型)
 			if (isToDown) {
@@ -867,8 +878,8 @@ function FlowLine(flowBase, json, fromNode, toNode) {
 		};
 
 		// 更新箭頭路徑
-		this.arrowPath.plot(`M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
-		//this.arrowPath1.plot(`M ${fromPnt.x} ${fromPnt.y} L ${toPnt.x} ${toPnt.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
+		this.arrow.plot(`M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
+		//this.arrow2.plot(`M ${fromPnt.x} ${fromPnt.y} L ${toPnt.x} ${toPnt.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
 	};
 
 	//id記錄在 path !!

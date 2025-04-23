@@ -6137,13 +6137,15 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * add one row(or empty) into UI, 同時設定新id
      * param {object} (optional) row
      * param {object} (optional) rowsBox, default this.rowsBox
+     * param {int} (optional) newId 新id
      * return {object} row
      */
-    this.addRow = function (row, rowsBox) {
+    this.addRow = function (row, rowsBox, newId) {
         row = row || {};
         rowsBox = this._getRowsBox(rowsBox);
         var obj = this._renderRow(row, rowsBox);
-        this.setNewIdByBox(obj);
+        newId = this.setNewIdByBox(obj, newId);
+        row[this.kid] = newId;  //寫入新Id for 外面程式 if need
         return row;
     };
 
@@ -6271,13 +6273,17 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * set new id by row box
      * public for MyCrud.js, Flow.js
      * param box {object} row box
+     * param newId {int} 外部傳入newId if any
      * return {int} new key index
      */
-    this.setNewIdByBox = function (box) {
-        this.newIndex++;
-        _itext.set(this.kid, this.newIndex, box);
+    this.setNewIdByBox = function (box, newId) {
+        if (newId == null) {
+            this.newIndex++;
+            newId = this.newIndex;
+        }
+        _itext.set(this.kid, newId, box);
         _edit.addIsNew(box);    //增加_IsNew隱藏欄位
-        return this.newIndex;
+        return newId;
     };
 
     /**
@@ -6538,9 +6544,9 @@ var _flow = {
 /**
  * 自定函數(由flow內部觸發):
  * void fnMoveNode(node, x, y): after move node to (x,y)
- * void fnAddLine(fromNode, toNode): when add line
+ * void fnAfterAddLine(json): when add line
  * void fnShowMenu(isNode, flowItem, event);
- * void fnDropLineEnd(oldNode, newNode): after drop line end point
+ * void fnAfterMoveLineEnd(oldNode, newNode): after drop line end point
  */
 //控制 FlowNode、FlowLine for 外部程式
 function FlowBase(boxId) {	
@@ -6551,7 +6557,7 @@ function FlowBase(boxId) {
 	 svg: svg
 	 nodes: nodes
 	 lines: lines
-	 startNode: start node
+	 fromNode: drap start node
 	 onMoveNode: event onMoveNode(node)
 	*/
 
@@ -6568,7 +6574,7 @@ function FlowBase(boxId) {
 		//this.svg.node.style.zIndex = 100;	//在eform上面!! 無效 !!
 
 		this.fnMoveNode = null;
-		this.fnAddLine = null;
+		this.fnAfterAddLine = null;
 		this.fnShowMenu = null;
 		//this._reset();
 	};
@@ -6580,7 +6586,7 @@ function FlowBase(boxId) {
 	};
 	*/
 	//由元件內部發動, 所以必須提供此功能
-	this.newLineId = function () {
+	this.getNewLineId = function () {
 		this.newLineId++;
 		return this.newLineId;
 	};
@@ -6593,7 +6599,7 @@ function FlowBase(boxId) {
 	this._reset = function () {
 		this.nodes = [];
 		this.lines = [];
-		this.startNode = null;
+		this.fromNode = null;
 
 		//刪除 svg 裡面的全部子元素
 		Array.from(this.svg.node.childNodes).forEach(node => {
@@ -6624,7 +6630,6 @@ function FlowBase(boxId) {
 		return node;
 	};
 	
-	//addLine(startNode, endNode, id, fromType) {
 	this.addLine = function (json) {
 		//this.lineCount++;
 		//if (id == null)
@@ -6648,16 +6653,27 @@ function FlowBase(boxId) {
 		this.fromNode = fromNode;
 	};
 
-	//return new line
+	//return new line json
 	this.drawLineEnd = function (toNode) {
-		var line = new FlowLine(this, this.startNode, endNode);
-		this.startNode = null;
-		return line;
+		var json = {
+			Id: this.newLineId,
+			FromNodeId: this.fromNode.getId(),
+			ToNodeId: toNode.getId(),
+		};
+		new FlowLine(this, json, this.fromNode, toNode);
+		this.fromNode = null;
+		return json;
 	};
 	
 	this.idToNode = function (id) {
 		//elm.node 指向dom
 		return this.nodes.find(node => node.getId() == id);
+	};
+
+	//check has startNode or not
+	this.hasStartNode = function () {
+		//some 用法類似 c# any()
+		return this.nodes.some(node => node.getNodeType() == _flow.TypeStart);
 	};
 
 	//call last
@@ -6719,7 +6735,9 @@ function FlowNode(flowBase, json) {
         let nodeText = '';
 
 		// 建立一個 group(有x,y, 沒有大小, 含文字的節點框線), 才能控制文字拖拉
-		this.elm = this.svg.group();
+		this.elm = this.svg
+			.group()
+			.attr('data-id', json.Id)
 
 		let startEnd = this._isStartEnd();
 		if (startEnd) {
@@ -6847,7 +6865,7 @@ function FlowNode(flowBase, json) {
 		this.elm.node.addEventListener('contextmenu', function (event) {
 			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
 			if (flowBase.fnShowMenu)
-				flowBase.fnShowMenu(true, me, event);
+				flowBase.fnShowMenu(event, true, me);
 		});
 
 		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
@@ -6882,10 +6900,10 @@ function FlowNode(flowBase, json) {
 		if (!this.pointElm)
 			return;
 		
-		let startElm, startX, startY;
+		let fromDom, startX, startY;
 		let tempLine;
-		let endElm = null;
-		let me = this;
+		let toElm = null;
+		let me = this;	//flowNode
 		let flowBase = this.flowBase;
 
 		// 啟用 pointElm 的拖拽功能, 使用箭頭函數時 this 會指向類別實例 !!, 使用 function則會指向 pointElm !!
@@ -6896,7 +6914,7 @@ function FlowNode(flowBase, json) {
 			let { x, y } = me.pointElm.rbox(me.svg); // 使用SVG畫布的座標系
 			startX = x;
 			startY = y;
-			startElm = me.self.elm;	//this.self指向這個FlowNode
+			fromDom = me.self.elm.node;	//this.self指向這個FlowNode
 
 			tempLine = me.svg.line(startX, startY, startX, startY)
 				.addClass('xf-line off');
@@ -6926,18 +6944,18 @@ function FlowNode(flowBase, json) {
 
 				// 檢查是否懸停在節點上
 				let overDom = document.elementsFromPoint(viewPortX, viewPortY)
-					.find(elm => elm != startElm && (elm.classList.contains('xf-node') || elm.classList.contains('xf-end')));
+					.find(dom => dom != fromDom && (dom.classList.contains('xf-node') || dom.classList.contains('xf-end')));
 				if (overDom) {
 					let overElm = overDom.instance;	//svg element
-					if (endElm !== overElm) {
-						if (endElm) 
-							me._markNode(endElm, false);
-						endElm = overElm;
-						me._markNode(endElm, true);
+					if (toElm !== overElm) {
+						if (toElm) 
+							me._markNode(toElm, false);
+						toElm = overElm;
+						me._markNode(toElm, true);
 					}
-				} else if (endElm) {
-					me._markNode(endElm, false);
-					endElm = null;
+				} else if (toElm) {
+					me._markNode(toElm, false);
+					toElm = null;
 				}
 			}
 			
@@ -6945,14 +6963,15 @@ function FlowNode(flowBase, json) {
 			if (!flowBase.isEdit) return;
 
 			// 檢查座標值是否有效
-			if (endElm) {
-				me._markNode(endElm, false);					
-				var line = flowBase.drawLineEnd(flowBase.idToNode(me.getId()));
-				endElm = null;
+			if (toElm) {
+				me._markNode(toElm, false);
+				var id = toElm.parent().node.dataset.id;
+				var json = flowBase.drawLineEnd(flowBase.idToNode(id));
+				toElm = null;
 
 				//trigger event
-				if (flowBase.fnAddLine)
-					flowBase.fnAddLine(line.startNode, line.endNode);
+				if (flowBase.fnAfterAddLine)
+					flowBase.fnAfterAddLine(json);
 			}
 			tempLine.remove();
 		});
@@ -7012,6 +7031,7 @@ function FlowNode(flowBase, json) {
     svg: svg
     path: line path
     path2: for right menu
+	arrow: 末端箭頭
 	textElm: 顯示label
     fromNode: from node
     toNode: to node
@@ -7051,7 +7071,7 @@ function FlowLine(flowBase, json, fromNode, toNode) {
 		json.FromType = json.FromType || this.FromTypeAuto;
 		json.Label = json.Label || '';
 
-		json.Id = json.Id || this.flowBase.newLineId();
+		json.Id = json.Id || flowBase.getNewLineId();
 		this.flowBase = flowBase;
 		this.json = json;
 		this.svg = flowBase.svg;
@@ -7076,8 +7096,8 @@ function FlowLine(flowBase, json, fromNode, toNode) {
 			.font({ anchor: 'middle' });
 
 		// 用來儲存箭頭的路徑
-		this.arrowPath = this.svg.path('').addClass('xf-arrow');
-		//this.arrowPath2 = this.svg.path('').addClass('xf-arrow');
+		this.arrow = this.svg.path('').addClass('xf-arrow');
+		//this.arrow2 = this.svg.path('').addClass('xf-arrow');
 
 		//add line to from/to node
 		this.fromNode.addLine(this);
@@ -7092,7 +7112,7 @@ function FlowLine(flowBase, json, fromNode, toNode) {
 		this.path2.node.addEventListener('contextmenu', function (event) {
 			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
 			if (me.flowBase.fnShowMenu)
-				me.flowBase.fnShowMenu(false, me, event);
+				me.flowBase.fnShowMenu(event, false, me);
 		});
 	}
 
@@ -7102,6 +7122,11 @@ function FlowLine(flowBase, json, fromNode, toNode) {
 		this.isFromTypeV = (fromType == this.FromTypeV);
 		this.isFromTypeH = (fromType == this.FromTypeH);
 		//this.isFromTypeAuto = (!this.isFromTypeV && !this.isFromTypeH) || (fromType == this.FromTypeAuto);
+		var dom = this.path.node;
+		if (fromType == this.FromTypeAuto)
+			dom.classList.remove('xf-way');
+		else
+			dom.classList.add('xf-way');			
 	};
 
 	//?? from text element
@@ -7207,17 +7232,17 @@ function FlowLine(flowBase, json, fromNode, toNode) {
 			}
 			points = [fromPnt, { x: toPnt.x, y: fromPnt.y }];
 			//isMinCntSide2H
-		} else if (!this.isFromTypeH && isMinSideCnt2V && isMinCntSide2H) {
-			//2線段-垂直(先考慮)
-			fromPnt = isToDown ? fromDown : fromUp;
-			toPnt = isToRight ? toLeft : toRight;
-			points = [fromPnt, { x: fromPnt.x, y: toPnt.y }, toPnt];
 		} else if (!this.isFromTypeV && isMinSideCnt2H && isMinCntSide2V) {
-			//2線段-水平
+			//2線段-水平(先考慮)
 			fromPnt = isToRight ? fromRight : fromLeft;
 			toPnt = isToDown ? toUp : toDown;
 			points = [fromPnt, { x: toPnt.x, y: fromPnt.y }, toPnt];
 			textStartAry = 1;
+		} else if (!this.isFromTypeH && isMinSideCnt2V && isMinCntSide2H) {
+			//2線段-垂直
+			fromPnt = isToDown ? fromDown : fromUp;
+			toPnt = isToRight ? toLeft : toRight;
+			points = [fromPnt, { x: fromPnt.x, y: toPnt.y }, toPnt];
 		} else if (!this.isFromTypeH && isMinSideSide3V && isMinCntCnt3V) {
 			//3線段-垂直(直線型)
 			if (isToDown) {
@@ -7385,8 +7410,8 @@ function FlowLine(flowBase, json, fromNode, toNode) {
 		};
 
 		// 更新箭頭路徑
-		this.arrowPath.plot(`M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
-		//this.arrowPath1.plot(`M ${fromPnt.x} ${fromPnt.y} L ${toPnt.x} ${toPnt.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
+		this.arrow.plot(`M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
+		//this.arrow2.plot(`M ${fromPnt.x} ${fromPnt.y} L ${toPnt.x} ${toPnt.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
 	};
 
 	//id記錄在 path !!
@@ -7532,22 +7557,22 @@ function FlowForm(boxId, mNode, mLine) {
         //set instance first
         //this.flowBase = new FlowBase(boxId, (nodeId, x, y) => this.onMoveNode(nodeId, x, y));
         var flowBase = new FlowBase(boxId);
-        flowBase.fnMoveNode = (node, x, y) => this.onMoveNode(node, x, y);
-        flowBase.fnAddLine = (json) => this.onAddLine(json);
-        flowBase.fnShowMenu = (isNode, flowItem, event) => this.onShowMenu(isNode, flowItem, event);
+        flowBase.fnMoveNode = (node, x, y) => this.fnMoveNode(node, x, y);
+        flowBase.fnAfterAddLine = (json) => this.fnAfterAddLine(json);
+        flowBase.fnShowMenu = (event, isNode, flowItem) => this.fnShowMenu(event, isNode, flowItem);
         this.flowBase = flowBase;
 
         //set event
         this._setFlowEvent();
     };
 
-    this.onMoveNode = function (node, x, y) {
+    this.fnMoveNode = function (node, x, y) {
         var rowBox = this.mNode.idToRowBox(node.getId());
         _form.loadRow(rowBox, { PosX: Math.floor(x), PosY: Math.floor(y) });    //座標取整數
     };
 
-    this.onAddLine = function (json) {
-        alert('onAddLine');
+    this.fnAfterAddLine = function (json) {
+        this.mLine.addRow(json, null, json.Id);   //不產生新Id, FlowLine已經產生
     };
 
     /**
@@ -7557,7 +7582,7 @@ function FlowForm(boxId, mNode, mLine) {
      * param mouseX {int} 
      * param mouseY {int} 
      */
-    this.onShowMenu = function (isNode, flowItem, event) {
+    this.fnShowMenu = function (event, isNode, flowItem) {
         //set instance variables
         this.nowIsNode = isNode;
         this.nowFlowItem = flowItem;
@@ -7958,9 +7983,8 @@ function FlowForm(boxId, mNode, mLine) {
 
     this.onAddNode = function (nodeType) {
         if (nodeType == _flow.TypeStart) {
-            if (this.eformNodes.find(this.StartNodeFilter).length > 0) {
-                //_tool.msg(this.R.StartNodeExist);
-                _tool.msg('Start Node Already Existed !');
+            if (this.flowBase.hasStartNode()) {
+                _tool.msg('起始節點已經存在，不可再新增。');
                 return;
             }
 

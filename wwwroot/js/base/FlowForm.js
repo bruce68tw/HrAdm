@@ -119,21 +119,21 @@ function FlowForm(boxId, mNode, mLine) {
         //set instance first
         //this.flowBase = new FlowBase(boxId, (nodeId, x, y) => this.onMoveNode(nodeId, x, y));
         var flowBase = new FlowBase(boxId);
-        flowBase.fnMoveNode = (node, x, y) => this.onMoveNode(node, x, y);
-        flowBase.fnAddLine = (fromNodeId, toNodeId) => this.onAddLine(fromNodeId, toNodeId);
-        flowBase.fnShowMenu = (isNode, flowItem, event) => this.onShowMenu(isNode, flowItem, event);
+        flowBase.fnMoveNode = (node, x, y) => this.fnMoveNode(node, x, y);
+        flowBase.fnAfterAddLine = (json) => this.fnAfterAddLine(json);
+        flowBase.fnShowMenu = (event, isNode, flowItem) => this.fnShowMenu(event, isNode, flowItem);
         this.flowBase = flowBase;
 
         //set event
         this._setFlowEvent();
     };
 
-    this.onMoveNode = function (node, x, y) {
+    this.fnMoveNode = function (node, x, y) {
         var rowBox = this.mNode.idToRowBox(node.getId());
         _form.loadRow(rowBox, { PosX: Math.floor(x), PosY: Math.floor(y) });    //座標取整數
     };
 
-    this.onAddLine = function (json) {
+    this.fnAfterAddLine = function (json) {
         this.mLine.addRow(json, null, json.Id);   //不產生新Id, FlowLine已經產生
     };
 
@@ -144,7 +144,7 @@ function FlowForm(boxId, mNode, mLine) {
      * param mouseX {int} 
      * param mouseY {int} 
      */
-    this.onShowMenu = function (isNode, flowItem, event) {
+    this.fnShowMenu = function (event, isNode, flowItem) {
         //set instance variables
         this.nowIsNode = isNode;
         this.nowFlowItem = flowItem;
@@ -545,9 +545,8 @@ function FlowForm(boxId, mNode, mLine) {
 
     this.onAddNode = function (nodeType) {
         if (nodeType == _flow.TypeStart) {
-            if (this.eformNodes.find(this.StartNodeFilter).length > 0) {
-                //_tool.msg(this.R.StartNodeExist);
-                _tool.msg('Start Node Already Existed !');
+            if (this.flowBase.hasStartNode()) {
+                _tool.msg('起始節點已經存在，不可再新增。');
                 return;
             }
 

@@ -112,10 +112,9 @@
             <!-- add outer div for validate msg layout -->
             <div>
                 <div class="btn-group-vertical" role="group" style="margin-left: 5px;" aria-label="button group vertical">
-                    <button type="button" class="btn btn-default xu-fun" onclick="_me.flowForm.onAddNode(_flow.TypeStart)" Title='@R["TipStartNode"]'>@R["StartNode"]</button>
-                    <button type="button" class="btn btn-default xu-fun" onclick="_me.flowForm.onAddNode(_flow.TypeNode)" Title='@R["TipNode"]'>@R["Node"]</button>
-                    @*<button type="button" class="btn btn-default xu-fun" onclick="_me.flowForm.onAddAutoNode()" Title="New Auto Node">Auto</button>*@
-                    <button type="button" class="btn btn-default xu-fun" onclick="_me.flowForm.onAddNode(_flow.TypeEnd)" Title='@R["TipEndNode"]'>@R["EndNode"]</button>
+                    <button type="button" class="btn xf-start" onclick="_me.flowForm.onAddNode(_flow.TypeStart)" Title='@R["TipStartNode"]'>@R["StartNode"]</button>
+                    <button type="button" class="btn xf-node" onclick="_me.flowForm.onAddNode(_flow.TypeNode)" Title='@R["TipNode"]'>@R["Node"]</button>
+                    <button type="button" class="btn xf-end" onclick="_me.flowForm.onAddNode(_flow.TypeEnd)" Title='@R["TipEndNode"]'>@R["EndNode"]</button>
                 </div>
             </div>
         </form>
@@ -148,7 +147,7 @@
     template內必須加上型別, 使用vc語法時, 無法使用model !!
 -->
 <script id="tplNode" type="text/template">
-    <div class="xd-node">
+    <div class="xd-tr">
         @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "Id" })
         @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "FlowId" })
         @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "Name" })
@@ -162,7 +161,7 @@
 
 <!-- flow line template -->
 <script id="tplLine" type="text/template">
-    <div class="xd-line">
+    <div class="xd-tr">
         @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "Id" })
         @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "FlowId" })
         @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "CondStr" })
