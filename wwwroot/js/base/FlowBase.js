@@ -241,10 +241,17 @@ function FlowNode(flowBase, json) {
 
 		this.elm.move(this.json.PosX, this.json.PosY);
 
-		//add 節點文字
-		this.textElm = this.elm.text(nodeText)
+		//add 節點文字, 考慮斷行
+		const lines = nodeText.split('\n');
+		this.textElm = this.elm.text(add => {
+			lines.forEach((line, i) => {
+				add.tspan(line).attr({ x: 0, dy: i === 0 ? 0 : 20 }); // 每行往下 20px，可調整
+			});
+		})
+		//this.textElm = this.elm.text(nodeText)
 			.addClass(cssClass + '-text')
-			.font({ anchor: 'middle' });
+			.font({ anchor: 'middle' })
+			.attr({ 'text-anchor': 'middle' }); // 確保對齊生效
 
 		//this._setSize(startEnd);
 
