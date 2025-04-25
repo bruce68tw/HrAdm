@@ -54,7 +54,7 @@
 }
 
 /* 節點文字後的小方塊, 用來拖拉流程線 */
-.xf-point {
+.xf-pin {
 	fill: orange;
 	stroke: red;
 	stroke-width: 1px;

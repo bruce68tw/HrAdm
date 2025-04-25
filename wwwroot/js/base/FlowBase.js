@@ -177,10 +177,11 @@ function FlowNode(flowBase, json) {
 	//normal node size
 	this.MinWidth = 100;
 	this.MinHeight = 50;
-	this.Padding = 15;
+	this.PadTop = 8;
+	this.PadLeft = 15;
 
-	this.PointWidth = 12;
-	this.PointGap = 3;
+	this.PinWidth = 12;
+	this.PinGap = 3;
 
 	this._init = function (flowBase, json) {
 		this.self = this;
@@ -223,46 +224,47 @@ function FlowNode(flowBase, json) {
 				
 			//移動circle時會參考radius, 所以先更新, 從css讀取radius, 而不是從circle建立的屬性 !!
 			let style = window.getComputedStyle(this.boxElm.node);	//不能直接讀取circle屬性
-            let radius = parseFloat(style.getPropertyValue("r"));	//轉浮點
-			this.boxElm.attr("r", radius);
-			
-			let width = radius * 2;
-            this.width = width;		//寫入width, 供後面計算位置
-            this.height = width;	//畫流程線時會用到
-		} else {
-			//一般節點依文字自動調整大小
+            let radius = parseFloat(style.getPropertyValue('r'));	//轉浮點
+			this.boxElm.attr('r', radius);	//reset radius
 
+			//起迄節點不會改變文字和大小, 直接設定
+			this.textElm = this.elm.text(nodeText)
+				.addClass(cssClass + '-text')
+				.attr({ 'text-anchor': 'middle', 'dominant-baseline': 'middle' }); //水平垂直置中
+
+			//this.textElm.center(radius, radius);
+
+			//let width = radius * 2;
+			//this.boxElm.size(width, width);
+            //this.width = width;		//寫入width, 供後面計算位置
+            //this.height = width;	//畫流程線時會用到
+		} else {
             nodeText = this.json.Name;
             cssClass = 'xf-node';
 			this.boxElm = this.elm.rect()
-				.addClass(cssClass);
-				//.move(this.json.PosX, this.json.PosY);
+				.addClass(cssClass)
+				.attr({ 'text-anchor': 'middle', 'dominant-baseline': 'middle' }); //水平垂直置中
+			//.move(this.json.PosX, this.json.PosY);
+
+			this.textElm = this.elm.text('')
+				.addClass(cssClass + '-text');
+				//.font({ anchor: 'middle' })
+				//.attr({ 'text-anchor': 'middle' }); // 確保對齊生效
+
+			//一般節點依文字內容自動調整大小
+			this.setName(nodeText);
         }
 
 		this.elm.move(this.json.PosX, this.json.PosY);
 
-		//add 節點文字, 考慮斷行
-		const lines = nodeText.split('\n');
-		this.textElm = this.elm.text(add => {
-			lines.forEach((line, i) => {
-				add.tspan(line).attr({ x: 0, dy: i === 0 ? 0 : 20 }); // 每行往下 20px，可調整
-			});
-		})
-		//this.textElm = this.elm.text(nodeText)
-			.addClass(cssClass + '-text')
-			.font({ anchor: 'middle' })
-			.attr({ 'text-anchor': 'middle' }); // 確保對齊生效
-
-		//this._setSize(startEnd);
-
-		//add 連接點小方塊 connector(在文字右側)
+		//add 連接點小方塊(pin) if need(在文字右側)
 		if (nodeType != _flow.TypeEnd){
-			this.pointElm = this.elm
-				.rect(this.PointWidth, this.PointWidth)
-				.addClass('xf-point');
+			this.pinElm = this.elm
+				.rect(this.PinWidth, this.PinWidth)
+				.addClass('xf-pin');
+			this._setPinPos();
 		}
 		
-		this._setChildPos(startEnd, nodeText);
 		this._setEvent();
 	};
 
@@ -274,18 +276,6 @@ function FlowNode(flowBase, json) {
 	this._isStartEnd = function () {
 		return (this.json.NodeType == _flow.TypeStart || this.json.NodeType == _flow.TypeEnd);
 	};
-
-	/*
-	//設定長寬
-	this._setSize = function (startEnd) {
-		if (!startEnd) {
-			let bbox = this.textElm.bbox();
-			this.width = Math.max(this.MinWidth, bbox.width + this.Padding * 2);
-			this.height = Math.max(this.MinHeight, bbox.height + this.Padding * 2);
-		}
-		this.boxElm.size(this.width, this.height);
-	};
-	*/
 
 	this.getNodeType = function () {
 		return this.json.NodeType;
@@ -306,31 +296,15 @@ function FlowNode(flowBase, json) {
 		return { x: elm.cx(), y: elm.cy() };
 	};
 
-	//設定子元素位置
-	//param startEnd: 如果不是起迄節點要考慮最小寬高
-	this._setChildPos = function (startEnd) {
-		//set size if not startEnd node
+	//set pin position
+	this._setPinPos = function () {
+		//連接點 右移3px
+		if (!this.pinElm) return;
+
 		let bbox = this.textElm.bbox();
-		if (!startEnd) {
-			this.width = Math.max(this.MinWidth, bbox.width + this.PointWidth + this.PointGap * 2);
-			this.height = Math.max(this.MinHeight, bbox.height + this.Padding * 2);
-		}
-		this.boxElm.size(this.width, this.height);
-
-		//文字
-		//let bbox = this.textElm.bbox();
 		let center = this.getCenter();
-		//let size = this.getSize();
-		//this.textElm.move(size.w / 2, size.h / 2).center(center.x, center.y);
-		this.textElm.center(center.x, center.y);
-
-        //連接點 右移3px
-		if (this.pointElm)
-			this.pointElm.move(center.x + bbox.width / 2 + 3, center.y - 5);
-
-		//set lines pos
-		this._drawLines();
-	};
+		this.pinElm.move(center.x + bbox.width / 2 + 3, center.y - 5);
+	}
 
 	this._setEvent = function () {
 		//enable right click menu
@@ -347,8 +321,6 @@ function FlowNode(flowBase, json) {
 		this.elm.draggable().on(this.DragMove, () => {
 			if (!flowBase.isEdit) return;
 
-			//this._setChildPos(this._isStartEnd());
-			//this.lines.forEach(line => line.render());
 			this._drawLines();
 		}).on(this.DragEnd, (event) => {
 			if (!flowBase.isEdit) return;
@@ -362,7 +334,7 @@ function FlowNode(flowBase, json) {
 		});
 
 		//set connector draggable
-		this._setEventJoint();
+		this._setEventPin();
 	};
 
 	this._drawLines = function () {
@@ -370,9 +342,9 @@ function FlowNode(flowBase, json) {
 	};
 
 	//set event of node connector
-	//joint表示起始節點內的連接點
-	this._setEventJoint = function () {
-		if (!this.pointElm)
+	//pin表示起始節點內的連接點
+	this._setEventPin = function () {
+		if (!this.pinElm)
 			return;
 		
 		let fromDom, startX, startY;
@@ -381,12 +353,12 @@ function FlowNode(flowBase, json) {
 		let me = this;	//flowNode
 		let flowBase = this.flowBase;
 
-		// 啟用 pointElm 的拖拽功能, 使用箭頭函數時 this 會指向類別實例 !!, 使用 function則會指向 pointElm !!
-		this.pointElm.draggable().on(this.DragStart, (event) => {
+		// 啟用 pinElm 的拖拽功能, 使用箭頭函數時 this 會指向類別實例 !!, 使用 function則會指向 pinElm !!
+		this.pinElm.draggable().on(this.DragStart, (event) => {
 			if (!flowBase.isEdit) return;
 
 			// 初始化線條
-			let { x, y } = me.pointElm.rbox(me.svg); // 使用SVG畫布的座標系
+			let { x, y } = me.pinElm.rbox(me.svg); // 使用SVG畫布的座標系
 			startX = x;
 			startY = y;
 			fromDom = me.self.elm.node;	//this.self指向這個FlowNode
@@ -475,22 +447,32 @@ function FlowNode(flowBase, json) {
 		this.lines.splice(index, 1);
 	};
 
-	/*
-	this.update = function (json) {
-		//todo
-	};
-	*/
-
 	this.getName = function () {
 		return this.textElm.text();
 	};
 
+	//set node name only for TypeNode, 考慮多行
 	this.setName = function (name) {
-		if (name == this.textElm.text())
-			return;
+		// 更新文字內容, 後端傳回會加上跳脫字元
+		var lines = _str.replaceAll(name, '\\n', '\n').split('\n');
+		//this.textElm.text(name);
+		this.textElm.clear().text(function (add) {
+			lines.forEach((line, i) => {
+				if (i > 0) add.tspan(line).newLine().dy(20);
+				else add.tspan(line);
+			});
+		});
 
-		this.textElm.text(name);
-		this._setChildPos(false);
+		// 獲取新文字尺寸
+		const bbox = this.textElm.bbox();
+
+		// 更新矩形尺寸
+		var width = Math.max(this.MinWidth, bbox.width + this.PadLeft * 2 + this.PinWidth + this.PinGap * 2);
+		var height = Math.max(this.MinHeight, bbox.height + this.PadTop * 2);
+		this.boxElm.size(Math.round(width), Math.round(height));
+
+		// 重新居中文字
+		this.textElm.center(this.boxElm.cx(), this.boxElm.cy());
 	};
 
 	//call last

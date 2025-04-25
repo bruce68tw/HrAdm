@@ -69,7 +69,6 @@
 
     <!-- 1.load css -->
     <link rel="stylesheet" href="~/css/lib@(min).css?v=@(libVer)" />
-    <link rel="stylesheet" href="~/css/my@(min).css?v=@(myVer)" />
     @RenderSection("styles", required: false)
 
     <!-- 2.load lib js -->
@@ -80,11 +79,15 @@
     <!-- 3.load my site js(debug/production mode) !! -->
     <environment include="Development">
         <!-- tail ver will load failed !! -->
+        <link rel="stylesheet" asp-href-include="~/css/icomoon.css" />
+        <link rel="stylesheet" asp-href-include="~/css/base/*.css" />
+
         <script asp-src-include="~/js/base/*.js"></script>
         <script asp-src-include="~/js/view/_*.js"></script>
     </environment>
-    <environment exclude="Development">
-        <script src="~/js/my@(min).js?v=@(myVer)"></script>
+    <environment include="Production">
+        <link rel="stylesheet" href="~/css/my@(min).css?v=@myVer" />
+        <script src="~/js/my@(min).js?v=@myVer"></script>
     </environment>
 
     <!-- 4.load local js -->
