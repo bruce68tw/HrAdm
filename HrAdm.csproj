@@ -87,7 +87,6 @@
     <None Remove="Controllers\UserController.cs%281%29" />
     <None Remove="Controllers\UserController.cs%282%29" />
     <None Remove="Controllers\zz_MyController.cs_old" />
-    <None Remove="Program.cs_old" />
     <None Remove="Startup.cs_old" />
     <None Remove="Tables\MyContext - 複製.cs_old" />
     <None Remove="Views\CustInput\Edit.cshtml_old" />
@@ -105,12 +104,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Program.cs_old" />
     <Compile Include="Startup.cs_old" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Views\XpFlow\Read.cshtm_jsPlumb" />
     <Content Include="_image\noImage.jpg">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

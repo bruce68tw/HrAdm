@@ -31,7 +31,7 @@ namespace HrAdm.Services
             if (string.IsNullOrEmpty(error))
             {
                 var sql = @"
-insert into dbo.XpFlowTest(Id, InputJson, UserId, Created, FlowLevel, FlowStatus) 
+insert into dbo.XpTestFlowSource(Id, InputJson, UserId, Created, FlowLevel, FlowStatus) 
 values (@Id, @InputJson, @UserId, @Created, 1, '0')";
 
                 var args = new List<Object>()

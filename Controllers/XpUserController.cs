@@ -23,12 +23,12 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new UserRead().GetPageA(Ctrl, dt));
+            return JsonToCnt(await new XpUserRead().GetPageA(Ctrl, dt));
         }
 
-        private UserEdit EditService()
+        private XpUserEdit EditService()
         {
-            return new UserEdit(Ctrl);
+            return new XpUserEdit(Ctrl);
         }
 
         [HttpPost]

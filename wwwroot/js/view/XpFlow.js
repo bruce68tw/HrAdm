@@ -140,7 +140,7 @@
             code: _me.nowFlowCode,
             data: _itextarea.get('Data', _me.divFlowTest),
         };
-        await _ajax.getStrA('SaveFlowTest', data, function (error) {
+        await _ajax.getStrA('SaveTest', data, function (error) {
             if (_str.isEmpty(error)) {
                 _tool.msg('作業完成。');
                 _me.testToRead(true);

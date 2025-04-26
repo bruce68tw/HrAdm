@@ -1,5 +1,8 @@
 Scaffold-DbContext "Name=FunConfig:Db" Microsoft.EntityFrameworkCore.SqlServer -Project HrAdm -Context MyContext -OutputDir Tables -Force -NoPluralize -UseDatabaseNames
 
-
+語法:
 Scaffold-DbContext [-Connection] [-Provider] [-OutputDir] [-Context] [-Schemas>] [-Tables>] 
                     [-DataAnnotations] [-Force] [-Project] [-StartupProject] [<CommonParameters>]
+
+注意:
+windows認證時, 連線字串必須加入 TrustServerCertificate=True;

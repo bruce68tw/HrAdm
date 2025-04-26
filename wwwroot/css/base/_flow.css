@@ -118,3 +118,7 @@
 		.xf-menu li:hover {
 			background-color: #DEF;
 		}
+		.xf-menu li.off {
+			color: #aaa;
+			cursor: not-allowed;
+		}

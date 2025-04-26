@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HrAdm.Services
 {
-    public class XpFlowTestRead
+    public class XpTestFlowRead
     {
         private ReadDto GetDto(string userId)
         {
@@ -20,8 +20,8 @@ select
     u.Name as SignerName,
 	d.Created, d.Id,
     case when (d.FlowStatus='0' and s.SignerId='{userId}') then 1 else 0 end as CanSign
-from dbo.XpFlowTest d 
-join dbo.XpFlowSignTest s on s.SourceId=d.Id and s.FlowLevel=d.FlowLevel
+from dbo.XpTestFlowSource d 
+join dbo.XpTestFlowSign s on s.SourceId=d.Id and s.FlowLevel=d.FlowLevel
 join dbo.XpFlow f on s.FlowId=f.Id
 join dbo.XpCode x on x.Type='FlowStatus' and d.FlowStatus=x.Value
 join dbo.XpUser u on s.SignerId=u.Id

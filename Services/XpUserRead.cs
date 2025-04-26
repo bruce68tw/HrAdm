@@ -2,11 +2,10 @@
 using Base.Models;
 using Base.Services;
 using Newtonsoft.Json.Linq;
-using System.Threading.Tasks;
 
 namespace HrAdm.Services
 {
-    public class UserRead
+    public class XpUserRead
     {
         private readonly ReadDto dto = new()
         {

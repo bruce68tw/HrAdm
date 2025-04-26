@@ -149,18 +149,20 @@ function FlowForm(boxId, mNode, mLine) {
         this.nowIsNode = isNode;
         this.nowFlowItem = flowItem;
 
-        //set edit status
+        //一般節點才需要設定屬性
         var canEdit = isNode
             ? (this.isEdit && flowItem.getNodeType() == _flow.TypeNode)
             : this.isEdit;
 
+        //html 不會自動處理自製功能表狀態, 自行配合 css style
+        var css = 'off';
         var menu = $(this.MenuFilter);
         if (canEdit) {
-            menu.find('.xd-edit').removeClass('disabled');
-            menu.find('.xd-delete').removeClass('disabled');
+            menu.find('.xd-edit').removeClass(css);
+            menu.find('.xd-delete').removeClass(css);
         } else {
-            menu.find('.xd-edit').addClass('disabled');
-            menu.find('.xd-delete').addClass('disabled');
+            menu.find('.xd-edit').addClass(css);
+            menu.find('.xd-delete').addClass(css);
         }
 
         // Show contextmenu
@@ -586,15 +588,23 @@ function FlowForm(boxId, mNode, mLine) {
     };
     */
 
+    this._menuStatus = function (me) {
+        return !me.classList.contains('off');
+    }
+
     //context menu event
-    this.onMenuEdit = function () {
+    this.onMenuEdit = function (me) {
+        if (!this._menuStatus(me)) return;
+
         if (this.nowIsNode)
             this.showNodeProp(this.nowFlowItem);
         else
             this.showLineProp(this.nowFlowItem);
     };
 
-    this.onMenuDelete = function () {
+    this.onMenuDelete = function (me) {
+        if (!this._menuStatus(me)) return;
+
         var me = this;
         if (me.nowIsNode) {
             _tool.ans('是否確定刪除這個節點和流程線?', function () {
@@ -605,6 +615,10 @@ function FlowForm(boxId, mNode, mLine) {
                 me.deleteLine(me.nowFlowItem);
             });
         }
+    };
+
+    this.onMenuView = function (me) {
+        //todo
     };
 
     //onclick add line condition
@@ -632,9 +646,11 @@ function FlowForm(boxId, mNode, mLine) {
         //update node display name
         var node = this.nowFlowItem;
         var rowBox = this.mNode.idToRowBox(node.getId());
+        var oldName = _itext.get('Name', rowBox);   //get before loadRow()
         _form.loadRow(rowBox, row);
 
-        node.setName(row.Name);
+        if (oldName != row.Name)
+            node.setName(row.Name, true);
 
         //hide modal
         _modal.hideO(this.modalNodeProp);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace HrAdm.Tables;
 
-public partial class XpFlowSign
+public partial class XpTestFlowSign
 {
     public int Sn { get; set; }
 

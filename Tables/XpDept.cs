@@ -3,15 +3,13 @@ using System.Collections.Generic;
 
 namespace HrAdm.Tables;
 
-public partial class XpFlow
+public partial class XpDept
 {
     public string Id { get; set; } = null!;
 
-    public string Code { get; set; } = null!;
-
     public string Name { get; set; } = null!;
 
-    public bool Portrait { get; set; }
+    public string MgrId { get; set; } = null!;
 
-    public bool Status { get; set; }
+    public string? TopDeptId { get; set; }
 }

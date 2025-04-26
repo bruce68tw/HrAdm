@@ -341,7 +341,7 @@ span.error {
 }
 
 /* 節點文字後的小方塊, 用來拖拉流程線 */
-.xf-point {
+.xf-pin {
 	fill: orange;
 	stroke: red;
 	stroke-width: 1px;
@@ -405,6 +405,11 @@ span.error {
 		.xf-menu li:hover {
 			background-color: #DEF;
 		}
+		.xf-menu li.off {
+			color: #aaa;
+			cursor: not-allowed;
+		}
+
 
 /* form without line */
 /* 停用 xg-row */

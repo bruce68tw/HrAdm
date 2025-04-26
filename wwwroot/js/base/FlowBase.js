@@ -99,11 +99,6 @@ function FlowBase(boxId) {
 	};
 	
 	this.addLine = function (json) {
-		//this.lineCount++;
-		//if (id == null)
-		//	id = (this.lines.length + 1) * (-1);
-		//let startNode = this.idToNode(json.StartNodeId);
-		//let endNode = this.idToNode(json.EndNodeId);
 		return new FlowLine(this, json);
 	};
 	
@@ -172,11 +167,12 @@ function FlowNode(flowBase, json) {
 	this.DragEnd = 'dragend';
 
 	//start/end node radius
-	this.MinRadius = 20;
+	//this.MinRadius = 20;
 
 	//normal node size
-	this.MinWidth = 100;
-	this.MinHeight = 50;
+	this.MinWidth = 80;
+	this.MinHeight = 42;
+	this.LineHeight = 18;	//文字行高
 	this.PadTop = 8;
 	this.PadLeft = 15;
 
@@ -252,7 +248,7 @@ function FlowNode(flowBase, json) {
 				//.attr({ 'text-anchor': 'middle' }); // 確保對齊生效
 
 			//一般節點依文字內容自動調整大小
-			this.setName(nodeText);
+			this.setName(nodeText, false);
         }
 
 		this.elm.move(this.json.PosX, this.json.PosY);
@@ -433,7 +429,7 @@ function FlowNode(flowBase, json) {
 		}
 	};
 
-	//id記錄在 boxElm !!
+	//id記錄在 group elm !!
 	this.getId = function () {
 		return this.json.Id;
 	};
@@ -452,14 +448,16 @@ function FlowNode(flowBase, json) {
 	};
 
 	//set node name only for TypeNode, 考慮多行
-	this.setName = function (name) {
-		// 更新文字內容, 後端傳回會加上跳脫字元
+	//called by initial, 前端改變node name
+	this.setName = function (name, drawLine) {
+		// 更新文字內容, 後端傳回會加上跳脫字元, js 2021才有 replaceAll, 所以自製
 		var lines = _str.replaceAll(name, '\\n', '\n').split('\n');
-		//this.textElm.text(name);
 		this.textElm.clear().text(function (add) {
 			lines.forEach((line, i) => {
-				if (i > 0) add.tspan(line).newLine().dy(20);
-				else add.tspan(line);
+				if (i > 0)
+					add.tspan(line).newLine().dy(this.LineHeight);
+				else
+					add.tspan(line);
 			});
 		});
 
@@ -473,6 +471,9 @@ function FlowNode(flowBase, json) {
 
 		// 重新居中文字
 		this.textElm.center(this.boxElm.cx(), this.boxElm.cy());
+
+		if (drawLine)
+			this._drawLines();
 	};
 
 	//call last

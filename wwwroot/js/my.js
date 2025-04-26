@@ -3774,6 +3774,14 @@ var _str = {
             return null;
         }
     },
+
+    replaceAll: function (str, oldStr, newStr) {
+        // 轉義特殊字元，避免錯誤正則
+        const oldStr2 = oldStr.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(oldStr2, 'g');
+        return str.replace(regex, newStr);
+    },
+
 }; //class
 
 //switch radio, 使用 css3 toggle switch
@@ -6631,11 +6639,6 @@ function FlowBase(boxId) {
 	};
 	
 	this.addLine = function (json) {
-		//this.lineCount++;
-		//if (id == null)
-		//	id = (this.lines.length + 1) * (-1);
-		//let startNode = this.idToNode(json.StartNodeId);
-		//let endNode = this.idToNode(json.EndNodeId);
 		return new FlowLine(this, json);
 	};
 	
@@ -6704,11 +6707,12 @@ function FlowNode(flowBase, json) {
 	this.DragEnd = 'dragend';
 
 	//start/end node radius
-	this.MinRadius = 20;
+	//this.MinRadius = 20;
 
 	//normal node size
-	this.MinWidth = 100;
-	this.MinHeight = 50;
+	this.MinWidth = 80;
+	this.MinHeight = 42;
+	this.LineHeight = 18;	//文字行高
 	this.PadTop = 8;
 	this.PadLeft = 15;
 
@@ -6757,12 +6761,14 @@ function FlowNode(flowBase, json) {
 			//移動circle時會參考radius, 所以先更新, 從css讀取radius, 而不是從circle建立的屬性 !!
 			let style = window.getComputedStyle(this.boxElm.node);	//不能直接讀取circle屬性
             let radius = parseFloat(style.getPropertyValue('r'));	//轉浮點
-			this.boxElm.attr('r', radius);
+			this.boxElm.attr('r', radius);	//reset radius
 
 			//起迄節點不會改變文字和大小, 直接設定
 			this.textElm = this.elm.text(nodeText)
 				.addClass(cssClass + '-text')
 				.attr({ 'text-anchor': 'middle', 'dominant-baseline': 'middle' }); //水平垂直置中
+
+			//this.textElm.center(radius, radius);
 
 			//let width = radius * 2;
 			//this.boxElm.size(width, width);
@@ -6772,7 +6778,8 @@ function FlowNode(flowBase, json) {
             nodeText = this.json.Name;
             cssClass = 'xf-node';
 			this.boxElm = this.elm.rect()
-				.addClass(cssClass);
+				.addClass(cssClass)
+				.attr({ 'text-anchor': 'middle', 'dominant-baseline': 'middle' }); //水平垂直置中
 			//.move(this.json.PosX, this.json.PosY);
 
 			this.textElm = this.elm.text('')
@@ -6781,7 +6788,7 @@ function FlowNode(flowBase, json) {
 				//.attr({ 'text-anchor': 'middle' }); // 確保對齊生效
 
 			//一般節點依文字內容自動調整大小
-			this.setName(nodeText);
+			this.setName(nodeText, false);
         }
 
 		this.elm.move(this.json.PosX, this.json.PosY);
@@ -6962,7 +6969,7 @@ function FlowNode(flowBase, json) {
 		}
 	};
 
-	//id記錄在 boxElm !!
+	//id記錄在 group elm !!
 	this.getId = function () {
 		return this.json.Id;
 	};
@@ -6981,14 +6988,16 @@ function FlowNode(flowBase, json) {
 	};
 
 	//set node name only for TypeNode, 考慮多行
-	this.setName = function (name) {
-		// 更新文字內容, 後端傳回會加上跳脫字元
-		var lines = name.replace('\\n', '\n').split('\n');
-		//this.textElm.text(name);
+	//called by initial, 前端改變node name
+	this.setName = function (name, drawLine) {
+		// 更新文字內容, 後端傳回會加上跳脫字元, js 2021才有 replaceAll, 所以自製
+		var lines = _str.replaceAll(name, '\\n', '\n').split('\n');
 		this.textElm.clear().text(function (add) {
 			lines.forEach((line, i) => {
-				if (i > 0) add.tspan(line).newLine().dy(20);
-				else add.tspan(line);
+				if (i > 0)
+					add.tspan(line).newLine().dy(this.LineHeight);
+				else
+					add.tspan(line);
 			});
 		});
 
@@ -7002,6 +7011,9 @@ function FlowNode(flowBase, json) {
 
 		// 重新居中文字
 		this.textElm.center(this.boxElm.cx(), this.boxElm.cy());
+
+		if (drawLine)
+			this._drawLines();
 	};
 
 	//call last
@@ -7573,18 +7585,20 @@ function FlowForm(boxId, mNode, mLine) {
         this.nowIsNode = isNode;
         this.nowFlowItem = flowItem;
 
-        //set edit status
+        //一般節點才需要設定屬性
         var canEdit = isNode
             ? (this.isEdit && flowItem.getNodeType() == _flow.TypeNode)
             : this.isEdit;
 
+        //html 不會自動處理自製功能表狀態, 自行配合 css style
+        var css = 'off';
         var menu = $(this.MenuFilter);
         if (canEdit) {
-            menu.find('.xd-edit').removeClass('disabled');
-            menu.find('.xd-delete').removeClass('disabled');
+            menu.find('.xd-edit').removeClass(css);
+            menu.find('.xd-delete').removeClass(css);
         } else {
-            menu.find('.xd-edit').addClass('disabled');
-            menu.find('.xd-delete').addClass('disabled');
+            menu.find('.xd-edit').addClass(css);
+            menu.find('.xd-delete').addClass(css);
         }
 
         // Show contextmenu
@@ -8010,15 +8024,23 @@ function FlowForm(boxId, mNode, mLine) {
     };
     */
 
+    this._menuStatus = function (me) {
+        return !me.classList.contains('off');
+    }
+
     //context menu event
-    this.onMenuEdit = function () {
+    this.onMenuEdit = function (me) {
+        if (!this._menuStatus(me)) return;
+
         if (this.nowIsNode)
             this.showNodeProp(this.nowFlowItem);
         else
             this.showLineProp(this.nowFlowItem);
     };
 
-    this.onMenuDelete = function () {
+    this.onMenuDelete = function (me) {
+        if (!this._menuStatus(me)) return;
+
         var me = this;
         if (me.nowIsNode) {
             _tool.ans('是否確定刪除這個節點和流程線?', function () {
@@ -8029,6 +8051,10 @@ function FlowForm(boxId, mNode, mLine) {
                 me.deleteLine(me.nowFlowItem);
             });
         }
+    };
+
+    this.onMenuView = function (me) {
+        //todo
     };
 
     //onclick add line condition
@@ -8056,9 +8082,11 @@ function FlowForm(boxId, mNode, mLine) {
         //update node display name
         var node = this.nowFlowItem;
         var rowBox = this.mNode.idToRowBox(node.getId());
+        var oldName = _itext.get('Name', rowBox);   //get before loadRow()
         _form.loadRow(rowBox, row);
 
-        node.setName(row.Name);
+        if (oldName != row.Name)
+            node.setName(row.Name, true);
 
         //hide modal
         _modal.hideO(this.modalNodeProp);

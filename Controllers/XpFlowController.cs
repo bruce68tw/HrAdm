@@ -71,7 +71,7 @@ namespace HrAdm.Controllers
         //code: flow.Code
         //json: flow data in json string
         [HttpPost]
-        public async Task<string> SaveFlowTest(string code, string data)
+        public async Task<string> SaveTest(string code, string data)
         {
             return await new TestFlowService().StartFlow(code, data);
         }

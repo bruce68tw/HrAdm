@@ -3,9 +3,9 @@ using Base.Services;
 
 namespace HrAdm.Services
 {
-    public class UserEdit : BaseEditSvc
+    public class XpUserEdit : BaseEditSvc
     {
-        public UserEdit(string ctrl) : base(ctrl) { }
+        public XpUserEdit(string ctrl) : base(ctrl) { }
 
         override public EditDto GetDto()
         {

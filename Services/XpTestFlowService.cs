@@ -5,13 +5,13 @@ using System.Linq;
 
 namespace HrAdm.Services
 {
-    public class XpFlowTestService
+    public class XpTestFlowService
     {
         public List<SignRowDto> GetSignRows(string id)
         {
             var locale = _Xp.GetLocale0();
             var db = _Xp.GetDb();
-            return (from s in db.XpFlowSignTest
+            return (from s in db.XpTestFlowSign
                     join f in db.XpFlow on s.FlowId equals f.Id
                     join c in db.XpCode on new { Type = "SignStatus", Value = s.SignStatus } 
                         equals new { c.Type, c.Value }

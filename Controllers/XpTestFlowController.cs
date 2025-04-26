@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace HrAdm.Controllers
 {
     [XgProgAuth]
-    public class XpFlowTestController : BaseCtrl
+    public class XpTestFlowController : BaseCtrl
     {
         public async Task<ActionResult> Read()
         {
@@ -29,12 +29,12 @@ namespace HrAdm.Controllers
         [XgProgAuth(CrudEnum.Read)]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new XpFlowTestRead().GetPageA(Ctrl, dt));
+            return JsonToCnt(await new XpTestFlowRead().GetPageA(Ctrl, dt));
         }
 
-        private XpFlowTestEdit EditService(string flowCode)
+        private XpTestFlowEdit EditService(string flowCode)
         {
-            return new XpFlowTestEdit(Ctrl, flowCode);
+            return new XpTestFlowEdit(Ctrl, flowCode);
         }
 
         [HttpPost]
@@ -54,17 +54,17 @@ namespace HrAdm.Controllers
         /// <summary>
         /// get signRows partial view
         /// </summary>
-        /// <param name="id">XpFlowTest.Id</param>
+        /// <param name="id">XpTestFlowSource.Id</param>
         /// <returns></returns>
         public ActionResult GetSignRows(string id)
         {
-            return PartialView(_Xp.SignRowsView, new XpFlowTestService().GetSignRows(id));
+            return PartialView(_Xp.SignRowsView, new XpTestFlowService().GetSignRows(id));
         }
 
         [HttpPost]
         public async Task<JsonResult> SignRow(string id, string status, string note)
         {
-            return Json(await _XgFlow.SignRowA(id, (status == "Y"), note, "XpFlowTest", true, FlowBackTypeEnum.Close));
+            return Json(await _XgFlow.SignRowA(id, (status == "Y"), note, "XpTestFlowSource", true, FlowBackTypeEnum.Close));
         }
 
     }//class

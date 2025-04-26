@@ -106,8 +106,8 @@
         <!-- eform 在 flowForm 下面, 使用 z-index無效, 改用 width -->
         <form id='eform' class='xg-form' style="width:100px;">
             <vc:xi-hide dto='new() { Fid = "Id" }' />
-            <vc:xi-text dto='new() { Fid = "Code" , MaxLen = 20, Required = true, BoxClass = "xu-text" , InputTip = "流程代碼", Width = "150%" }' />
-            <vc:xi-text dto='new() { Fid = "Name", MaxLen = 30, Required = true, BoxClass = "xu-text", InputTip = "流程名稱", Width = "150%" }' />
+            <vc:xi-text dto='new() { Fid = "Code" , MaxLen = 20, Required = true, BoxClass = "xu-text" , InputTip = "流程代碼", Width = "150%", InputAttr = "title=流程代碼" }' />
+            <vc:xi-text dto='new() { Fid = "Name", MaxLen = 30, Required = true, BoxClass = "xu-text", InputTip = "流程名稱", Width = "150%", InputAttr = "title=流程名稱" }' />
 
             <!-- add outer div for validate msg layout -->
             <div>
@@ -135,9 +135,9 @@
 
 <!-- context menu for node & line, xf means flow -->
 <ul class='xf-menu'>
-    <li onclick="_me.flowForm.onMenuEdit()" class="xd-edit">Edit</li>
-    <li onclick="_me.flowForm.onMenuDelete()" class="xd-delete">Delete</li>
-    <li onclick="_me.flowForm.onMenuView()" class="xd-view">View</li>
+    <li onclick="_me.flowForm.onMenuEdit(this)" class="xd-edit">Edit</li>
+    <li onclick="_me.flowForm.onMenuDelete(this)" class="xd-delete">Delete</li>
+    <li onclick="_me.flowForm.onMenuView(this)" class="xd-view">View</li>
 </ul>
 
 <!-- ??flow lines container, for keep saving rows, hide -->
@@ -197,7 +197,7 @@
                     @*await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "Node Type :", Fid = "NodeType", rows = ViewBag.NodeTypes, cols = cols })*@
                     @*await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "SignTime :", Fid = "LimitType", rows = ViewBag.NodeLimitTypes, cols = cols })*@
                     <vc:xi-text dto='new() { Title=R["NodeName"].Value, Fid="Name" , MaxLen=20, Required=true, Cols=cols }' />
-                    <vc:xi-select dto='new() { Title = "簽核者種類", Fid = "SignerType", Rows = ViewBag.SignerTypes, Required = true, Cols = cols }' />
+                    <vc:xi-select dto='new() { Title = "簽核者種類", Fid = "SignerType", Rows = ViewBag.SignerTypes, Required = true, LabelTip = "星號表示簽核者內容為必填。",  Cols = cols }' />
                     <vc:xi-text dto='new() { Title = "簽核者內容值", Fid = "SignerValue", MaxLen = 30, Cols = cols }' />
                 </form>
             </div>

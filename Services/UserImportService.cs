@@ -39,7 +39,7 @@ namespace HrAdm.Services
         private List<string> FnSaveImportRows(List<UserImportVo> okRows)
         {
             var db = _Xp.GetDb();
-            var deptIds = db.Dept.Select(a => a.Id).ToList();
+            var deptIds = db.XpDept.Select(a => a.Id).ToList();
             var errors = new List<string>();
             foreach (var row in okRows)
             {
@@ -51,14 +51,14 @@ namespace HrAdm.Services
                 }
 
                 //check rules: Account not repeat
-                if (db.User.Any(a => a.Account == row.Account))
+                if (db.XpUser.Any(a => a.Account == row.Account))
                 {
                     errors.Add("Account Existed.");
                     continue;
                 }
 
                 #region set entity model & save db
-                db.User.Add(new User() { 
+                db.XpUser.Add(new XpUser() { 
                     Id = _Str.NewId(),
                     Name = row.Name,
                     Account = row.Account,
