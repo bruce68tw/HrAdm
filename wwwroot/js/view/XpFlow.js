@@ -96,8 +96,6 @@
     //load nodes
     mNode_loadRows: function (rows) {
         _me.flowForm.loadNodes(rows);
-
-        //this.flowBox.loadNodes(rows);
     },
 
     //getUpdJson

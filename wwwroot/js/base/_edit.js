@@ -110,4 +110,15 @@ var _edit = {
             field.remove();
     },
 
+    /**
+     * getServerFid -> getFileSid
+     * get server side variables name for file field
+     * param tableId {string} 
+     * param fid {string} ui file id
+     * return {string} format: Table_Fid
+    getFileSid: function (levelStr, fid) {
+        return 't' + levelStr + '_' + fid;
+    },
+     */
+
 };

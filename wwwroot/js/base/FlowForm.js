@@ -16,12 +16,6 @@ function FlowForm(boxId, mNode, mLine) {
      */ 
     this._init = function () {
         //#region constant
-        //node types
-        //this.StartNode = 'S';
-        //this.EndNode = 'E';
-        //this.NormalNode = 'N';
-        //this.AutoNode = 'A';
-
         //and/or seperator for line condition
         //js only replace first found, so use regular, value is same to code.type=AndOr
         this.OrSep = '{O}';  
@@ -41,34 +35,6 @@ function FlowForm(boxId, mNode, mLine) {
         //this.OkLineCfg = { stroke: 'green', strokeWidth: 2 };   //??ok
         //this.DenyLineCfg = { stroke: 'red', strokeWidth: 2 };   //??deny(reject)
 
-		/*
-        //??start node config
-        this.StartNodeCfg = {
-            filter: this.EpFilter,
-            //anchor: 'Continuous',
-            anchor: ['Bottom', 'Left', 'Right'],
-            //outlineWidth not work !!
-            connectorStyle: {
-                stroke: '#5c96bc',
-                strokeWidth: 2,
-                outlineStroke: 'transparent',
-                outlineWidth: 3,
-            },
-            connectionType: 'basic',
-            extract: {
-                'action': 'the-action'
-            },
-            maxConnections: 10,
-        };
-
-        //??end node config
-        this.EndNodeCfg = {
-            dropOptions: { hoverClass: 'dragHover' },
-            //anchor: 'Continuous',
-            anchor: ['Top', 'Bottom', 'Left', 'Right'],
-            allowLoopback: true,
-        };
-		*/
         //#endregion
 
         //#region variables
@@ -94,7 +60,6 @@ function FlowForm(boxId, mNode, mLine) {
         //now selected type & element
         this.nowIsNode = false;     //true:node, false:line
         this.nowFlowItem = null;    //now selected FlowNode/FlowLine
-        //#endregion
 
         //for FlowLine, 對應 XpCode.Type=LineOp, 數對內容為:儲存值/顯示文字(label)
         var condOpMaps = [
@@ -117,12 +82,12 @@ function FlowForm(boxId, mNode, mLine) {
         }
 
         //set instance first
-        //this.flowBase = new FlowBase(boxId, (nodeId, x, y) => this.onMoveNode(nodeId, x, y));
         var flowBase = new FlowBase(boxId);
         flowBase.fnMoveNode = (node, x, y) => this.fnMoveNode(node, x, y);
         flowBase.fnAfterAddLine = (json) => this.fnAfterAddLine(json);
         flowBase.fnShowMenu = (event, isNode, flowItem) => this.fnShowMenu(event, isNode, flowItem);
         this.flowBase = flowBase;
+        //#endregion
 
         //set event
         this._setFlowEvent();
@@ -173,6 +138,11 @@ function FlowForm(boxId, mNode, mLine) {
                 left: event.clientX + 'px',
                 top: event.clientY + 'px',
             });
+    };
+
+    //清除UI & flow元件
+    this.reset = function () {
+        this.flowBase.reset();
     };
 
 	//set editable or not
@@ -238,15 +208,25 @@ function FlowForm(boxId, mNode, mLine) {
      * param name {string} only for normalType node
      */ 
     this.addNode = function (nodeType, name) {
+
+        var name = '';
+        if (nodeType == _flow.TypeStart) {
+            name = 'S';
+        } else if (nodeType == _flow.TypeEnd) {
+            name = 'E';
+        } else {
+            name = '節點-' + this.flowBase.getNewNodeId();
+        }
+
         //mNode新筆一筆資料, 會產生新id
         var json = {
-            Name: (nodeType == _flow.TypeNode) ? name : '',
+            Name: name,
             NodeType: nodeType,
             PosX: 100,
             PosY: 100,
         };
         var row = this.mNode.addRow(json);  //會產生id
-        row.Name += "-" + row.Id;
+        //row.Name += "-" + row.Id;
 
 		//flow add node
 		this.flowBase.addNode(row);
@@ -546,19 +526,13 @@ function FlowForm(boxId, mNode, mLine) {
     */
 
     this.onAddNode = function (nodeType) {
-        if (nodeType == _flow.TypeStart) {
-            if (this.flowBase.hasStartNode()) {
-                _tool.msg('起始節點已經存在，不可再新增。');
-                return;
-            }
-
-            //add node
-            this.addNode(nodeType);
-        } else if (nodeType == _flow.TypeEnd) {
-            this.addNode(nodeType);
-        } else {
-            this.addNode(_flow.TypeNode, '節點');
+        if (nodeType == _flow.TypeStart && this.flowBase.hasStartNode()) {
+            _tool.msg('起始節點已經存在，不可再新增。');
+            return;
         }
+
+        //add node
+        this.addNode(nodeType);
     };
 
     //#region events
@@ -680,18 +654,6 @@ function FlowForm(boxId, mNode, mLine) {
         //check input
 		//var form = this.modalLineProp;
 
-        //var lineType = _iradio.get('LineType', this.eformLines);
-        //_assert.inArray(lineType, ['0','1','2']);
-
-        //conds to string
-        //var condStr = this._getCondStr();
-
-        //set new value
-        //write into line, this.nowFlowItem is line connection
-        //var form = this.eformLines;
-        //var conn = this.nowFlowItem;
-        //conn.setParameter('LineType', lineType);
-
         //update mLine
         var modal = this.modalLineProp;
         var row = {
@@ -699,8 +661,6 @@ function FlowForm(boxId, mNode, mLine) {
             Sort: _itext.get('Sort', modal),
             FromType: _iselect.get('FromType', modal),
         };
-        //var line = this._connToLine(conn);
-        //_form.loadRow(line, row);
         var line = this.nowFlowItem;
         var rowBox = this.mLine.idToRowBox(line.getId());
         _form.loadRow(rowBox, row);
@@ -711,13 +671,6 @@ function FlowForm(boxId, mNode, mLine) {
 		
         //hide modal
         _modal.hideO(modal);
-
-		/*
-        //change line label
-        var prop = this.getLineProp(condStr)
-        this._setLineLabel(conn, prop.label);
-        conn.setPaintStyle(prop.style);
-		*/
     };
     //#endregion (events)
 

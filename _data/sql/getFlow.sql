@@ -1,7 +1,7 @@
 
 declare @flowId varchar(10)
-set @flowId = '5ZMDKNA0CA'
+set @flowId = 'sR9paQmAdm'
 
-select * from Flow where Id=@flowId
-select * from FlowNode where FlowId=@flowId
-select * from FlowLine where FlowId=@flowId
+select * from XpFlow where Id=@flowId
+select * from XpFlowNode where FlowId=@flowId
+select * from XpFlowLine where FlowId=@flowId
