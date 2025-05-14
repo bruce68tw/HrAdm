@@ -18,7 +18,7 @@ namespace HrAdm.Services
 				Table = "dbo.CustInput",
                 PkeyFid = "Id",
                 Col4 = null,
-                AutoIdLen = 0,  //表示新增時可傳入主key
+                CanAddKey = true,  //表示新增時可傳入主key
                 Items =
                 [
                     new() { Fid = "Id" },
