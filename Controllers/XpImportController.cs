@@ -35,7 +35,7 @@ namespace HrAdm.Controllers
         //abstract could not be async(CS1994), must use virtual method !!
         virtual public async Task<JsonResult> Import(IFormFile file) 
         { 
-            return await Task.FromResult<JsonResult>(result: null);
+            return await Task.FromResult(new JsonResult(null));
         }
 
         /// <summary>
