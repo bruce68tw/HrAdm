@@ -97,7 +97,7 @@ namespace HrAdm.Services
                 };
 
             //5.call public method
-            if (!await _HttpWord.ExportByTplRowA(tplPath, "UserExt.docx", user, childs, images))
+            if (!await _HttpWord.OutputTplA(tplPath, "UserExt.docx", user, childs, images))
                 return false;
 
             //case of ok
