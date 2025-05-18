@@ -4,11 +4,6 @@ using BaseApi.Services;
 using HrAdm.Enums;
 using HrAdm.Models;
 using HrAdm.Tables;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HrAdm.Services
 {

@@ -82,7 +82,7 @@ namespace HrAdm.Services
             #endregion
 
             //3.put rows into childs property(IEnumerable type !!)
-            var childs = new List<IEnumerable<dynamic>>() 
+            var childs = new List<dynamic>() 
             {
                 userJobs, userSchools, userLicenses, 
                 userLangs, userSkills
@@ -91,12 +91,13 @@ namespace HrAdm.Services
             //4.prepare image list
             List<WordImageDto>? images = null;
             if (!string.IsNullOrEmpty(user!.PhotoFile))
-                images = new List<WordImageDto>()
-                {
+                images =
+                [
                     new() { Code = "Photo", FilePath = _Xp.PathUserExt(user.Id, _File.GetFileExt(user.PhotoFile)) }
-                };
+                ];
 
             //5.call public method
+            //if (!_HttpWord.OutputTplA2())
             if (!await _HttpWord.OutputTplA(tplPath, "UserExt.docx", user, childs, images))
                 return false;
 
