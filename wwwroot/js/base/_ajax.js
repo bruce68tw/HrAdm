@@ -118,14 +118,15 @@ var _ajax = {
      * param json {json} ajax json
      * param fnOk {function} (optional) callback function
      * param fnError {function} (optional) callback function
-     * param block {bool} block ui or not, default true
+     * param block {bool/object} block ui or not, default true
+     *   如果要block modal, 必須傳入 modal object !!
      * return {bool/json/any} ResultDto return null when error
      *   bool: fnOk not empty, return false when error
      *   json/any: fnOk is empty, return null when error
      */
     _rpcA: async function (json, fnOk, block) {
         if (_var.isEmpty(block)) block = true;
-        if (block) _fun.block();
+        if (block) _fun.block(block);
 
         //改用 async/await
         var status = false;
@@ -154,6 +155,7 @@ var _ajax = {
                     errJson[row.Fid] = row.Msg;
                     edit.validator.showErrors(errJson);
                 }
+            //todo: 考慮下載檔案
             } else if (fnOk) {
                 fnOk(result);
                 status = true;
@@ -162,7 +164,7 @@ var _ajax = {
             console.error(error);
         }
 
-        if (block) _fun.unBlock();
+        if (block) _fun.unBlock(block);
         return (fnOk == null) ? result : status;
 
         /*

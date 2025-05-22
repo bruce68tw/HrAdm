@@ -94,8 +94,8 @@ var _fun = {
         });
     },
 
-    block: function (){
-        $.blockUI({
+    block: function (obj) {
+        var data = {
             message: '' +
                 '<table><tr><td style="height:50px">' +
                 '   <i class="spinner ico-spin"></i>' +
@@ -108,11 +108,18 @@ var _fun = {
                 left: '42%',
             },
             overlayCSS: { opacity: 0.3 },
-        });
+        };
+        if (obj != null && obj.length > 0)
+            $(obj).block(data);
+        else
+            $.blockUI(data);
     },
 
-    unBlock: function () {
-        $.unblockUI();
+    unBlock: function (obj) {
+        if (obj != null && obj.length > 0)
+            $(obj).unblock();
+        else
+            $.unblockUI();
     },
 
     //#region remark code

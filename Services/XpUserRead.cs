@@ -16,11 +16,12 @@ from dbo.XpUser u
 join dbo.XpDept d on u.DeptId=d.Id
 order by u.Name
 ",
-            Items = new QitemDto[] {
+            TableAs = "u",
+            Items = [
                 new() { Fid = "Account", Op = ItemOpEstr.Like },
                 new() { Fid = "Name", Op = ItemOpEstr.Like },
                 new() { Fid = "DeptId" },
-            },
+            ],
         };
 
         public async Task<JObject?> GetPageA(string ctrl, DtDto dt)
