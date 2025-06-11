@@ -78,6 +78,7 @@ function CrudR(dtConfig, edits, updName) {
         //set _me
         _me.crudR = this;
         _me.hasRead = hasRead;
+        _me.divRead = this.divRead;
     };
 
     /**
@@ -194,7 +195,7 @@ function CrudR(dtConfig, edits, updName) {
     /**
      * change newDiv to active
      * param toRead {bool} show divRead or not
-     * param nowDiv {object} (default _me.crudE.divEdit) now div to show
+     * param nowDiv {object} (default _me.divEdit) now div to show
      * param fnCallback {function} (optional) callback function
      */
     this.swap = function (toRead, nowDiv, fnCallback) {
@@ -206,7 +207,7 @@ function CrudR(dtConfig, edits, updName) {
 
         var isDefault = _var.isEmpty(nowDiv);
         if (isDefault)
-            nowDiv = _me.crudE.divEdit;
+            nowDiv = _me.divEdit;
 
         var oldDiv, newDiv;
         if (toRead) {

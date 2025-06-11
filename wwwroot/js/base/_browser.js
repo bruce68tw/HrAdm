@@ -29,7 +29,7 @@ var _browser = {
         window.print();
         body.innerHTML = old;
         //_me = me;
-        //_me.crudR.divRead = $('#divRead');
+        //_me.divRead = $('#divRead');
         //if (fnCallback !== undefined)
         //    fnCallback();
         */
