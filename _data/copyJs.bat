@@ -13,9 +13,10 @@ rem === Bao related ===
 rem set toDirs=BaoAdm BaoCust
 rem === All ===
 rem set toDirs=DbAdm Mantis TplMvc BaoAdm BaoCust
-set toDirs=Mantis TplMvc BaoAdm BaoCust
+rem set toDirs=Mantis TplMvc BaoAdm BaoCust
+set toDirs=DbAdm GroupProg AdoptAdm
 
-set baseDir=c:\_project
+set baseDir=d:\_project
 set fromDir=%baseDir%\HrAdm\wwwroot
 
 rem %%a must be one char !!
