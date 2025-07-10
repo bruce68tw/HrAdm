@@ -55,7 +55,7 @@ where l.Id=@Id
         public async Task<ResultDto> CreateA(JObject json, IFormFile t0_FileName)
         {
             _inputRow = _Json.GetRows0(json)!;
-            var service = EditService();
+            var service = EditSvc();
             var result = await service.CreateA(json);
             if (_Valid.ResultStatus(result))
                 await _HttpFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.DirLeave, t0_FileName, nameof(t0_FileName));
@@ -64,7 +64,7 @@ where l.Id=@Id
 
         public async Task<ResultDto> UpdateA(string key, JObject json, IFormFile t0_FileName)
         {
-            var service = EditService();
+            var service = EditSvc();
             var result = await service.UpdateA(key, json);
             if (_Valid.ResultStatus(result))
                 await _HttpFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.DirLeave, t0_FileName, nameof(t0_FileName));

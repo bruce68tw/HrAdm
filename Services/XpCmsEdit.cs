@@ -47,7 +47,7 @@ where c.Id=@Id
         public async Task<ResultDto> CreateA(JObject json, IFormFile t0_FileName, string dirUpload, string cmsType)
         {
             _cmsType = cmsType;
-            var service = EditService();
+            var service = EditSvc();
             var result = await service.CreateA(json);
             if (_Valid.ResultStatus(result))
                 await _HttpFile.SaveCrudFileA(json, service.GetNewKeyJson(), dirUpload, t0_FileName, nameof(t0_FileName));
@@ -56,7 +56,7 @@ where c.Id=@Id
 
         public async Task<ResultDto> UpdateA(string key, JObject json, IFormFile t0_FileName, string dirUpload)
         {
-            var service = EditService();
+            var service = EditSvc();
             var result = await service.UpdateA(key, json);
             if (_Valid.ResultStatus(result))
                 await _HttpFile.SaveCrudFileA(json, service.GetNewKeyJson(), dirUpload, t0_FileName, nameof(t0_FileName));

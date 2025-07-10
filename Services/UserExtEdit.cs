@@ -1,10 +1,7 @@
 ﻿using Base.Models;
 using Base.Services;
 using BaseApi.Services;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace HrAdm.Services
 {
@@ -119,7 +116,7 @@ namespace HrAdm.Services
         //t03_FileName: t + table serial _ + fid
         public async Task<ResultDto> CreateA(JObject json, IFormFile t0_PhotoFile, List<IFormFile> t03_FileName)
         {
-            var service = EditService();
+            var service = EditSvc();
             var result = await service.CreateA(json);
             if (_Valid.ResultStatus(result))
             {
@@ -134,7 +131,7 @@ namespace HrAdm.Services
         //t03_FileName: t + table serial _ + fid
         public async Task<ResultDto> UpdateA(string key, JObject json, IFormFile t0_PhotoFile, List<IFormFile> t03_FileName)
         {
-            var service = EditService();
+            var service = EditSvc();
             var result = await service.UpdateA(key, json);
             if (_Valid.ResultStatus(result))
             {
