@@ -1,9 +1,7 @@
 ﻿using Base.Models;
 using Base.Services;
 using BaseApi.Services;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
-using System.Threading.Tasks;
 
 namespace HrAdm.Services
 {

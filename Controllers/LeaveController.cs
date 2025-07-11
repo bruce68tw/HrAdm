@@ -4,9 +4,7 @@ using Base.Services;
 using BaseApi.Attributes;
 using BaseApi.Controllers;
 using HrAdm.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace HrAdm.Controllers
 {
