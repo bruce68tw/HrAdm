@@ -27,7 +27,7 @@ namespace HrAdmin.Controllers
         [HttpPost]
         public async Task<ActionResult> Login(LoginVo vo)
         {
-            return await _Login.LoginByVoA(vo, encodePwd)
+            return await _Login.LoginByVoA(vo, "", encodePwd)
                 ? Redirect(_Str.IsEmpty(vo.FromUrl) ? "/Home/Index" : vo.FromUrl)
                 : View(vo);
 
