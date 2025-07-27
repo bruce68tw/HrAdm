@@ -1,7 +1,6 @@
 ﻿using Base.Services;
+using BaseApi.Services;
 using HrAdm.Models;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace HrAdm.Services
 {
@@ -9,7 +8,7 @@ namespace HrAdm.Services
     {
         public List<SignRowDto> GetSignRows(string id)
         {
-            var locale = _Xp.GetLocale0();
+            var locale = _Locale.GetLocale();
             var db = _Xp.GetDb();
             return (from s in db.XpFlowSign
                     join f in db.XpFlow on s.FlowId equals f.Id

@@ -2,7 +2,7 @@ using Base.Enums;
 using Base.Interfaces;
 using Base.Models;
 using Base.Services;
-using BaseWeb.Services;
+using BaseApi.Services;
 using HrAdm.Services;
 using Microsoft.AspNetCore.Mvc.Razor;
 using System.Data.Common;
@@ -17,6 +17,8 @@ var services = builder.Services;
 #region set services
 //1.config MVC
 services.AddControllersWithViews()
+    //for add ref BaseFlow, ­n¦w¸Ë Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation
+    .AddRazorRuntimeCompilation()
     //view Localization
     .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
     //use pascal for newtonSoft json
@@ -80,7 +82,7 @@ var app = builder.Build();
 
 //initial & set locale
 var isDev = app.Environment.IsDevelopment();
-_Fun.Init(isDev, app.Services, DbTypeEnum.MSSql, AuthTypeEnum.Row);
+_Fun.Init(isDev, app.Services, DbTypeEnum.MSSql, AuthTypeEnum.Row, true);
 await _Locale.SetCultureA(_Fun.Config.Locale);
 
 

@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\XpFlow_old\**" />
     <Compile Remove="wwwroot\css\lib\jsPlumb\**" />
     <Compile Remove="wwwroot\css\lib\jsPlumb_old\**" />
     <Compile Remove="wwwroot\css\lib\old\**" />
@@ -19,6 +20,7 @@
     <Compile Remove="_sql\**" />
     <Compile Remove="_temp\**" />
     <Compile Remove="_upload\**" />
+    <Content Remove="Views\XpFlow_old\**" />
     <Content Remove="wwwroot\css\lib\jsPlumb\**" />
     <Content Remove="wwwroot\css\lib\jsPlumb_old\**" />
     <Content Remove="wwwroot\css\lib\old\**" />
@@ -30,6 +32,7 @@
     <Content Remove="_sql\**" />
     <Content Remove="_temp\**" />
     <Content Remove="_upload\**" />
+    <EmbeddedResource Remove="Views\XpFlow_old\**" />
     <EmbeddedResource Remove="wwwroot\css\lib\jsPlumb\**" />
     <EmbeddedResource Remove="wwwroot\css\lib\jsPlumb_old\**" />
     <EmbeddedResource Remove="wwwroot\css\lib\old\**" />
@@ -41,6 +44,7 @@
     <EmbeddedResource Remove="_sql\**" />
     <EmbeddedResource Remove="_temp\**" />
     <EmbeddedResource Remove="_upload\**" />
+    <None Remove="Views\XpFlow_old\**" />
     <None Remove="wwwroot\css\lib\jsPlumb\**" />
     <None Remove="wwwroot\css\lib\jsPlumb_old\**" />
     <None Remove="wwwroot\css\lib\old\**" />
@@ -60,12 +64,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="Views\XpFlow\LineProp.cshtml" />
-    <Content Remove="Views\XpFlow\NodeProp.cshtml" />
-    <Content Remove="Views\XpFlow\Read_old.cshtml" />
-    <Content Remove="Views\XpFlow\zz_Edit.cshtml" />
-    <Content Remove="Views\XpFlow\zz_Test.cshtml" />
-    <Content Remove="Views\XpFlow\zz__LineCond.cshtml" />
     <Content Remove="Views\XpUser\Edit - 複製.cshtml" />
     <Content Remove="Views\XpUser\Read - 複製.cshtml" />
     <Content Remove="Views\XpRole\Read_v0.cshtml" />
@@ -87,6 +85,7 @@
     <None Remove="Controllers\UserController.cs%281%29" />
     <None Remove="Controllers\UserController.cs%282%29" />
     <None Remove="Controllers\zz_MyController.cs_old" />
+    <None Remove="Startup.cs.bak" />
     <None Remove="Startup.cs_old" />
     <None Remove="Tables\MyContext - 複製.cs_old" />
     <None Remove="Views\CustInput\Edit.cshtml_old" />
@@ -97,14 +96,9 @@
     <None Remove="Views\XpCms\Edit.cshtml_old" />
     <None Remove="Views\XpEasyRpt\Edit.cshtml_old" />
     <None Remove="Views\XpFlowSign\Edit.cshtml_old" />
-    <None Remove="Views\XpFlow\Edit.cshtml_old" />
     <None Remove="Views\XpProg\Edit.cshtml_old" />
     <None Remove="Views\XpRole\Edit.cshtml_old" />
     <None Remove="_image\noImage.jpg" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Startup.cs_old" />
   </ItemGroup>
 
   <ItemGroup>
@@ -118,6 +112,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.18" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">

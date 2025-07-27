@@ -1,7 +1,7 @@
 ﻿using Base.Models;
 using Base.Services;
+using BaseApi.Services;
 using Newtonsoft.Json.Linq;
-using System.Threading.Tasks;
 
 namespace HrAdm.Services
 {
@@ -9,7 +9,7 @@ namespace HrAdm.Services
     {
         private ReadDto GetDto()
         {
-            var locale = _Xp.GetLocale0();
+            var locale = _Locale.GetLocale();
             return new ReadDto()
             {
                 ReadSql = $@"

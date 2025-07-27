@@ -1,12 +1,10 @@
 ﻿using Base.Models;
 using Base.Services;
-using BaseApi.Controllers;
 using BaseApi.Attributes;
+using BaseApi.Controllers;
+using BaseApi.Services;
 using HrAdm.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace HrAdm.Controllers
 {
@@ -15,10 +13,10 @@ namespace HrAdm.Controllers
     {
         public async Task<ActionResult> Read()
         {
-			//for read view
-			ViewBag.Depts = await _XpCode.DeptsA();
-			//for edit view
-			ViewBag.LangLevels = await _XpCode.LangLevelsA(_Xp.GetLocale0());
+            var locale = _Locale.GetLocale();
+            await using var db = new Db();
+            ViewBag.Depts = await _XpCode.DeptsA(db);
+			ViewBag.LangLevels = await _XpCode.LangLevelsA(locale, db);
             return View();
         }
 

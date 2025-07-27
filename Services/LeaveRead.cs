@@ -1,6 +1,7 @@
 ﻿using Base.Enums;
 using Base.Models;
 using Base.Services;
+using BaseApi.Services;
 using Newtonsoft.Json.Linq;
 
 namespace HrAdm.Services
@@ -9,15 +10,15 @@ namespace HrAdm.Services
     {
         private ReadDto GetReadDto()
         {
-            var locale0 = _Xp.GetLocale0();
+            var locale = _Locale.GetLocale();
             return new ReadDto()
             {
                 ReadSql = $@"
 select 
     u.Name as UserName, u2.Name as AgentName,
-    c.Name_{locale0} as LeaveName, l.StartTime,
+    c.Name_{locale} as LeaveName, l.StartTime,
     l.EndTime, l.Hours,
-    c2.Name_{locale0} as SignStatusName, l.Created,
+    c2.Name_{locale} as SignStatusName, l.Created,
     l.Id
 from dbo.Leave l
 join dbo.XpUser u on l.UserId=u.Id

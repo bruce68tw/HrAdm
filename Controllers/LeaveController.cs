@@ -3,6 +3,7 @@ using Base.Models;
 using Base.Services;
 using BaseApi.Attributes;
 using BaseApi.Controllers;
+using BaseApi.Services;
 using HrAdm.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,11 +16,11 @@ namespace HrAdm.Controllers
         public async Task<ActionResult> Read()
         {
             //for read view
-            var locale0 = _Xp.GetLocale0();
-            ViewBag.LeaveTypes = await _XpCode.LeaveTypesA(locale0);
-			ViewBag.SignStatuses = await _XpCode.SignStatusesA(locale0);
-			//for edit view
-			ViewBag.Users = await _XpCode.UsersA();
+            var locale = _Locale.GetLocale();
+            await using var db = new Db();
+            ViewBag.LeaveTypes = await _XpCode.LeaveTypesA(locale, db);
+			ViewBag.SignStatuses = await _XpCode.SignStatusesA(locale, db);
+			ViewBag.Users = await _XpCode.UsersA(db);
             return View();
         }
 

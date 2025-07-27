@@ -1,12 +1,11 @@
 ﻿using Base.Enums;
 using Base.Models;
 using Base.Services;
-using BaseApi.Controllers;
 using BaseApi.Attributes;
+using BaseApi.Controllers;
+using BaseApi.Services;
 using HrAdm.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace HrAdm.Controllers
 {
@@ -16,14 +15,11 @@ namespace HrAdm.Controllers
         public async Task<ActionResult> Read()
         {
             //for edit view
-            await using (var db = new Db())
-            {
-                var locale0 = _Xp.GetLocale0();
-                ViewBag.Users = await _XpCode.UsersA(db);
-                //ViewBag.Progs = await _XpCode.GetProgsAsync(locale0, db);
-                ViewBag.AuthRanges = await _XpCode.AuthRangesA(locale0, db);
-                ViewBag.Depts = await _XpCode.DeptsA(db);
-            }
+            await using var db = new Db();
+            var locale = _Locale.GetLocale();
+            ViewBag.Users = await _XpCode.UsersA(db);
+            ViewBag.AuthRanges = await _XpCode.AuthRangesA(locale, db);
+            ViewBag.Depts = await _XpCode.DeptsA(db);
             return View();
         }
 

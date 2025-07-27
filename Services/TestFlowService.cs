@@ -1,8 +1,5 @@
 ﻿using Base.Services;
 using BaseApi.Services;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace HrAdm.Services
 {

@@ -5,7 +5,6 @@ using BaseApi.Controllers;
 using BaseApi.Services;
 using HrAdm.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace HrAdm.Controllers
 {
@@ -14,15 +13,7 @@ namespace HrAdm.Controllers
     {
         public async Task<ActionResult> Read()
         {
-            await using(var db = new Db())
-            {
-                var locale0 = _Xp.GetLocale0();
-                ViewBag.NodeTypes = await _XpCode.NodeTypesA(locale0, db);
-                ViewBag.SignerTypes = await _XpCode.SignerTypesA(locale0, db);
-                ViewBag.AndOrs = await _XpCode.AndOrsA(locale0, db);
-                ViewBag.LineOps = await _XpCode.LineOpsA(locale0, db);
-                ViewBag.LineFromTypes = await _XpCode.LineFromTypesA(locale0, db);
-            }
+            await _XgFlow.ReadSetViewBagA(ViewBag, _Locale.GetLocale(false));
             return View();
         }
 
@@ -32,7 +23,7 @@ namespace HrAdm.Controllers
             return JsonToCnt(await new XgFlowR().GetPageA(Ctrl, dt));
         }
 
-        private XgFlowE EditService()
+        private XgFlowE EditSvc()
         {
             return new XgFlowE(Ctrl);
         }
@@ -40,36 +31,39 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetUpdJson(string key)
         {
-            return JsonToCnt(await EditService().GetUpdJsonA(key));
+            return JsonToCnt(await EditSvc().GetUpdJsonA(key));
         }
 
         [HttpPost]
         public async Task<ContentResult> GetViewJson(string key)
         {
-            return JsonToCnt(await EditService().GetViewJsonA(key));
+            return JsonToCnt(await EditSvc().GetViewJsonA(key));
         }
 
         [HttpPost]
         public async Task<JsonResult> Create(string json)
         {
-            return Json(await EditService().CreateA(_Str.ToJson(json)!));
+            return Json(await EditSvc().CreateA(_Str.ToJson(json)!));
         }
 
         [HttpPost]
         public async Task<JsonResult> Update(string key, string json)
         {
-            return Json(await EditService().UpdateA(key, _Str.ToJson(json)!));
+            return Json(await EditSvc().UpdateA(key, _Str.ToJson(json)!));
         }
 
         [HttpPost]
         public async Task<JsonResult> Delete(string key)
         {
-            return Json(await EditService().DeleteA(key));
+            return Json(await EditSvc().DeleteA(key));
         }
 
-        //test flow
-        //code: flow.Code
-        //json: flow data in json string
+        /// <summary>
+        /// test flow
+        /// </summary>
+        /// <param name="code">flow.Code</param>
+        /// <param name="data">flow data in json string</param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<string> SaveTest(string code, string data)
         {

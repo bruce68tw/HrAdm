@@ -1,9 +1,7 @@
 ﻿using Base.Services;
 using BaseApi.Services;
-using BaseWeb.Services;
 using HrAdm.Tables;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace HrAdm.Services
 {
@@ -96,10 +94,12 @@ namespace HrAdm.Services
         /// get locale code without dash sign
         /// </summary>
         /// <returns></returns>
+        /*
         public static string GetLocale0()
         {
             return _Locale.GetLocaleByUser(false);
         }
+        */
 
         /// <summary>
         /// get template file
@@ -109,7 +109,7 @@ namespace HrAdm.Services
         {
             var dir = DirTpl;
             if (hasLocale)
-                dir += _Locale.GetLocaleByUser() + _Fun.DirSep;
+                dir += _Locale.GetLocale() + _Fun.DirSep;
 
             return dir + fileName;
         }

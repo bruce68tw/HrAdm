@@ -1,5 +1,6 @@
 ﻿using Base.Models;
 using Base.Services;
+using BaseApi.Services;
 
 namespace HrAdm.Services
 {
@@ -9,7 +10,7 @@ namespace HrAdm.Services
 
         override public EditDto GetDto()
         {
-            var locale = _Xp.GetLocale0();
+            var locale = _Locale.GetLocale();
             return new EditDto
             {
                 ReadSql = $@"

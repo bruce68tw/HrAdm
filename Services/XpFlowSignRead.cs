@@ -2,7 +2,6 @@
 using Base.Models;
 using Base.Services;
 using Newtonsoft.Json.Linq;
-using System.Threading.Tasks;
 
 namespace HrAdm.Services
 {
@@ -19,11 +18,11 @@ where a.FlowLevel=0
 order by a.SignTime
 ",            
             TableAs = "a",
-            Items = new QitemDto[] {
+            Items = [
                 new() { Fid = "SignTime", Type = QitemTypeEnum.Date },
                 new() { Fid = "FlowId", Col = "f.Id" },
                 //new() { Fid = "FlowStatus" },
-            },
+            ],
         };
 
         public async Task<JObject?> GetPageA(string ctrl, DtDto dt)

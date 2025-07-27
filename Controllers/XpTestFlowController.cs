@@ -6,7 +6,6 @@ using BaseApi.Controllers;
 using BaseApi.Services;
 using HrAdm.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace HrAdm.Controllers
 {
@@ -15,13 +14,11 @@ namespace HrAdm.Controllers
     {
         public async Task<ActionResult> Read()
         {
-            //for read view
-            var locale0 = _Xp.GetLocale0();
+            var locale = _Locale.GetLocale();
             await using var db = new Db();
             ViewBag.Flows = await _XpCode.FlowsA(db);
-			ViewBag.FlowStatuses = await _XpCode.FlowStatusesA(locale0, db);
-			//for edit view
-            ViewBag.SignStatuses2 = await _XpCode.SignStatuses2A(locale0, db);
+			ViewBag.FlowStatuses = await _XpCode.FlowStatusesA(locale, db);
+            ViewBag.SignStatuses2 = await _XpCode.SignStatuses2A(locale, db);
             return View();
         }
 
