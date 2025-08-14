@@ -1,5 +1,5 @@
 ﻿
-<form class='xg-form xg-mt10 xg-mb10'>
+<form class='x-form mt-2 mb-2'>
     <div class='row'>
         @await Component.InvokeAsync("XiTextarea", new XiTextareaDto { Title = "輸入流程資料", Fid = "Data", Required = true, RowsCount = 6, InRow = true, Cols = "2,4" })
         <div class='col-md-3' style='padding:10px 0'>
@@ -14,7 +14,7 @@ Hours: 8,<br>
 
 <div class='row'>
     <div class='col-md-2'></div>
-    <div class='col-md-4 xg-center'>
+    <div class='col-md-4 x-center'>
         <button type='button' class='btn btn-primary' onclick='_me.onSaveTestA()'>產生流程資料</button>
         <button type='button' class='btn btn-secondary' onclick='_me.testToRead(true)'>取消</button>
     </div>

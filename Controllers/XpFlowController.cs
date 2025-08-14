@@ -20,12 +20,12 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new XgFlowR().GetPageA(Ctrl, dt));
+            return JsonToCnt(await new XgFlowRead().GetPageA(Ctrl, dt));
         }
 
-        private XgFlowE EditSvc()
+        private XgFlowEdit EditSvc()
         {
-            return new XgFlowE(Ctrl);
+            return new XgFlowEdit(Ctrl);
         }
 
         [HttpPost]

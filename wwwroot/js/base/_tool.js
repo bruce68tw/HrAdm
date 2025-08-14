@@ -6,9 +6,9 @@ var _tool = {
         //alert
         _tool.xgMsg = $('#xgMsg');  //使用id
         _tool.xgAns = $('#xgAns');  //使用id
-        _tool.xgAlert = $('.xg-alert');
-        _tool.xgArea = $('.xg-area');
-        _tool.xgImage = $('.xg-image');
+        _tool.xgAlert = $('.x-alert');
+        _tool.xgArea = $('.x-area');
+        _tool.xgImage = $('.x-image');
     },
 
     /**
@@ -47,7 +47,7 @@ var _tool = {
         var box = _tool.xgAlert;
         box.find('.xd-msg').text(msg)
         box.fadeIn(500, function () {
-            box.show();
+            _obj.show(box);
             setTimeout(function () {
                 _tool.onAlertClose();
             }, 5000);   //show 5 seconds
@@ -56,13 +56,13 @@ var _tool = {
 
     //??show waiting
     showWait: function () {
-        //$('body').addClass('xg-show-loading');
-        $('.xg-wait').show();
+        //$('body').addClass('x-show-loading');
+        _obj.show($('.x-wait'));
     },
     //??
     hideWait: function () {
-        //$('body').removeClass('xg-show-loading');
-        $('.xg-wait').hide();
+        //$('body').removeClass('x-show-loading');
+        _obj.hide($('.x-wait'));
     },
 
     /**
@@ -118,7 +118,7 @@ var _tool = {
     onAlertClose: function () {
         var box = _tool.xgAlert;
         box.fadeOut(500, function () {
-            box.hide();
+            _obj.hide(box);
         });
     },
 

@@ -6,7 +6,7 @@
         : "??";
 }
 
-<script type="text/javascript">
+<script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
@@ -71,9 +71,9 @@
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { progName } })
-<div class="xg-prog">
+<div class="x-prog">
     <div id="divRead">
-        <form id='formRead' class='xg-form'>
+        <form id='formRead' class='x-form'>
             <div class="row">
                 @*await Component.InvokeAsync("XiText", new XiTextDto { title = R["FileName"].Value, fid = "FileName", inRow = true })*@
                 <vc:xi-text dto="@(new XiTextDto { Title = R["FileName"].Value, Fid = "FileName", InRow = true })"></vc:xi-text>
@@ -81,11 +81,11 @@
             </div>
         </form>
 
-        <div class='xg-btns-box'>
+        <div class='x-btns-box'>
             <button type="button" class="btn btn-secondary" onclick="_me.onOpenImport()">@R["ImportExcel"]</button>
             <a class="btn btn-secondary" href="Template">@R["DownloadTpl"]</a>
         </div>
-        <table id="tableRead" class="table xg-table" cellspacing="0">
+        <table id="tableRead" class="table x-table" cellspacing="0">
             <thead>
                 <tr>
                     <th>@R["OkRows"]</th>

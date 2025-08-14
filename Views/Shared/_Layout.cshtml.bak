@@ -7,7 +7,7 @@
     var libVer = _Xp.LibVer;
     var myVer = _Xp.MyVer;
     var min = _Fun.IsDev ? "" : ".min";   //min js
-    var locale = _Locale.GetLocaleByUser();
+    var locale = _Locale.GetLocale();
 
     _Fun.Config.SystemName = R0["SystemName"].Value;
 
@@ -42,7 +42,7 @@
     }
 }
 
-<style>
+<style nonce="@_Fun.Nonce">
 	.xu-body {
         /*
 		display: inline-block;
@@ -68,42 +68,39 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <!-- 1.load css -->
-    <link rel="stylesheet" href="~/css/lib@(min).css?v=@(libVer)" />
+    <link rel="stylesheet" href="~/css/lib@(min).css?v=@libVer" />
     @RenderSection("styles", required: false)
 
     <!-- 2.load lib js -->
-    <script src="~/js/lib@(min).js?v=@(libVer)"></script>
-    <script src="~/js/bootstrap.bundle-5.1.3.min.js"></script>
-    <script src="~/js/summernote-bs5.min-bruce.js?v=@(libVer)"></script>
+    <script src="~/js/lib@(min).js?v=@libVer"></script>
+    <script src="~/js/summernote-bs5.min-bruce.js?v=@libVer"></script>
 
     <!-- 3.load my site js(debug/production mode) !! -->
-    <environment include="Development">
-        <!-- tail ver will load failed !! -->
-        <link rel="stylesheet" asp-href-include="~/css/icomoon.css" />
-        <link rel="stylesheet" asp-href-include="~/css/base/*.css" />
-
-        <script asp-src-include="~/js/base/*.js"></script>
-        <script asp-src-include="~/js/view/_*.js"></script>
-    </environment>
     <environment include="Production">
         <link rel="stylesheet" href="~/css/my@(min).css?v=@myVer" />
         <script src="~/js/my@(min).js?v=@myVer"></script>
     </environment>
+    <environment include="Development">
+        <!-- tail ver will load failed !! -->
+        <link rel="stylesheet" asp-href-include="~/css/icomoon.css" />
+        <link rel="stylesheet" asp-href-include="~/css/base/*.css" />
+        <link rel="stylesheet" asp-href-include="~/css/view/_xgBlue.css" />
+
+        <script asp-src-include="~/js/base/*.js"></script>
+        <script asp-src-include="~/js/view/_*.js"></script>
+    </environment>
 
     <!-- 4.load local js -->
-    <script src="~/js/@(locale+min).js?v=@(myVer)"></script>
+    <script src="~/js/@(locale+min).js?v=@myVer"></script>
 
     @RenderSection("scripts", required: false)
 
     <!-- 5.initial -->
-    <script type="text/javascript">
+    <script nonce="@_Fun.Nonce">
         $(function () {
-            _fun.locale = '@(locale)';
-            //initial
-            _leftmenu.init();
-            _pjax.init('.xu-body');
-            _tool.init();
-            moment.locale(_fun.locale);
+            _fun.init('@locale');
+            _fun.pageRows = 20;
+            _fun.userId = '@_Fun.UserId()';
         });
     </script>
 </head>

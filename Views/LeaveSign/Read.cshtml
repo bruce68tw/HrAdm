@@ -1,7 +1,7 @@
 ﻿@inject IHtmlLocalizer<HrAdm.R0> R0
 @inject IViewLocalizer R
 
-<script type="text/javascript">
+<script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
@@ -69,9 +69,9 @@
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuLeaveSign"].Value } })
-<div class="xg-prog">
+<div class="x-prog">
     <div id="divRead">
-        <table id="tableRead" class="table xg-table" cellspacing="0">
+        <table id="tableRead" class="table x-table" cellspacing="0">
             <thead>
                 <tr>
                     <th>@R["Asker"]</th>
@@ -88,8 +88,8 @@
         </table>
     </div>
 
-    <div id="divEdit" class="xg-hide">
-        <form id='eform' class='xg-form'>
+    <div id="divEdit" class="d-none">
+        <form id='eform' class='x-form'>
             @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "SignId" })
             @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "LeaveId" })
             @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["Asker"].Value, Fid = "UserName" })
@@ -104,7 +104,7 @@
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Note"].Value, Fid = "Note", MaxLen = 100, Cols = "2,8" })
         </form>
 
-        <div class='xg-center' style="margin-top:10px">
+        <div class='x-center' style="margin-top:10px">
             <button type='button' class='btn btn-success' onclick='_me.onSubmit()'>@R0["Submit"]</button>
             <button type='button' class='btn btn-primary' onclick='_me.crudR.onToRead()'>@R0["ToRead"]<i class='ico-back'></i></button>
         </div>

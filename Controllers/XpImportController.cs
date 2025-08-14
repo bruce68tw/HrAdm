@@ -28,7 +28,7 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new XgImportR(ImportType).GetPageA(Ctrl, dt));
+            return JsonToCnt(await new XgImportRead(ImportType).GetPageA(Ctrl, dt));
         }
 
         //run import, drived class implement !!

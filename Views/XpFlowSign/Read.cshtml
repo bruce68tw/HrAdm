@@ -1,7 +1,7 @@
 ﻿@inject IHtmlLocalizer<HrAdm.R0> R0
 @inject IViewLocalizer R
 
-<script type="text/javascript">
+<script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
@@ -63,23 +63,23 @@
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuXpFlowSign"].Value } })
-<div class="xg-prog">
+<div class="x-prog">
     <div id="divRead">
-        <form id='formRead' class='xg-form xg-mb10'>
+        <form id='formRead' class='x-form mb-2'>
             <div class="row">
-                <div class="col-md-2 xg-label">@R["SignTime"]</div>
-                <div class="col-md-10 xg-input">
+                <div class="col-md-2 x-label">@R["SignTime"]</div>
+                <div class="col-md-10 x-input">
                     @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "SignTime", InRow = true })
                     <span>～</span>
                     @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "SignTime2", InRow = true })
                     @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
                 </div>
             </div>
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Flow"].Value, Fid = "FlowId", Rows = ViewBag.Flows, BoxClass = "xg-date-w" })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Flow"].Value, Fid = "FlowId", Rows = ViewBag.Flows, BoxClass = "x-date-w" })
             @*await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["FlowStatus"].Value, Fid = "FlowStatus", rows = ViewBag.SignStatuses })*@
         </form>
 
-        <table id="tableRead" class="table xg-table" cellspacing="0">
+        <table id="tableRead" class="table x-table" cellspacing="0">
             <thead>
                 <tr>
                     <th>@R["Flow"]</th>
@@ -92,8 +92,8 @@
         </table>
     </div>
 
-    <div id="divEdit" class="xg-hide">
-        <form id='eform' class='xg-form'>
+    <div id="divEdit" class="d-none">
+        <form id='eform' class='x-form'>
             @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
             @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["Asker"].Value + " :", Fid = "UserName" })
             @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["Agent"].Value + " :", Fid = "AgentName" })
@@ -105,12 +105,12 @@
             @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R0["Created"].Value + " :", Fid = "Created", Format = BrFormatEstr.Dt })
 
             <div class="row">
-                <div class="col-md-2 xg-label">@R["SignRows"] :</div>
-                <div class="col-md-8 xg-input" id="divSignRows"></div>
+                <div class="col-md-2 x-label">@R["SignRows"] :</div>
+                <div class="col-md-8 x-input" id="divSignRows"></div>
             </div>
         </form>
 
-        <div class='xg-center'>
+        <div class='x-center'>
             <button id='btnToRead' type='button' class='btn btn-primary' onclick='_me.crudR.onToRead()'>@R0["ToRead"]<i class='ico-back'></i></button>
         </div>
     </div>

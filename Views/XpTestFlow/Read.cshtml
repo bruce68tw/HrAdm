@@ -1,14 +1,14 @@
 ﻿<script src="~/js/view/XpTestFlow.js"></script>
-<script type="text/javascript">
+<script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { "簽核流程(測試)" } })
-<div class="xg-prog">
+<div class="x-prog">
     <div id="divRead">
-        <form id='formRead' class='xg-form xg-mb10'>
+        <form id='formRead' class='x-form mb-2'>
             <div class="row">
                 @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "流程名稱", Fid = "FlowId", Rows = ViewBag.Flows, InRow = true })
                 @await Component.InvokeAsync("XgFindTbar")
@@ -16,7 +16,7 @@
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "流程狀態", Fid = "FlowStatus", Rows = ViewBag.FlowStatuses })
         </form>
 
-        <table id="tableRead" class="table xg-table" cellspacing="0">
+        <table id="tableRead" class="table x-table" cellspacing="0">
             <thead>
                 <tr>
                     <th>流程名稱</th>
@@ -32,8 +32,8 @@
         </table>
     </div>
 
-    <div id="divEdit" class="xg-hide">
-        <form id='eform' class='xg-form'>
+    <div id="divEdit" class="d-none">
+        <form id='eform' class='x-form'>
             @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
             @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "SignId" })
             @await Component.InvokeAsync("XiTextarea", new XiTextareaDto { Title = "流程資料", Fid = "InputJson", Cols = "2,4", Edit = "C", RowsCount = 6 })
@@ -43,12 +43,12 @@
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = "備註", Fid = "Note", MaxLen = 100, Cols = "2,6" })
 
             <div class="row">
-                <div class="col-md-2 xg-label">簽核流程</div>
-                <div class="col-md-8 xg-input" id="divSignRows"></div>
+                <div class="col-md-2 x-label">簽核流程</div>
+                <div class="col-md-8 x-input" id="divSignRows"></div>
             </div>
         </form>
 
-        <div class='xg-center' style="margin-top:10px">
+        <div class='x-center' style="margin-top:10px">
             <button type='button' class='btn btn-primary' onclick='_me.onSubmitA()'>送出</button>
             <button type='button' id='btnToRead' class='btn btn-secondary' onclick='_me.crudR.onToRead()'>回列表頁</button>
         </div>

@@ -2,7 +2,7 @@
 @inject IViewLocalizer R
 
 <script src="~/js/view/CustInput.js"></script>
-<script type="text/javascript">
+<script nonce="@_Fun.Nonce">
     $(function () {
         //set js locale for test
         _me.R = {
@@ -15,19 +15,19 @@
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuCustInput"].Value } })
-<div class="xg-prog">
+<div class="x-prog">
     <div id="divRead">
-        <form id='formRead' class='xg-form'>
+        <form id='formRead' class='x-form'>
             <div class="row">
                 <vc:xi-text dto='new() { Title = R["Text"].Value, Fid = "FldText", InRow = true }'/>
                 <vc:xg-find-tbar/>
             </div>
         </form>
 
-        <div class='xg-btns-box'>
+        <div class='x-btns-box'>
             <vc:xg-create/>
         </div>
-        <table id="tableRead" class="table xg-table" cellspacing="0">
+        <table id="tableRead" class="table x-table" cellspacing="0">
             <thead>
                 <tr>
                     <th>Id</th>
@@ -43,14 +43,14 @@
         </table>
     </div>
 
-    <div id="divEdit" class="xg-hide">
-        <form id='eform' class='xg-form'>
+    <div id="divEdit" class="d-none">
+        <form id='eform' class='x-form'>
             <vc:xi-text dto='new(){ Title = "Id", Fid = "Id", MaxLen = 10, Required = true, Edit="C" }' />
             <vc:xi-check dto='new(){ Title = "XiCheck", Fid = "FldCheck", LabelTip = "CheckBox Input" }' />
             <vc:xi-date dto='new(){ Title = "XiDate", Fid = "FldDate", LabelTip = "Date Input" }'/>
             <vc:xi-dt dto='new(){ Title = "XiDt", Fid = "FldDt", Cols = "2,8" }'/>
-            <vc:xi-dec dto='new(){ Title = "XiDec", Fid = "FldDec", Cols = "2,6", Width = "100px" }'/>
-            <vc:xi-int dto='new(){ Title = "XiInt", Fid = "FldInt", Cols = "2,6", Width = "100px", Min = 2, Max = 10 }'/>
+            <vc:xi-dec dto='new(){ Title = "XiDec", Fid = "FldDec", Cols = "2,6", Width = 100 }'/>
+            <vc:xi-int dto='new(){ Title = "XiInt", Fid = "FldInt", Cols = "2,6", Width = 100, Min = 2, Max = 10 }'/>
             <vc:xi-file dto='new(){ Title = "XiFile", Fid = "FldFile", MaxSize = 1, FileType = "*" }'/>
             @*<vc:xi-link dto='new(){ Title = "XiLink", Fid = "FldFile" })"></vc:xi-link>*@
             <vc:xi-hide dto='new(){ Fid = "Id" }'/>

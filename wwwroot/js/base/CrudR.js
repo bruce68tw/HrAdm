@@ -1,5 +1,6 @@
 ﻿/**
  * 改為非靜態類別
+ * trigger _me.fnAfterFind(result) if any
  * crud read function
  * main for admin Web system
  * this properties:
@@ -29,7 +30,7 @@ function CrudR(dtConfig, edits, updName) {
      * default datatable column define
      
     dtColDef: {
-        className: 'xg-center',
+        className: 'x-center',
         orderable: false,
         targets: '_all',
     },
@@ -62,8 +63,9 @@ function CrudR(dtConfig, edits, updName) {
                 _idate.init(this.rform2);
 
             //4.Create Datatable object
+            //傳入 _me.fnAfterFind if any !!
             if (_var.notEmpty(dtConfig)) {
-                this.dt = new Datatable('#tableRead', 'GetPage', dtConfig, this._getFindCond());
+                this.dt = new Datatable('#tableRead', 'GetPage', dtConfig, this._getFindCond(), null, null, _me.fnAfterFind || null);
             }
         }
 
@@ -99,9 +101,9 @@ function CrudR(dtConfig, edits, updName) {
         //if (checked)
         //    attr += ' checked';
 
-        //xg-no-label for checked sign position
+        //x-no-label for checked sign position
         return "" +
-            "<label class='xi-check xg-no-label'>" +
+            "<label class='xi-check x-no-label'>" +
             "   <input " + attr + " type='checkbox'>" +
             "   <span class='xi-cspan'></span>" +
             "</label>";
@@ -224,11 +226,37 @@ function CrudR(dtConfig, edits, updName) {
             newDiv.fadeToggle(500);
         }
         */
+        /*
         oldDiv.fadeOut(200, function () {
             newDiv.fadeIn(500);
             if (fnCallback)
                 fnCallback();
         });
+        */
+        oldDiv.addClass('x-off');
+        setTimeout(() => {
+            oldDiv.addClass('d-none').removeClass('x-off');
+
+            newDiv.removeClass('d-none').addClass('x-on');
+            setTimeout(() => {
+                newDiv.removeClass('x-on');
+                if (fnCallback) fnCallback();
+            }, 500);
+        }, 200);
+
+        /*
+        // fadeOut 用 d-none 隱藏
+        oldDiv.animate({ opacity: 0 }, 200, function () {
+            oldDiv.addClass('d-none').css('opacity', 1);  // 動畫結束後隱藏並還原透明度
+
+            // fadeIn 用 d-none 顯示
+            newDiv.removeClass('d-none').css('opacity', 0).animate({ opacity: 1 }, 500);
+
+            if (fnCallback)
+                fnCallback();
+        });
+        */
+
         /*
         newDiv.fadeIn(500, function () {
             //debugger;
@@ -259,7 +287,7 @@ function CrudR(dtConfig, edits, updName) {
      * back to list form
      */
     this.toReadMode = function () {
-        //this.divReadTool.show();
+        //_obj.show(this.divReadTool);
         _prog.resetPath();
         this.swap(true);
     };

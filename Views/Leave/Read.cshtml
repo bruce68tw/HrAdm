@@ -8,36 +8,36 @@
 }
 
 <script src="~/js/view/Leave.js"></script>
-<script type="text/javascript">
+<script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuLeave"].Value } })
-<div class="xg-prog">
+<div class="x-prog">
     <div id="divRead">
-        <form id='formRead' class='xg-form'>
+        <form id='formRead' class='x-form'>
             <div class="row">
-                <div class="col-md-2 xg-label">@R["StartTime"]</div>
-                <div class="col-md-10 xg-input">
+                <div class="col-md-2 x-label">@R["StartTime"]</div>
+                <div class="col-md-10 x-input">
                     @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "StartTime", InRow = true })
                     <span>～</span>
                     @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "StartTime2", Value = today, InRow = true })
-                    @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
+                    @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { SpanMode = true, HasReset = true })
                 </div>
             </div>
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["LeaveType"].Value, Fid = "LeaveType", Value = leaveType, Rows = ViewBag.LeaveTypes, BoxClass = "xg-date-w" })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["FlowStatus"].Value, Fid = "FlowStatus", Value = flowStatus, Rows = ViewBag.SignStatuses, BoxClass = "xg-date-w" })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["LeaveType"].Value, Fid = "LeaveType", Value = leaveType, Rows = ViewBag.LeaveTypes, BoxClass = "x-date-w" })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["FlowStatus"].Value, Fid = "FlowStatus", Value = flowStatus, Rows = ViewBag.SignStatuses, BoxClass = "x-date-w" })
         </form>
 
         @if (_Auth.CheckCreate("Leave"))
         {
-            <div class='xg-btns-box'>
+            <div class='x-btns-box'>
                 @await Component.InvokeAsync("XgCreate")
             </div>
         }
-        <table id="tableRead" class="table xg-table" cellspacing="0">
+        <table id="tableRead" class="table x-table" cellspacing="0">
             <thead>
                 <tr>
                     <th>@R["Asker"]</th>
@@ -55,8 +55,8 @@
         </table>
     </div>
 
-    <div id="divEdit" class="xg-hide">
-        <form id='eform' class='xg-form'>
+    <div id="divEdit" class="d-none">
+        <form id='eform' class='x-form'>
             @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Asker"].Value, Fid = "UserId", Rows = ViewBag.Users, Required = true })
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Agent"].Value, Fid = "AgentId", Rows = ViewBag.Users, Required = true })
@@ -77,8 +77,8 @@
             </div>
 
             <div class="row">
-                <div class="col-md-2 xg-label">@R["SignRows"]</div>
-                <div class="col-md-8 xg-input" id="divSignRows"></div>
+                <div class="col-md-2 x-label">@R["SignRows"]</div>
+                <div class="col-md-8 x-input" id="divSignRows"></div>
             </div>
         </form>
         @await Component.InvokeAsync("XgSaveBack")

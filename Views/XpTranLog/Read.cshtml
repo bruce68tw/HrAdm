@@ -2,16 +2,16 @@
 @inject IViewLocalizer R
 
 <script src="~/js/view/XpTranLog.js"></script>
-<script type="text/javascript">
+<script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuXpTranLog"].Value } })
-<div class="xg-prog">
+<div class="x-prog">
     <div id="divRead">
-        <form id='formRead' class='xg-form' style="margin-bottom:10px;">
+        <form id='formRead' class='x-form' style="margin-bottom:10px;">
             <div class="row">
                 @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["TableName"].Value, Fid = "TableName", InRow = true })
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
@@ -20,7 +20,7 @@
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["RowId"].Value, Fid = "RowId" })
         </form>
 
-        <table id="tableRead" class="table xg-table" cellspacing="0">
+        <table id="tableRead" class="table x-table" cellspacing="0">
             <thead>
                 <tr>
                     <th>@R["TableName"]</th>

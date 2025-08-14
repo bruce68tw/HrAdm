@@ -6,7 +6,7 @@
     var cols = "4,6";
 }
 
-<style>
+<style nonce="@_Fun.Nonce">
     .xu-prog {
         height: 100%;
         width: 98%;
@@ -59,7 +59,7 @@
 <script src="~/js/svg-3.2.min.js"></script>
 <script src="~/js/svg.draggable-3.0.3.min.js"></script>
 <script src="~/js/view/XpFlow.js"></script>
-<script type="text/javascript">
+<script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
@@ -74,20 +74,20 @@
     </div>
 </div>
 
-<div class="xg-prog">
+<div class="x-prog">
     <!-- read form -->
     <div id="divRead">
-        <form id='formRead' class='xg-form'>
+        <form id='formRead' class='x-form'>
             <div class="row">
                 <vc:xi-text dto='new() { Title = "流程名稱", Fid = "Name", MaxLen = 30, InRow = true }' />
                 <vc:xg-find-tbar/>
             </div>
         </form>
 
-        <div class='xg-btns-box'>
+        <div class='x-btns-box'>
             @await Component.InvokeAsync("XgCreate")
         </div>
-        <table id="tableRead" class="table xg-table" cellspacing="0">
+        <table id="tableRead" class="table x-table" cellspacing="0">
             <thead>
                 <tr>
                     <th>@R["FlowCode"]</th>
@@ -102,12 +102,12 @@
     </div>
 
     <!-- edit form -->
-    <div id="divEdit" class="xg-hide">
+    <div id="divEdit" class="d-none">
         <!-- eform 在 flowForm 下面, 使用 z-index無效, 改用 width -->
-        <form id='eform' class='xg-form' style="width:100px;">
+        <form id='eform' class='x-form' style="width:100px;">
             <vc:xi-hide dto='new() { Fid = "Id" }' />
-            <vc:xi-text dto='new() { Fid = "Code" , MaxLen = 20, Required = true, BoxClass = "xu-text" , InputTip = "流程代碼", Width = "150%", InputAttr = "title=流程代碼" }' />
-            <vc:xi-text dto='new() { Fid = "Name", MaxLen = 30, Required = true, BoxClass = "xu-text", InputTip = "流程名稱", Width = "150%", InputAttr = "title=流程名稱" }' />
+            <vc:xi-text dto='new() { Fid = "Code" , MaxLen = 20, Required = true, BoxClass = "xu-text w-150" , InputTip = "流程代碼",  InputAttr = "title=流程代碼" }' />
+            <vc:xi-text dto='new() { Fid = "Name", MaxLen = 30, Required = true, BoxClass = "xu-text w-150", InputTip = "流程名稱", InputAttr = "title=流程名稱" }' />
 
             <!-- add outer div for validate msg layout -->
             <div>
@@ -120,15 +120,15 @@
         </form>
 
         <!-- flowNodes editMany -->
-        <form id='eformNodes' class='xg-hide'>
+        <form id='eformNodes' class='d-none'>
         </form>
 
         <!-- flowLines editMany -->
-        <form id='eformLines' class='xg-hide'>
+        <form id='eformLines' class='d-none'>
         </form>
     </div>
 
-    <div id="divFlowTest" class="xg-hide">
+    <div id="divFlowTest" class="d-none">
         <partial name="FlowTest" />
     </div>
 </div>
@@ -184,7 +184,7 @@
 </script>
 
 <!-- node property modal -->
-<div id="modalNodeProp" class="modal fade xg-modal" role="dialog">
+<div id="modalNodeProp" class="modal fade x-modal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -192,7 +192,7 @@
                 <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal xg-form" style="padding:5px 20px;">
+                <form class="form-horizontal x-form" style="padding:5px 20px;">
                     <vc:xi-hide dto='new() { Fid="NodeType" }' />
                     @*await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "Node Type :", Fid = "NodeType", rows = ViewBag.NodeTypes, cols = cols })*@
                     @*await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "SignTime :", Fid = "LimitType", rows = ViewBag.NodeLimitTypes, cols = cols })*@
@@ -210,7 +210,7 @@
 </div>
 
 <!-- line property modal -->
-<div id="modalLineProp" class="modal fade xg-modal" role="dialog">
+<div id="modalLineProp" class="modal fade x-modal" role="dialog">
     <div class="modal-dialog" style="max-width:620px;">
         <div class="modal-content">
             <div class="modal-header">
@@ -218,7 +218,7 @@
                 <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal xg-form" style="padding:0 10px;">
+                <form class="form-horizontal x-form" style="padding:0 10px;">
                     <vc:xi-read dto='new() { Title = "起始節點 :", Fid = "FromNodeName", Cols = cols }' />
                     <vc:xi-read dto='new() { Title = "結束節點 :", Fid = "ToNodeName", Cols = cols }' />
                     <vc:xi-int dto='new() { Title = "執行順序" + " :", Fid = "Sort", Required = true, Cols = "4,2" }' />
@@ -230,7 +230,7 @@
                             @R["RunCond"]
                             <button type="button" class="btn btn-sm btn-primary" onclick="_me.flowForm.onAddLineCond()">@br.BtnAddRow</button>
                         </div>
-                        <table class="table xg-table" cellspacing="0">
+                        <table class="table x-table" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th width="104px" class="text-center"></th>
