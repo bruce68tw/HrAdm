@@ -28,7 +28,12 @@ var _fun = {
     locale: 'zh-TW',    //now locale, _Layout.cshmlt will set
     maxFileSize: 50971520,  //upload file limit(50M)
     isRwd: false,
-    pageRows: 10,   //must be 10,20(not 25),50,100
+    pageRows: 10,   //must be 10,20(not 25),50,100    
+    userId: '',     //now userId
+    nowDom: '',     //now dom event element
+
+    //mid variables
+    data: {},
 
     //datatables column define default values
     dtColDef: {
@@ -37,14 +42,11 @@ var _fun = {
         targets: '_all',
     },
 
-    //now userId
-    userId: '',
-
-    //mid variables
-    //data: {},
-
-    //variables ??
-    //isCheck: true,
+    /**
+     * initial
+     * param {string} locale
+     * param {string} pjaxArea Filter
+     */
     init: function (locale) {
         //set jwt token
         //_fun.jwtToken = localStorage.getItem('_jwtToken') || '';
@@ -53,9 +55,14 @@ var _fun = {
         _fun.locale = locale;
         //initial
         _leftmenu.init();
-        _pjax.init('.xu-body');
+        _pjax.init('.x-main-right');
         _tool.init();
         moment.locale(_fun.locale);
+
+        //註冊事件, 避免使用inline script for CSRF
+        var body = $('body');
+        _fun.setEvent(body, 'click');   //eventName 不含 on
+        _fun.setEvent(body, 'change');
 
         //資安: 防止CSRF
         $.ajaxSetup({
@@ -73,11 +80,46 @@ var _fun = {
         });
     },
 
-    /*
-    isNull: function (obj) {
-        return (obj == null);
+    //get 目前event this
+    //param {bool} isObj: true(jQuery object)
+    getMe: function (isObj) {
+        return isObj ? $(_fun.nowDom) : _fun.nowDom;
     },
-    */
+
+    /**
+     * 註冊事件, 避免使用inline script for CSRF
+     * param {object} box 容器
+     * param {string} event name(不含on)
+     */ 
+    setEvent: function (box, eventName) {
+        //eventName ||= 'onclick'; //default event name
+        var event2 = 'on' + eventName;
+        box.on(eventName, `[data-${event2}]`, function () {
+            //set global
+            _fun.nowDom = this;
+
+            var me = $(this);
+            const fnPath = me.data(event2);  // "_me.crudR.onAddRow"
+            var argsStr = me.data("args");
+            argsStr = (argsStr == null) ? "" : argsStr.toString();  //數字必須轉字串, 否則split error
+            const args = argsStr ? argsStr.split(",") : [];
+
+            //在解析 fnPath 時，不要直接拿到方法後執行，而是保留父物件
+            const parts = fnPath.split(".");
+            let obj = window;
+            for (let i = 0; i < parts.length - 1; i++) {
+                obj = obj[parts[i]];
+            }
+            const fnName = parts[parts.length - 1];
+            const fn = obj[fnName];
+
+            if (typeof fn === "function") {
+                fn.apply(obj, args); // <-- 用 obj 當 this
+            } else {
+                console.warn(`Function ${fnPath} not found`);
+            }
+        });
+    },
 
     /**
      * get default value if need
@@ -102,32 +144,13 @@ var _fun = {
         });
     },
 
+    //for CSP, 不使用 jQuery.blockUI(), 會有inline style 衝突!!
     block: function (obj) {
-        var data = {
-            message: '' +
-                '<table><tr><td class="x-h50">' +
-                '   <i class="spinner ico-spin"></i>' +
-                '   <span class="ms-1 align-middle">' + _BR.Working + '</span>' +
-                '</td></tr></table>',
-            css: {
-                padding: '0 30px',
-                borderWidth: '2px', //no dash here, use camel or add '
-                width: 'auto',
-                left: '42%',
-            },
-            overlayCSS: { opacity: 0.3 },
-        };
-        if (obj != null && obj.length > 0)
-            $(obj).block(data);
-        else
-            $.blockUI(data);
+        _obj.show(_tool.xgWork);
     },
 
     unBlock: function (obj) {
-        if (obj != null && obj.length > 0)
-            $(obj).unblock();
-        else
-            $.unblockUI();
+        _obj.hide(_tool.xgWork);
     },
 
     //#region remark code

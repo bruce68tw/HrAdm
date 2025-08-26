@@ -1,7 +1,7 @@
 ﻿@inject IHtmlLocalizer<HrAdm.R0> R0
 @inject IViewLocalizer R
 
-<script src="~/js/view/CustInput.js"></script>
+<script nonce="@_Fun.Nonce" src="~/js/view/CustInput.js"></script>
 <script nonce="@_Fun.Nonce">
     $(function () {
         //set js locale for test
@@ -14,7 +14,7 @@
     });
 </script>
 
-@await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuCustInput"].Value } })
+<vc:xg-prog-path />
 <div class="x-prog">
     <div id="divRead">
         <form id='formRead' class='x-form'>

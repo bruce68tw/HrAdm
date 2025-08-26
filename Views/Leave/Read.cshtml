@@ -7,14 +7,14 @@
     var flowStatus = "Y";   //同意
 }
 
-<script src="~/js/view/Leave.js"></script>
+<script nonce="@_Fun.Nonce" src="~/js/view/Leave.js"></script>
 <script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
 </script>
 
-@await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuLeave"].Value } })
+<vc:xg-prog-path />
 <div class="x-prog">
     <div id="divRead">
         <form id='formRead' class='x-form'>

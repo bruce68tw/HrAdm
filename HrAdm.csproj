@@ -91,6 +91,7 @@
     <None Remove="Views\CustInput\Edit.cshtml_old" />
     <None Remove="Views\LeaveSign\Edit.cshtml_old" />
     <None Remove="Views\Leave\Edit.cshtml_old" />
+    <None Remove="Views\Shared\zz_Top.cshtml_old" />
     <None Remove="Views\UserExt\Edit.cshtml_old" />
     <None Remove="Views\XpUser\Edit.cshtml_old" />
     <None Remove="Views\XpCms\Edit.cshtml_old" />

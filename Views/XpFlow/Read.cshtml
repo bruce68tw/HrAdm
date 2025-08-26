@@ -56,9 +56,9 @@
     }
 </style>
 
-<script src="~/js/svg-3.2.min.js"></script>
-<script src="~/js/svg.draggable-3.0.3.min.js"></script>
-<script src="~/js/view/XpFlow.js"></script>
+<script nonce="@_Fun.Nonce" src="~/js/svg-3.2.min.js"></script>
+<script nonce="@_Fun.Nonce" src="~/js/svg.draggable-3.0.3.min.js"></script>
+<script nonce="@_Fun.Nonce" src="~/js/view/XpFlow.js"></script>
 <script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
@@ -67,7 +67,7 @@
 
 <div class="row">
     <div class="col-md-6">
-        @await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuXpFlow"].Value } })
+        <vc:xg-prog-path />
     </div>
     <div class="col-md-6" id="divEditTbar" style="padding-top: 6px; display:none">
         <vc:xg-save-back align="right me-3" />

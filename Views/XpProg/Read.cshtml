@@ -5,14 +5,14 @@
     var authRanges = (List<IdStrDto>)ViewBag.AuthRanges;
 }
 
-<script src="~/js/view/XpProg.js"></script>
+<script nonce="@_Fun.Nonce" src="~/js/view/XpProg.js"></script>
 <script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
 </script>
 
-@await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuXpProg"].Value } })
+<vc:xg-prog-path />
 <div class="x-prog">
     <div id="divRead">
         <form id='formRead' class='x-form'>

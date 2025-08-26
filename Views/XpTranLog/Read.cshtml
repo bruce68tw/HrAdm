@@ -1,14 +1,14 @@
 ﻿@inject IHtmlLocalizer<HrAdm.R0> R0
 @inject IViewLocalizer R
 
-<script src="~/js/view/XpTranLog.js"></script>
+<script nonce="@_Fun.Nonce" src="~/js/view/XpTranLog.js"></script>
 <script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
 </script>
 
-@await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuXpTranLog"].Value } })
+<vc:xg-prog-path />
 <div class="x-prog">
     <div id="divRead">
         <form id='formRead' class='x-form' style="margin-bottom:10px;">

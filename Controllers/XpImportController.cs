@@ -1,11 +1,8 @@
 ﻿using Base.Models;
+using BaseApi.Attributes;
 using BaseApi.Controllers;
 using BaseApi.Services;
-using BaseApi.Attributes;
-using BaseWeb.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace HrAdm.Controllers
 {

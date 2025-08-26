@@ -133,13 +133,15 @@ function CrudR(dtConfig, edits, updName) {
         //TODO: pending
         return '';
 
+        /*
         //debugger;
         var checked = _str.toBool(value);
         if (_str.isEmpty(fnOnClick)) {
-            fnOnClick = _str.format("_me.crudR.onSetStatusA(this,\'{0}\')", key);
+            fnOnClick = `_me.crudR.onSetStatusA(this,\'{0}\')`, key);
         }
         //??
         return _icheck.render2(0, '', 1, checked, '', true, '', "onclick=" + fnOnClick);
+        */
     };
 
     this.dtStatusName = function (value) {
@@ -172,11 +174,11 @@ function CrudR(dtConfig, edits, updName) {
         fnOnUpdate, fnOnDelete, fnOnView) {
         var funs = '';
         if (hasUpdate)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-pen" title="{2}"></i></button>', ((fnOnUpdate == null) ? '_me.crudR.onUpdateA' : fnOnUpdate), key, _BR.TipUpdate);
+            funs += `<button type="button" class="btn btn-link" data-onclick="${(fnOnUpdate == null ? '_me.crudR.onUpdateA' : fnOnUpdate)}" data-args="${key}"><i class="ico-pen" title="${_BR.TipUpdate}"></i></button>`;
         if (hasDelete)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\',\'{2}\')"><i class="ico-delete" title="{3}"></i></button>', ((fnOnDelete == null) ? '_me.crudR.onDeleteA' : fnOnDelete), key, rowName, _BR.TipDelete);
+            funs += `<button type="button" class="btn btn-link" data-onclick="${(fnOnDelete == null ? '_me.crudR.onDeleteA' : fnOnDelete)}" data-args="${key},${rowName}"><i class="ico-delete" title="${_BR.TipDelete}"></i></button>`;
         if (hasView)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-eye" title="{2}"></i></button>', ((fnOnView == null) ? '_me.crudR.onViewA' : fnOnView), key, _BR.TipView);
+            funs += `<button type="button" class="btn btn-link" data-onclick="${(fnOnView == null ? '_me.crudR.onViewA' : fnOnView)}" data-args="${key}"><i class="ico-eye" title="${_BR.TipView}"></i></button>`;
         return funs;
     };
 

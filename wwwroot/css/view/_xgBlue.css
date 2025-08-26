@@ -1,6 +1,6 @@
 ﻿/* color & font size only */
 
-/* ==== html, body ==== */
+/* === html, body === */
 html, body {
     font-size: 16px !important; /* global */
     font-family: 微軟正黑體,Arial,Roboto,Helvetica Neue,Helvetica,sans-serif;
@@ -13,65 +13,80 @@ body, label {
     /*background: #1A202E;*/
 }
 
-/* ==== left menu ==== */
-.x-leftmenu {
-    background: #E0E0E0;
-    border-right: 1px solid #C1C1C1;
+/* === 主畫面 === */
+.x-main-top {
+    height: 45px;
+    color: #fff;
+    background: #87c5da;
+    border-bottom: 1px solid #8099a5;
 }
 
-/* li(item),a(文字),i(icon) */
-.x-leftmenu li {
-    /*
-    color: #fff;
-    border-bottom: solid 1px #E5E5E5;
-    */
+    .x-main-top i {
+        font-size: 20px;
+        color: #fff;
+    }
+
+    .x-main-top a {
+        color: #fff;
+    }
+
+.x-main-down {
+    height: calc(100vh - 45px); /* 減去xu-top高度, 右邊捲軸才能與左邊分開!! */
 }
+
+.x-main-right {
+    background: #f1f1f1;
+}
+
+/* === left menu === */
+.x-leftmenu {
+    background: #52ABCB;
+    border-right: 1px solid #8099a5;
+}
+
+    /* 分隔線 */
+    .x-leftmenu li {
+        border-bottom: solid 1px #8099a5;
+    }
 
     /* 文字 */
     .x-leftmenu a {
         font-size: 15px;
-        color: #555 !important;
     }
 
+    .x-leftmenu a, .x-leftmenu i {
+        color: #fff !important;
+    }
 
-.x-leftmenu a, .x-leftmenu i {
-    color: #222222 !important;
-}
-
-.x-leftmenu a:hover, .x-leftmenu a:hover i {
-    color: #222222 !important;
-    background: #CFCFCF;
-}
-/*
-.x-leftmenu a:hover i {
-    color: #222222;
-    background: #EEEEEE;
-}
-*/
+        .x-leftmenu a:hover, .x-leftmenu a:hover i {
+            color: #fff !important;
+            background: #086384;
+        }
 
 /* 子功能表 */
 .x-leftmenu-subbox {
-    background: #FAFAFA;
+    background: #4695B2;
 }
 
     .x-leftmenu-subbox a {
-        color: #222222;
+        color: #fff;
     }
 
-    .x-leftmenu-subbox a:hover {
-        background: #EEEEEE !important;
-    }
+        .x-leftmenu-subbox a:hover {
+            background: #086384 !important;
+        }
 
+
+/* === table === */
 .x-table th {
-    background: #E0E0E0 !important;
+    background: #d6e9f9 !important;
 }
 
 .x-table tr:hover {
-    background: #FAFAFA !important;
+    background: #e5ecf1 !important;
 }
 
-
-/* ==== modal ==== */
+/* === modal === */
 .x-modal .modal-header {
     border-bottom: none;
     background: #FAFAFA;
@@ -79,7 +94,6 @@ body, label {
 .x-modal .modal-body, .x-modal .modal-footer {
     /*background: #404040;*/
 }
-
 
 /* === checkbox/radio === */
 /* checkbox, span is square/round checked sign */
