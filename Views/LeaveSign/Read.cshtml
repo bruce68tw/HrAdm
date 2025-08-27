@@ -32,7 +32,7 @@
                         return _date.dtsToUiDt(data);
                     }},
 				    { targets: [7], render: function (data, type, full, meta) {
-                        return _str.format('<button type="button" class="btn btn-outline-secondary btn-sm" onclick="_me.crudR.onUpdateA(\'{0}\')">@R["Audit"]</button>', full.Id);
+                        return `<button type="button" class="btn btn-outline-secondary btn-sm" data-onclick="_me.crudR.onUpdateA" data-args="${full.Id}">@R["Audit"]</button>`;
                     }},
                 ],
             };
@@ -105,8 +105,8 @@
         </form>
 
         <div class='x-center' style="margin-top:10px">
-            <button type='button' class='btn btn-success' onclick='_me.onSubmit()'>@R0["Submit"]</button>
-            <button type='button' class='btn btn-primary' onclick='_me.crudR.onToRead()'>@R0["ToRead"]<i class='ico-back'></i></button>
+            <button type='button' class='btn btn-success' data-onclick='_me.onSubmit'>@R0["Submit"]</button>
+            <button type='button' class='btn btn-primary' data-onclick='_me.crudR.onToRead'>@R0["ToRead"]<i class='ico-back'></i></button>
         </div>
     </div>
 </div>

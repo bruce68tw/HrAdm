@@ -21,7 +21,7 @@
                         return _date.dtsToUiDt(data);
                     }},
 				    { targets: [3], render: function (data, type, full, meta) {
-                        return _str.format('<button type="button" class="btn btn-outline-secondary btn-sm" onclick="_me.onView(\'{0}\', \'{1}\')">@R0["View"]</button>', full.FlowCode, full.SourceId);
+                        return `<button type="button" class="btn btn-outline-secondary btn-sm" data-onclick="_me.onView" data-args="${full.FlowCode}, ${full.SourceId}">@R0["View"]</button>`;
                     }},
                 ],
             };
@@ -111,7 +111,7 @@
         </form>
 
         <div class='x-center'>
-            <button id='btnToRead' type='button' class='btn btn-primary' onclick='_me.crudR.onToRead()'>@R0["ToRead"]<i class='ico-back'></i></button>
+            <button id='btnToRead' type='button' class='btn btn-primary' data-onclick='_me.crudR.onToRead'>@R0["ToRead"]<i class='ico-back'></i></button>
         </div>
     </div>
 </div>

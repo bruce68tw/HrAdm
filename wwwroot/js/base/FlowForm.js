@@ -566,7 +566,8 @@ function FlowForm(boxId, mNode, mLine) {
     }
 
     //context menu event
-    this.onMenuEdit = function (me) {
+    this.onMenuEdit = function () {
+        var me = _fun.getMe();
         if (!this._menuStatus(me)) return;
 
         if (this.nowIsNode)
@@ -575,7 +576,8 @@ function FlowForm(boxId, mNode, mLine) {
             this.showLineProp(this.nowFlowItem);
     };
 
-    this.onMenuDelete = function (me) {
+    this.onMenuDelete = function () {
+        var me = _fun.getMe();
         if (!this._menuStatus(me)) return;
 
         var me = this;
@@ -590,7 +592,8 @@ function FlowForm(boxId, mNode, mLine) {
         }
     };
 
-    this.onMenuView = function (me) {
+    this.onMenuView = function () {
+        var me = _fun.getMe();
         //todo
     };
 
@@ -605,7 +608,8 @@ function FlowForm(boxId, mNode, mLine) {
         this.tbodyLineCond.append(cond);
     };
 
-    this.onDeleteLineCond = function (btn) {
+    this.onDeleteLineCond = function () {
+        var btn = _fun.getMe();
         $(btn).closest('tr').remove();
     };
 

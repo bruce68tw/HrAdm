@@ -15,7 +15,7 @@
             columnDefs: [
 				{ targets: [4], render: function (data, type, full, meta) {
                     return (full.CanSign == 1)
-                        ? _str.format('<button type="button" class="btn btn-outline-secondary btn-sm" onclick="_me.crudR.onUpdateA(\'{0}\')">審核</button>', full.Id)
+                        ? `<button type="button" class="btn btn-outline-secondary btn-sm" data-onclick="_me.crudR.onUpdateA" data-args="${full.Id}">審核</button>`
                         : '';
                 }},
 				{ targets: [5], render: function (data, type, full, meta) {

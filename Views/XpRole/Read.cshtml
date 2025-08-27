@@ -85,7 +85,7 @@
 
         <div class='x-btns-box x-mt5'>
             <span class="x-span-label">@R["UserList"]</span>
-            <button type="button" class="btn btn-secondary" onclick="_me.onOpenUser()">@R0["Select"]</button>
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onOpenUser">@R0["Select"]</button>
         </div>
         <form id='eformUserRole' class='x-form'>
             <table class="table x-table" cellspacing="0">
@@ -219,8 +219,8 @@
                         @await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Account" })
                     </div>
                     <div class="col-md-4 x-right">
-                        <button type="button" class="btn btn-success" onclick="_me.onFindUserA()">查詢</button>
-                        <button type="button" class="btn btn-primary" onclick="_me.onUserModalOk()">選取</button>
+                        <button type="button" class="btn btn-success" data-onclick="_me.onFindUserA">查詢</button>
+                        <button type="button" class="btn btn-primary" data-onclick="_me.onUserModalOk">選取</button>
                     </div>
                 </div>
 

@@ -104,7 +104,7 @@
     <!-- edit form -->
     <div id="divEdit" class="d-none">
         <!-- eform 在 flowForm 下面, 使用 z-index無效, 改用 width -->
-        <form id='eform' class='x-form' style="width:100px;">
+        <form id='eform' class='x-form x-w100'>
             <vc:xi-hide dto='new() { Fid = "Id" }' />
             <vc:xi-text dto='new() { Fid = "Code" , MaxLen = 20, Required = true, BoxClass = "xu-text w-150" , InputTip = "流程代碼",  InputAttr = "title=流程代碼" }' />
             <vc:xi-text dto='new() { Fid = "Name", MaxLen = 30, Required = true, BoxClass = "xu-text w-150", InputTip = "流程名稱", InputAttr = "title=流程名稱" }' />
@@ -112,9 +112,9 @@
             <!-- add outer div for validate msg layout -->
             <div>
                 <div class="btn-group-vertical" role="group" style="margin-left: 5px;" aria-label="button group vertical">
-                    <button type="button" class="btn xf-start" onclick="_me.flowForm.onAddNode(_flow.TypeStart)" Title='@R["TipStartNode"]'>@R["StartNode"]</button>
-                    <button type="button" class="btn xf-node" onclick="_me.flowForm.onAddNode(_flow.TypeNode)" Title='@R["TipNode"]'>@R["Node"]</button>
-                    <button type="button" class="btn xf-end" onclick="_me.flowForm.onAddNode(_flow.TypeEnd)" Title='@R["TipEndNode"]'>@R["EndNode"]</button>
+                    <button type="button" class="btn xf-start" data-onclick="_me.flowForm.onAddNode" data-args="S" Title='@R["TipStartNode"]'>@R["StartNode"]</button>
+                    <button type="button" class="btn xf-node" data-onclick="_me.flowForm.onAddNode" data-args="N" Title='@R["TipNode"]'>@R["Node"]</button>
+                    <button type="button" class="btn xf-end" data-onclick="_me.flowForm.onAddNode" data-args="E" Title='@R["TipEndNode"]'>@R["EndNode"]</button>
                 </div>
             </div>
         </form>
@@ -135,9 +135,9 @@
 
 <!-- context menu for node & line, xf means flow -->
 <ul class='xf-menu'>
-    <li onclick="_me.flowForm.onMenuEdit(this)" class="xd-edit">Edit</li>
-    <li onclick="_me.flowForm.onMenuDelete(this)" class="xd-delete">Delete</li>
-    <li onclick="_me.flowForm.onMenuView(this)" class="xd-view">View</li>
+    <li data-onclick="_me.flowForm.onMenuEdit" class="xd-edit">Edit</li>
+    <li data-onclick="_me.flowForm.onMenuDelete" class="xd-delete">Delete</li>
+    <li data-onclick="_me.flowForm.onMenuView" class="xd-view">View</li>
 </ul>
 
 <!-- ??flow lines container, for keep saving rows, hide -->
@@ -203,7 +203,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@br.BtnCancel</button>
-                <button type="button" class="btn btn-primary" onclick="_me.flowForm.onModalNodeOk()">@br.BtnYes</button>
+                <button type="button" class="btn btn-primary" data-onclick="_me.flowForm.onModalNodeOk">@br.BtnYes</button>
             </div>
         </div>
     </div>
@@ -228,7 +228,7 @@
                     <div class="row">
                         <div class="col-md-12" style="margin:5px 0 2px -10px;">
                             @R["RunCond"]
-                            <button type="button" class="btn btn-sm btn-primary" onclick="_me.flowForm.onAddLineCond()">@br.BtnAddRow</button>
+                            <button type="button" class="btn btn-sm btn-primary" data-onclick="_me.flowForm.onAddLineCond">@br.BtnAddRow</button>
                         </div>
                         <table class="table x-table" cellspacing="0">
                             <thead>
@@ -247,7 +247,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@br.BtnCancel</button>
-                <button type="button" class="btn btn-primary" onclick="_me.flowForm.onModalLineOk()">@br.BtnYes</button>
+                <button type="button" class="btn btn-primary" data-onclick="_me.flowForm.onModalLineOk">@br.BtnYes</button>
             </div>
         </div>
     </div>

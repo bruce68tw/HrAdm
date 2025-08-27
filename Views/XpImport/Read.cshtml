@@ -82,7 +82,7 @@
         </form>
 
         <div class='x-btns-box'>
-            <button type="button" class="btn btn-secondary" onclick="_me.onOpenImport()">@R["ImportExcel"]</button>
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onOpenImport">@R["ImportExcel"]</button>
             <a class="btn btn-secondary" href="Template">@R["DownloadTpl"]</a>
         </div>
         <table id="tableRead" class="table x-table" cellspacing="0">
@@ -117,7 +117,7 @@
             </div>
             <div class='modal-footer'>
                 <button type='button' class='btn btn-secondary xd-cancel' data-bs-dismiss='modal'>@R0["Cancel"]</button>
-                <button type='button' class='btn btn-primary xd-yes' onclick='_me.onImport()'>@R0["Import"]</button>
+                <button type='button' class='btn btn-primary xd-yes' data-onclick='_me.onImport'>@R0["Import"]</button>
             </div>
         </div>
     </div>
