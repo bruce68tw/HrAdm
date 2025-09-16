@@ -42,7 +42,7 @@
     //開啟畫面後會執行這個函數
     fnAfterOpenEditA: async function (fun, json) {
         var box = _me.divSignRows;
-        if (fun == _fun.FunC) {     //表示新增
+        if (fun == EstrFun.Create) {     //表示新增
             box.empty();
 
             //設定初始值

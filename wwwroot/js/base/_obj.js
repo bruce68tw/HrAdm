@@ -84,8 +84,16 @@ var _obj = {
     /**
      * check object existed or not
      */
-    isExist: function (obj) {
-        return (obj !== undefined && obj !== null && obj.length > 0);
+    isEmpty: function (obj) {
+        return (obj == null || obj.length == 0);
+    },
+
+    /**
+     * isExist -> notEmpty
+     * check object existed or not
+     */
+    notEmpty: function (obj) {
+        return !_obj.isEmpty(obj);
     },
 
     /**
@@ -109,4 +117,20 @@ var _obj = {
         else
             _obj.hide(obj);
     },
+
+    /**
+     * jquery data() 只寫入 jquery 暫存, 不寫入 DOM !!
+     * param {object} obj
+     * param {string} fid
+     * param {string} value
+     */
+    setData: function (obj, fid, value) {
+        obj.attr('data-' + fid, value);
+    },
+
+    //傳回小寫tagName
+    tagName: function (obj) {
+        return obj[0].tagName.toLowerCase();
+    },
+
 }; //class

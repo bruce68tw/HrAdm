@@ -38,7 +38,7 @@
     </div>
 
     <div id="divEdit" class="d-none">
-        <form id='eform' class='x-form' style='margin-bottom:0;'>
+        <form id='eform' class='x-form mb-0'>
             @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Account"].Value, Fid = "Account", Required = true, MaxLen = 20 })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["UserName"].Value, Fid = "Name", Required = true, MaxLen = 20 })

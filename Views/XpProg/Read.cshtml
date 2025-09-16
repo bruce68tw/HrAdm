@@ -56,7 +56,7 @@
 
             <div class="row">
                 <div class="col-md-2 x-label">@R["CrudFun"]</div>
-                <div class="col-md-9 x-input" style="padding-top:5px;">
+                <div class="col-md-9 x-input pt-1">
                     @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunCreate", Label = R0["Create"].Value })
                     @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunRead", Label = R0["Read"].Value })
                     @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunUpdate", Label = R0["Update"].Value })
@@ -73,7 +73,7 @@
             <span class="x-span-label">@R["RoleProg"]</span>
             @await Component.InvokeAsync("XgAddRow", "_me.mRoleProg.onAddRow()")
         </div>
-        <form id='eformRoleProg' class='x-form' style="border:none;">
+        <form id='eformRoleProg' class='x-form border-0'>
             <table class="table x-table x-no-hline" cellspacing="0">
                 <thead>
                     <tr>

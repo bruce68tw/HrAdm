@@ -44,7 +44,7 @@
         _itext.set('Note', '', form);
 
         var box = _me.divSignRows;
-        if (fun == _fun.FunC) {
+        if (fun == EstrFun.Create) {
             box.empty();
         } else {
             await _ajax.getViewA('GetSignRows', { id: _me.edit0.getKey() }, function (html) {

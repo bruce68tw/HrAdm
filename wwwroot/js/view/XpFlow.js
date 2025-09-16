@@ -33,7 +33,7 @@
         new CrudR(config, [null, _me.mNode, _me.mLine]);
 
         //initial flow edit form
-        _me.flowForm = new FlowForm('divEdit', _me.mNode, _me.mLine);
+        _me.flowMany = new FlowMany('divEdit', _me.mNode, _me.mLine);
 
         //custom function
         //_me.edit0.fnAfterSwap = _me.edit0_afterSwap;
@@ -55,20 +55,20 @@
     //auto called
     fnAfterSwap: function (toRead) {
         if (toRead) {
-            _me.divEditTbar.hide();
+            _obj.hide(_me.divEditTbar);
         } else {
-            _me.divEditTbar.show();
+            _obj.show(_me.divEditTbar);
         }
     },
 
     //auto called !!
     //reset when create
     fnAfterOpenEdit: function (fun, json) {
-        var isAdd = (fun === _fun.FunC);
+        var isAdd = (fun === EstrFun.Create);
         if (isAdd) {
-            _me.flowForm.reset();
+            _me.flowMany.reset();
         }
-        _me.flowForm.setEdit(isAdd || (fun === _fun.FunU));
+        _me.flowMany.setEdit(isAdd || (fun === EstrFun.Update));
     },
 
     /**
@@ -80,14 +80,14 @@
      * @returns {bool}
      */
     fnUpdateOrViewA: async function (fun, key) {
-        var act = (fun == _fun.FunU)
+        var act = (fun == EstrFun.Update)
             ? 'GetUpdJson' : 'GetViewJson';
         return await _ajax.getJsonA(act, { key: key }, function (json) {
             //show container first
             _me.crudR.toEditMode(fun, () => {
-                _me.crudE._loadJson(json);
-                _me.crudE._setEditStatus(fun);
-                _me.crudE._afterOpenEdit(fun, json);
+                _me.crudE.loadJson(json);
+                _me.crudE.setEditStatus(fun);
+                _me.crudE.afterOpen(fun, json);
             });
         });
     },
@@ -95,7 +95,7 @@
     //#region mNode/mLine custom function
     //load nodes
     mNode_loadRows: function (rows) {
-        _me.flowForm.loadNodes(rows);
+        _me.flowMany.loadNodes(rows);
     },
 
     //getUpdJson
@@ -109,7 +109,7 @@
     },
 
     mLine_loadRows: function (rows) {
-        _me.flowForm.loadLines(rows);
+        _me.flowMany.loadLines(rows);
     },
 
     //getUpdJson

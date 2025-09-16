@@ -104,7 +104,7 @@
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Note"].Value, Fid = "Note", MaxLen = 100, Cols = "2,8" })
         </form>
 
-        <div class='x-center' style="margin-top:10px">
+        <div class='x-center mt-2'>
             <button type='button' class='btn btn-success' data-onclick='_me.onSubmit'>@R0["Submit"]</button>
             <button type='button' class='btn btn-primary' data-onclick='_me.crudR.onToRead'>@R0["ToRead"]<i class='ico-back'></i></button>
         </div>

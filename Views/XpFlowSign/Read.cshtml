@@ -49,8 +49,8 @@
         onView: async function (flowCode, key) {
             await _ajax.getJsonA('GetViewJson', { flowCode: flowCode, key: key }, function (json) {
                 //consider other flow types
-                _me.crudE._loadJson(json); //private ??
-                _me.crudR.toEditMode(_fun.FunV);
+                _me.crudE.loadJson(json);
+                _me.crudR.toEditMode(EstrFun.View);
             });
         },
 

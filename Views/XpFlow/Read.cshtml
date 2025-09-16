@@ -69,7 +69,7 @@
     <div class="col-md-6">
         <vc:xg-prog-path />
     </div>
-    <div class="col-md-6" id="divEditTbar" style="padding-top: 6px; display:none">
+    <div class="col-md-6 d-none pt-2" id="divEditTbar">
         <vc:xg-save-back align="right me-3" />
     </div>
 </div>
@@ -103,7 +103,7 @@
 
     <!-- edit form -->
     <div id="divEdit" class="d-none">
-        <!-- eform 在 flowForm 下面, 使用 z-index無效, 改用 width -->
+        <!-- eform 在 flowMany 下面, 使用 z-index無效, 改用 width -->
         <form id='eform' class='x-form x-w100'>
             <vc:xi-hide dto='new() { Fid = "Id" }' />
             <vc:xi-text dto='new() { Fid = "Code" , MaxLen = 20, Required = true, BoxClass = "xu-text w-150" , InputTip = "流程代碼",  InputAttr = "title=流程代碼" }' />
@@ -111,10 +111,10 @@
 
             <!-- add outer div for validate msg layout -->
             <div>
-                <div class="btn-group-vertical" role="group" style="margin-left: 5px;" aria-label="button group vertical">
-                    <button type="button" class="btn xf-start" data-onclick="_me.flowForm.onAddNode" data-args="S" Title='@R["TipStartNode"]'>@R["StartNode"]</button>
-                    <button type="button" class="btn xf-node" data-onclick="_me.flowForm.onAddNode" data-args="N" Title='@R["TipNode"]'>@R["Node"]</button>
-                    <button type="button" class="btn xf-end" data-onclick="_me.flowForm.onAddNode" data-args="E" Title='@R["TipEndNode"]'>@R["EndNode"]</button>
+                <div class="btn-group-vertical ms-1" role="group" aria-label="button group vertical">
+                    <button type="button" class="btn xf-start" data-onclick="_me.flowMany.onAddNode" data-args="S" Title='@R["TipStartNode"]'>@R["StartNode"]</button>
+                    <button type="button" class="btn xf-node" data-onclick="_me.flowMany.onAddNode" data-args="N" Title='@R["TipNode"]'>@R["Node"]</button>
+                    <button type="button" class="btn xf-end" data-onclick="_me.flowMany.onAddNode" data-args="E" Title='@R["TipEndNode"]'>@R["EndNode"]</button>
                 </div>
             </div>
         </form>
@@ -135,13 +135,13 @@
 
 <!-- context menu for node & line, xf means flow -->
 <ul class='xf-menu'>
-    <li data-onclick="_me.flowForm.onMenuEdit" class="xd-edit">Edit</li>
-    <li data-onclick="_me.flowForm.onMenuDelete" class="xd-delete">Delete</li>
-    <li data-onclick="_me.flowForm.onMenuView" class="xd-view">View</li>
+    <li data-onclick="_me.flowMany.onMenuEdit" class="xd-edit">Edit</li>
+    <li data-onclick="_me.flowMany.onMenuDelete" class="xd-delete">Delete</li>
+    <li data-onclick="_me.flowMany.onMenuView" class="xd-view">View</li>
 </ul>
 
 <!-- ??flow lines container, for keep saving rows, hide -->
-<div id="divLinesBox" style="display:none"></div>
+<div id="divLinesBox" class="d-none"></div>
 
 <!-- flow node template, 透過EditMany傳送後端update DB, _isnew(lower case !!), _key are need !! 
     template內必須加上型別, 使用vc語法時, 無法使用model !!
@@ -179,7 +179,7 @@
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Fid", Value = "{{Fid}}", MaxLen = 30, InRow = true })</td>
         <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "Op", Value = "{{Op}}", Rows = ViewBag.LineOps, InRow = true })</td>
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Value", Value = "{{Value}}", MaxLen = 30, InRow = true })</td>
-        <td width='100px' class='text-center'>@await Component.InvokeAsync("XgDeleteUpDown", new { fnDeleteRow = "_me.flowForm.onDeleteLineCond(this)" })</td>
+        <td width='100px' class='text-center'>@await Component.InvokeAsync("XgDeleteUpDown", new { fnDeleteRow = "_me.flowMany.onDeleteLineCond(this)" })</td>
     </tr>
 </script>
 
@@ -192,7 +192,7 @@
                 <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal x-form" style="padding:5px 20px;">
+                <form class="form-horizontal x-form pt-1 pe-5">
                     <vc:xi-hide dto='new() { Fid="NodeType" }' />
                     @*await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "Node Type :", Fid = "NodeType", rows = ViewBag.NodeTypes, cols = cols })*@
                     @*await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "SignTime :", Fid = "LimitType", rows = ViewBag.NodeLimitTypes, cols = cols })*@
@@ -203,7 +203,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@br.BtnCancel</button>
-                <button type="button" class="btn btn-primary" data-onclick="_me.flowForm.onModalNodeOk">@br.BtnYes</button>
+                <button type="button" class="btn btn-primary" data-onclick="_me.flowMany.onModalNodeOk">@br.BtnYes</button>
             </div>
         </div>
     </div>
@@ -211,14 +211,14 @@
 
 <!-- line property modal -->
 <div id="modalLineProp" class="modal fade x-modal" role="dialog">
-    <div class="modal-dialog" style="max-width:620px;">
+    <div class="modal-dialog w-50">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title">流程線屬性設定</div>
                 <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal x-form" style="padding:0 10px;">
+                <form class="form-horizontal x-form pe-2">
                     <vc:xi-read dto='new() { Title = "起始節點 :", Fid = "FromNodeName", Cols = cols }' />
                     <vc:xi-read dto='new() { Title = "結束節點 :", Fid = "ToNodeName", Cols = cols }' />
                     <vc:xi-int dto='new() { Title = "執行順序" + " :", Fid = "Sort", Required = true, Cols = "4,2" }' />
@@ -226,9 +226,9 @@
                     @*Html.XiNum("Sort", "", "Run Order :", true, cols, new PropNumModel() { IsDigit = true, MaxValue = 10, Width = "80px" })*@
                     @*Html.XiRadios("LineType", "0", "Run Type :", ViewBag.LineTypes, 9)*@
                     <div class="row">
-                        <div class="col-md-12" style="margin:5px 0 2px -10px;">
+                        <div class="col-md-12">
                             @R["RunCond"]
-                            <button type="button" class="btn btn-sm btn-primary" data-onclick="_me.flowForm.onAddLineCond">@br.BtnAddRow</button>
+                            <button type="button" class="btn btn-sm btn-primary" data-onclick="_me.flowMany.onAddLineCond">@br.BtnAddRow</button>
                         </div>
                         <table class="table x-table" cellspacing="0">
                             <thead>
@@ -247,7 +247,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@br.BtnCancel</button>
-                <button type="button" class="btn btn-primary" data-onclick="_me.flowForm.onModalLineOk">@br.BtnYes</button>
+                <button type="button" class="btn btn-primary" data-onclick="_me.flowMany.onModalLineOk">@br.BtnYes</button>
             </div>
         </div>
     </div>

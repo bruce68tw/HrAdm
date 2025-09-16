@@ -126,7 +126,7 @@
             <span class="x-span-label">@R["RoleProg"]</span>
             @await Component.InvokeAsync("XgAddRow", "_me.mRoleProg.onAddRow()")
         </div>
-        <form id='eformRoleProg' class='x-form' style="border:none;">
+        <form id='eformRoleProg' class='x-form border-0'>
             <table class="table x-table x-no-hline" cellspacing="0">
                 <thead>
                     <tr>
@@ -202,19 +202,19 @@
             </div>
             <div class="modal-body">
                 <div class="row mb-1">
-                    <div class="col-md-3 x-right" style="padding-top: 6px;">@R0["DeptName"]</div>
+                    <div class="col-md-3 x-right pt-2">@R0["DeptName"]</div>
                     <div class="col-md-5">
                         @await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "DeptId", Rows = ViewBag.Depts })
                     </div>
                 </div>
 				<div class="row mb-1">
-                    <div class="col-md-3 x-right" style="padding-top: 6px;">姓名</div>
+                    <div class="col-md-3 x-right pt-2">姓名</div>
                     <div class="col-md-5">
                         @await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Name" })
                     </div>
                 </div>                
                 <div class="row mb-1">
-                    <div class="col-md-3 x-right" style="padding-top: 6px;">@R0["Account"]</div>
+                    <div class="col-md-3 x-right pt-2">@R0["Account"]</div>
                     <div class="col-md-5">
                         @await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Account" })
                     </div>
@@ -225,7 +225,7 @@
                 </div>
 
                 <!-- query result list -->
-                <table id="tableUser" class="table x-table x-table-vscroll" cellspacing="0" style="width:100%">
+                <table id="tableUser" class="table x-table x-table-vscroll w-100" cellspacing="0">
                     <thead>
                         <tr>
                             <th>@R0["Select"]</th>
