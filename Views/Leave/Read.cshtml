@@ -27,8 +27,8 @@
                     @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { SpanMode = true, HasReset = true })
                 </div>
             </div>
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["LeaveType"].Value, Fid = "LeaveType", Value = leaveType, Rows = ViewBag.LeaveTypes, BoxClass = "x-date-w" })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["FlowStatus"].Value, Fid = "FlowStatus", Value = flowStatus, Rows = ViewBag.SignStatuses, BoxClass = "x-date-w" })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["LeaveType"].Value, Fid = "LeaveType", Value = leaveType, Rows = ViewBag.LeaveTypes, ClsBox = "x-date-w" })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["FlowStatus"].Value, Fid = "FlowStatus", Value = flowStatus, Rows = ViewBag.SignStatuses, ClsBox = "x-date-w" })
         </form>
 
         @if (_Auth.CheckCreate("Leave"))

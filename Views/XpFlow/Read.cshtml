@@ -106,8 +106,8 @@
         <!-- eform 在 flowMany 下面, 使用 z-index無效, 改用 width -->
         <form id='eform' class='x-form x-w100'>
             <vc:xi-hide dto='new() { Fid = "Id" }' />
-            <vc:xi-text dto='new() { Fid = "Code" , MaxLen = 20, Required = true, BoxClass = "xu-text w-150" , InputTip = "流程代碼",  InputAttr = "title=流程代碼" }' />
-            <vc:xi-text dto='new() { Fid = "Name", MaxLen = 30, Required = true, BoxClass = "xu-text w-150", InputTip = "流程名稱", InputAttr = "title=流程名稱" }' />
+            <vc:xi-text dto='new() { Fid = "Code" , MaxLen = 20, Required = true, ClsBox = "xu-text w-150" , InputTip = "流程代碼",  InputAttr = "title=流程代碼" }' />
+            <vc:xi-text dto='new() { Fid = "Name", MaxLen = 30, Required = true, ClsBox = "xu-text w-150", InputTip = "流程名稱", InputAttr = "title=流程名稱" }' />
 
             <!-- add outer div for validate msg layout -->
             <div>

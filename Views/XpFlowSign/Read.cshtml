@@ -75,7 +75,7 @@
                     @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true, SpanMode = true })
                 </div>
             </div>
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Flow"].Value, Fid = "FlowId", Rows = ViewBag.Flows, BoxClass = "x-date-w" })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Flow"].Value, Fid = "FlowId", Rows = ViewBag.Flows, ClsBox = "x-date-w" })
             @*await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["FlowStatus"].Value, Fid = "FlowStatus", rows = ViewBag.SignStatuses })*@
         </form>
 
