@@ -94,7 +94,7 @@
             <vc:xi-text dto="@(new() { Title = R["Account"].Value, Fid = "Account", MaxLen = 20 })"></vc:xi-text>
             <vc:xi-text dto="@(new() { Title = R["UserName"].Value, Fid = "Name", MaxLen = 20 })"></vc:xi-text>
             <vc:xi-text dto="@(new() { Title = R["Dept"].Value, Fid = "DeptId", MaxLen = 10 })"></vc:xi-text>
-            <vc:xi-file dto="@(new() { Title = R0["UpdImage"].Value, Fid = "PhotoFile", LabelTip = R["TipUpdImage"].Value })"></vc:xi-file>
+            <vc:xi-file dto="@(new() { Title = R0["UpdImage"].Value, Fid = "PhotoFile", TitleTip = R["TipUpdImage"].Value })"></vc:xi-file>
             <vc:xi-check dto="@(new() { Title = R0["Status"].Value, Fid = "Status" })"></vc:xi-check>
         </form>
 

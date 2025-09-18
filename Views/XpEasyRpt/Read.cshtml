@@ -39,7 +39,7 @@
             @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["RptName"].Value, Fid = "Name", MaxLen = 100, Required = true, Cols = "2,4" })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ExcelTpl"].Value, Fid = "TplFile", MaxLen = 30, Required = true, Cols = "2,4" })
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ToEmail"].Value, Fid = "ToEmails", LabelTip = R["TipToEmail"].Value, Cols = "2,9" })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ToEmail"].Value, Fid = "ToEmails", TitleTip = R["TipToEmail"].Value, Cols = "2,9" })
             @await Component.InvokeAsync("XiTextarea", new XiTextareaDto { Title = "Sql", Fid = "Sql", MaxLen = 500, Required = true, Cols = "2,6" })
             @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R0["Status"].Value, Fid = "Status", Label = R0["Active"].Value })
         </form>

@@ -197,7 +197,7 @@
                     @*await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "Node Type :", Fid = "NodeType", rows = ViewBag.NodeTypes, cols = cols })*@
                     @*await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "SignTime :", Fid = "LimitType", rows = ViewBag.NodeLimitTypes, cols = cols })*@
                     <vc:xi-text dto='new() { Title=R["NodeName"].Value, Fid="Name" , MaxLen=20, Required=true, Cols=cols }' />
-                    <vc:xi-select dto='new() { Title = "簽核者種類", Fid = "SignerType", Rows = ViewBag.SignerTypes, Required = true, LabelTip = "星號表示簽核者內容為必填。",  Cols = cols }' />
+                    <vc:xi-select dto='new() { Title = "簽核者種類", Fid = "SignerType", Rows = ViewBag.SignerTypes, Required = true, TitleTip = "星號表示簽核者內容為必填。",  Cols = cols }' />
                     <vc:xi-text dto='new() { Title = "簽核者內容值", Fid = "SignerValue", MaxLen = 30, Cols = cols }' />
                 </form>
             </div>
