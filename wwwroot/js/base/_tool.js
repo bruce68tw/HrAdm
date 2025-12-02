@@ -1,11 +1,15 @@
 ﻿
 //small public components
 var _tool = {
+    //for ansA
+    ansStatus: false,
+    fnResolve: null,
 
     init: function () {
         //alert
-        _tool.xgMsg = $('#xgMsg');  //使用id
-        _tool.xgAns = $('#xgAns');  //使用id
+        _tool.xgMsg = $('#xgMsg');      //使用id
+        _tool.xgAns = $('#xgAns');      //使用id
+        _tool.xgAnsA = $('#xgAnsA');    //使用id, 非同步
         _tool.xgAlert = $('.x-alert');
         _tool.xgArea = $('.x-area');
         _tool.xgImage = $('.x-image');
@@ -20,7 +24,7 @@ var _tool = {
     msg: function (msg, fnClose) {
         var box = _tool.xgMsg;
         box.find('.xd-msg').html(msg);
-        _modal.showO(box);
+        _modal.show(box);
 
         //set callback
         _tool._fnOnMsgClose = fnClose;
@@ -28,15 +32,45 @@ var _tool = {
 
     /**
      * show confirmation 
+     * param {string} msg
+     * param {function} fnYes
+     * param {function} fnNo
      */
     ans: function (msg, fnYes, fnNo) {
         var box = _tool.xgAns;
         box.find('.xd-msg').html(msg);
-        _modal.showO(box);
+        _modal.show(box);
 
         //set callback
         _tool._fnOnAnsYes = fnYes;
         _tool._fnOnAnsNo = (fnNo === undefined) ? null : fnNo;
+    },
+
+    /**
+     * 非同步方式, 比callback function(promise)方便
+     * show confirmation 
+     * param {string} msg
+     * return {bool} yes/no
+     */
+    ansA: async function (msg) {
+        var box = _tool.xgAnsA;
+        box.find('.xd-msg').html(msg);
+        _modal.show(box);
+
+        return new Promise((resolve) => {
+            //reset flag, 防止重複 resolve
+            _tool.ansStatus = false;
+            _tool.fnResolve = resolve;
+        });
+    },
+
+    //called by ansA yes/no onclick event
+    onAnsA: function(value) {
+        if (_tool.ansStatus) return;
+
+        _tool.ansStatus = true;
+        _modal.hide(_tool.xgAnsA);
+        _tool.fnResolve(value == 1);
     },
 
     /**
@@ -82,20 +116,20 @@ var _tool = {
         var obj = box.find('textarea');
         obj.val(value);
         _itextarea.setEditO(obj, isEdit);
-        _btn.setEditO(box.find('.xd-yes'), isEdit);
+        _btn.setEdit(box.find('.xd-yes'), isEdit);
 
         //set callback function
         if (isEdit)
             _tool._fnOnAreaYes = fnOk;
 
         //show modal
-        _modal.showO(box);
+        _modal.show(box);
     },
 
     onAreaYes: function () {
         var box = _tool.xgArea;
         if (_tool._fnOnAreaYes) {
-            _modal.hideO(box);
+            _modal.hide(box);
             var value = box.find('textarea').val();
             _tool._fnOnAreaYes(value);
         }
@@ -110,7 +144,7 @@ var _tool = {
         var box = _tool.xgImage;
         box.find('img').attr('src', imageSrc);
         box.find('label').text(fileName);
-        _modal.showO(box);
+        _modal.show(box);
     },
 
     /**
@@ -129,19 +163,19 @@ var _tool = {
      */
     onAnsYes: function () {
         if (_tool._fnOnAnsYes) {
-            _modal.hideO(_tool.xgAns);
+            _modal.hide(_tool.xgAns);
             _tool._fnOnAnsYes();
         }
     },
     onAnsNo: function () {
         if (_tool._fnOnAnsNo)
             _tool._fnOnAnsNo();
-        _modal.hideO(_tool.xgAns);
+        _modal.hide(_tool.xgAns);
     },
     onMsgClose: function () {
         if (_tool._fnOnMsgClose)
             _tool._fnOnMsgClose();
-        _modal.hideO(_tool.xgMsg);
+        _modal.hide(_tool.xgMsg);
     },
 
 }; //class

@@ -39,7 +39,7 @@ var _input = {
                 return _ifile.getO(obj);
             case EstrInputType.Html:
                 return _ihtml.getO(obj);
-            case EstrInputType.ReadOnly:
+            case EstrInputType.Read:
                 return _iread.getO(obj);
             case EstrInputType.Link:
                 return _ilink.getO(obj);
@@ -57,6 +57,7 @@ var _input = {
      * set input value by object
      * param obj {object}
      * param value {object}
+     * param box {object} for radio
      * param type {string} optional, data-type
      */ 
     setO: function (obj, value, box, type) {
@@ -162,7 +163,7 @@ var _input = {
         //label欄位設定文字內容
         var filter = '[data-id2=' + fid + _fun.errTail + ']';
         //先找parent下
-        //var label = _obj.getF(filter, box);
+        //var label = _obj.getByFt(filter, box);
         var parent = obj.parent();
         var label = parent.find(filter);
         if (label.length == 0)

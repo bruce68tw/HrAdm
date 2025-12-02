@@ -16,10 +16,11 @@ rem set toDirs=DbAdm Mantis TplMvc BaoAdm BaoCust
 rem set toDirs=Mantis TplMvc BaoAdm BaoCust
 rem(常用) 
 rem set toDirs=DbAdm GroupProg AdoptAdm TplMvc
-set toDirs=NetAsset
+set toDirs=AdoptAdm
 
 set baseDir=d:\_project
-set fromDir=%baseDir%\HrAdm\wwwroot
+rem set fromDir=%baseDir%\HrAdm\wwwroot
+set fromDir=%baseDir%\DbAdm\wwwroot
 
 rem %%a must be one char !!
 rem @ECHO ON

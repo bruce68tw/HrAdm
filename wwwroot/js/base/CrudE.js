@@ -1,131 +1,195 @@
 ﻿/**
- * crud edit function
- *   合併 _edit.js
- * 寫入 _me properties:
- *   fnAfterSwap:
- *   fnAfterOpenEdit:
- *   fnUpdateOrViewA: see _updateOrViewA
- *   divEdit:
- *   //hasEdit:
- *   edit0:
- *   eform0: 
- *   hasChild:
- *   _nowFun:
- *   modal:
+ * 控制 CRUD 編輯畫面
+ * 說明:
+ *   前端使用固定 filter: #divEdit
+ * 寫入 _me 屬性:
+ *   crudE
+ *   divEdit
+ *   hasEdit
+ *   edit0 {EditOne}
+ *   eform0 
+ * 自動呼叫 _me 函數:
+ *   void fnAfterOpenEdit(fun, json):
+ *   bool fnUpdateOrViewA(fun, key): 自訂 GetUpdJson/GetViewJson 函數, see _updateOrViewA
+ *   string fnWhenSave(fun): 此時還沒有產生 updated json, return error msg
+ *   void fnWhenSave2(fun, json): 此時已經產生 updated json
+ * 公用屬性: 無
  */
-function CrudE(edits) {
-
-    /*
-    //constant with underline
-    this.Rows = '_rows';
-    this.Childs = '_childs';
-    this.Deletes = '_deletes';
-
-    //edit form mode
-    this.ModeBase = 'Base';
-    this.ModeUR = 'UR';   //user role mode
-
-    //server side fid for file input collection, must pre '_'
-    //key-value of file serverFid vs row key
-    this.FileJson = '_fileJson';
-
-    //data property name for keep old value
-    this.DataOld = '_old';
-
-    //前後端欄位: isNew, new row flag
-    this.IsNew = '_IsNew';
-    */
+class CrudE {
 
     /**
-     * initial crud edit, 寫入 this 變數
      * param1 edits {object Array} for edit form
      *   1.null: means one table, get eform
      *   2.many edit object, if ary0 is null, then call new EditOne()
-     * param2 updName {string} update name, default to _BR.Update
+     *   3.如果是 DtoEdit list, 表示多個編輯畫面
      */
-    this._init = function() {
-        this.divEdit = $('#divEdit');
-        var hasEdit = (this.divEdit.length > 0);
-        if (hasEdit) {
-            var Childs = _edit.Childs;  //constant
-            var edit0 = null;  //master edit object
-            if (edits == null) {
-                edit0 = new EditOne();
-                //this.hasChild = false;
-            } else {
-                edit0 = (edits[0] === null) ? new EditOne() : edits[0];
-                //this.hasChild = edits.length > 1;
-                if (edits.length > 1) {
-                    edit0[Childs] = [];
-                    //var childs = this.edits._childs;
-                    for (var i = 1; i < edits.length; i++)
-                        edit0[Childs][i - 1] = edits[i];
-                }
-            }
-
-            this.edit0 = edit0;
-            if (edit0.eform != null)
-                this.eform0 = edit0.eform;
-            this.hasChild = (_fun.hasValue(this.edit0[Childs]) && this.edit0[Childs].length > 0);
-            //this.editLen = this.edits.length;
-            this._initForm(this.edit0);
-        }
-
+    constructor(edits) {
         this._nowFun = '';    //now fun of edit0 form
         //this.updName = updName;
 
+        //多個編輯畫面時利用這個變數來切換, 顯示Read時會重設為null
+        this._multiEdit = false;
+        this._nowEditNo = 0;
+
+        this._divEdit = $('#divEdit');
+        var hasEdit = (this._divEdit.length > 0);
+
+        //set _me, 以下與 editNo 無關
+        _me.crudE = this;
+        _me.hasEdit = hasEdit;
+
+        if (hasEdit) {
+            //var Childs = _edit.Childs;  //constant
+            //var edit0 = null;  //master edit object
+            if (edits == null) {
+                edits = [new EditOne()];
+            } else {
+                if (edits[0] instanceof DtoEdit) {
+                    //如果傳入 DtoEdit[], 表示有2個以上的編輯畫面
+                    this._multiEdit = true;
+                    //this._edits = edits;
+                    //this.setEditNo(0);
+                    for (var i = 0; i < edits.length; i++) {
+                        var dto = edits[i];
+                        if (dto.divEdit == null)
+                            dto.divEdit = this._divEdit;
+                        this._initEdit0(dto.edits);
+                        /*
+                        if (dto.edits[0] == null)
+                            dto.edits[0] = new EditOne();
+                        this._initForm(dto.edits[0]);
+                        */
+                    }
+                } else {
+                    this._initEdit0(edits);
+                    /*
+                    if (edits[0] == null) {
+                        edits[0] = new EditOne();
+                    }
+                    */
+                }
+
+                /*
+                //ary0 是master, 把2nd以的edit寫入Childs欄位
+                var edit0 = edits[0];
+                edit0[Childs] = [];
+                for (var i = 1; i < edits.length; i++)
+                    edit0[Childs][i - 1] = edits[i];
+                */
+            }
+
+            this._edits = edits;
+            /*
+            this._edit0 = edit0;
+            if (edit0.eform != null)
+                this.eform0 = edit0.eform;
+            */
+            //this._hasChild = (_fun.hasValue(this._edit0[Childs]) && this._edit0[Childs].length > 0);
+            //this.editLen = this.edits.length;
+            /*
+            if (!this._multiEdit) {
+                this._edit0 = edits[0];
+                this._initForm(this._edit0);
+            }
+            */
+        }
+
+        //set now edit no & _me & related variables
+        this.setEditNo(0);
+
         //for xgOpenModal
-        this.modal = null;
+        //this.modal = null;
 
         //3.initial forms(recursive)
         //_prog.init();   //prog path
 
-        //set _me
-        _me.crudE = this;
-        _me.edit0 = this.edit0;
-        _me.eform0 = this.eform0;
-        _me.hasEdit = hasEdit;
-        _me.divEdit = this.divEdit;
-    };
+        /*
+        //與 editNo 有關
+        if (this._multiEdit) {
+            this.setEditNo(0);
+        } else {
+            _me.divEdit = this._divEdit;
+            _me.edit0 = this._edit0;
+            _me.eform0 = _me.edit0.eform;
+        }
+        */
+    }
+
+    //set _edit0、Childs and initForm
+    _initEdit0(edits) {
+        var edit0 = edits[0];
+        if (edit0 == null) {
+            edit0 = new EditOne();
+            edits[0] = edit0;   //寫回
+        }
+
+        const childs = _edit.Childs;
+        edit0[childs] = [];
+        for (var i = 1; i < edits.length; i++)
+            edit0[childs][i - 1] = edits[i];
+
+        this._initForm(edit0);
+    }
 
     /**
-     * initial edit forms(recursive)
+     * (recursive)initial edit forms
      * param edit {object} EditOne/EditMany object
      */
-    this._initForm = function(edit) {
-        if (edit.eform == null)
-            return;
+    _initForm(edit) {
+        if (edit.eform == null) return;
 
         _idate.init(edit.eform);  //init all date inputs
         edit.validator = _valid.init(edit.eform);   //set valid variables for _ihtml.js !!
         var childLen = this._getEditChildLen(edit);
         for (var i = 0; i < childLen; i++)
             this._initForm(this._getEditChild(edit, i));
-    };
+    }
 
-    //get master edit form
-    this.getEform0 = function() {
-        return this.edit0.eform;
-    };
+    getDivEdit() {
+        return this._multiEdit
+            ? this._edits[this._nowEditNo].divEdit || _me.divEdit
+            : _me.divEdit;
+    }
+
+    /**
+     * set now editNo, base 0
+     */ 
+    setEditNo(editNo) {
+        if (this._multiEdit) {
+            this._nowEditNo = editNo;
+
+            //設定 instance variables
+            var dto = this._edits[editNo];
+            this._divEdit = dto.divEdit;;
+            this._edit0 = dto.edits[0];
+        } else {
+            this._edit0 = this._edits[0];
+        }
+
+        //設定 _me 屬性
+        _me.divEdit = this._divEdit;
+        _me.edit0 = this._edit0;
+        _me.eform0 = _me.edit0.eform;
+    }
+
+    getEditNo() {
+        return this._nowEditNo;
+    }
 
     /*
-    _getJsonAndSetMode = async function(key, fun) {
-        //_me.crudR.toUpdateMode(key);
-        var act = (fun == EstrFun.Update) ? 'GetUpdJson' :
-            (fun == EstrFun.View) ? 'GetViewJson' : '';
-        await _ajax.getJsonA(act, { key: key }, function(data) {
-            _me.crudR.toEditMode(fun, data);
-        });
-    };
-     */
+    //get master edit form
+    getEform0() {
+        return this._edit0.eform;
+    }
+    */
 
     /**
      * _loadJson -> loadJson
      * load row(include childs) into UI
      */
-    this.loadJson = function(json) {
+    loadJson(json) {
         //load master(single) row
-        var edit = this.edit0;
+        var edit = this._edit0;
         edit.loadRow(json);
         edit.dataJson = json;
 
@@ -140,22 +204,22 @@ function CrudE(edits) {
         //call fnAfterLoadJson() if existed
         //if (_fun.hasValue(edit.fnAfterLoadJson))
         //    edit.fnAfterLoadJson(json);
-    };
+    }
 
     //call fnAfterOpenEdit() if existed
     // _afterOpenEdit -> afterOpen
-    this.afterOpen = function(fun, json) {
+    afterOpen(fun, json) {
         //if (_fun.hasValue(_me.fnAfterOpenEdit))
         if (_me.fnAfterOpenEdit)
             _me.fnAfterOpenEdit(fun, json);
-    };
+    }
 
     /**
      * _setEditStatus -> setEditStatus
      * set all forms fields edit status
      * param fun {string} C,U,V
      */ 
-    this.setEditStatus = function(fun) {
+    setEditStatus(fun) {
         //if (fun === this._nowFun)
         //    return;
 
@@ -170,23 +234,23 @@ function CrudE(edits) {
         //if (!run)
         //    return;
 
-        var box = this.divEdit;
-        var eform = this.edit0.eform;
+        var box = this.getDivEdit();
+        var eform = this._edit0.eform;
         var items = box.find('input, textarea, select, button');
         if (fun == EstrFun.View) {
-            _edit.removeIsNew(eform);
+            //_edit.removeIsNew(eform);
             items.prop('disabled', true)
             box.find('#btnToRead').prop('disabled', false);
             _ihtml.setEdits(box, '', false);
         } else if (fun == EstrFun.Create) {
-            _edit.addIsNew(eform);    //增加_IsNew隱藏欄位
+            //_edit.addIsNew(eform);    //增加_IsNew隱藏欄位
             var dataEdit = '[data-edit=U]';
             items.prop('disabled', false)
             items.filter(dataEdit).prop('disabled', true)
             _ihtml.setEdits(box, '', true);
             _ihtml.setEdits(box, dataEdit, false);
         } else if (fun == EstrFun.Update) {
-            _edit.removeIsNew(eform);
+            //_edit.removeIsNew(eform);
             var dataEdit = '[data-edit=C]';
             items.prop('disabled', false)
             items.filter(dataEdit).prop('disabled', true)
@@ -195,18 +259,18 @@ function CrudE(edits) {
         }
 
         //remove span error
-        this.divEdit.find('span.error').remove();
+        box.find('span.error').remove();
 
         //enable btnToRead for view fun
         //if (isView)
         //    box.find('#btnToRead').prop('disabled', false);
-    };
+    }
 
     /**
      * check has upload file or not
      */
-    this._hasFile = function() {
-        var edit = this.edit0;
+    _hasFile() {
+        var edit = this._edit0;
         if (edit.hasFile)
             return true;
 
@@ -219,16 +283,16 @@ function CrudE(edits) {
 
         //case of not found
         return false;
-    };
+    }
 
     /**
      * get updated data for save create/update(has _rows, _childs, _deletes, _fileJson)
      * param formData {FormData} for write uploaded files
      * return {json} include fileJson if existed
      */
-    this._getUpdJson = function(formData) {
+    _getUpdJson(formData) {
         //load master(single) row
-        var edit0 = this.edit0;
+        var edit0 = this._edit0;
         var row = edit0.getUpdRow();
         var key = edit0.getKey();
         //var isNew = edit0.isNewRow();
@@ -283,15 +347,15 @@ function CrudE(edits) {
         //    data.key = key;
         _json.removeNull(data);
         return data;
-    };
+    }
 
     /**
      * forms validate check, also check systemError
      * return {bool}
      */
-    this.validAll = function() {
+    validAll() {
         //check system error
-        var edit = this.edit0;
+        var edit = this._edit0;
         if (_str.notEmpty(edit.systemError)) {
             _tool.msg(edit.systemError);
             return false;
@@ -318,17 +382,17 @@ function CrudE(edits) {
 
         //case of ok
         return true;
-    };
+    }
 
     /**
      * (public) after save
      * data: ResultDto
      */
-    this.afterSave = function(data) {
+    afterSave(data) {
         //debugger;
         //call fnAfterSave if need
-        if (_fun.hasValue(this.edit0.fnAfterSave))
-            this.edit0.fnAfterSave();
+        if (_fun.hasValue(this._edit0.fnAfterSave))
+            this._edit0.fnAfterSave();
 
         //save no rows
         if (data.Value === '0') {
@@ -343,13 +407,13 @@ function CrudE(edits) {
             _me.crudR.dt.reload();
             _me.crudR.toReadMode();
         }
-    };
+    }
 
     /**
      * reset form (recursive)
      * param edit {EditOne}
      */
-    this._resetForm = function(edit) {
+    _resetForm(edit) {
         //reset this
         edit.reset();
 
@@ -359,30 +423,34 @@ function CrudE(edits) {
             var edit2 = this._getEditChild(edit, i);
             edit2.reset();
         }
-    };
+    }
 
     /**
      * check current is create/update mode or not
      */
-    this.isEditMode = function() {
+    isEditMode() {
         return (this._nowFun !== EstrFun.View);
-    };
+    }
 
     //return {bool}
-    this._updateOrViewA = async function (fun, key) {
+    async _updateOrViewA(fun, key) {
         if (_me.fnUpdateOrViewA)
             return await _me.fnUpdateOrViewA(fun, key);
 
         var me = this;
+        var data = { key: key };
+        //如果多個編輯畫面, 傳入目前編輯序號, 後端個別method必須配合修改
+        if (this._multiEdit)
+            data.editNo = this._nowEditNo;
         var act = (fun == EstrFun.Update)
             ? 'GetUpdJson' : 'GetViewJson';
-        return await _ajax.getJsonA(act, { key: key }, function (json) {
+        return await _ajax.getJsonA(act, data, function (json) {
             me.loadJson(json);
             me.setEditStatus(fun);
             me.afterOpen(fun, json);
             _me.crudR.toEditMode(fun);
         });
-    };
+    }
 
 
     /**
@@ -390,18 +458,18 @@ function CrudE(edits) {
      * param edit {object} edit object
      * param childIdx {int} child index, base 0
      */
-    this._getEditChild = function (edit, childIdx) {
+    _getEditChild(edit, childIdx) {
         return edit[_edit.Childs][childIdx];
-    };
+    }
 
     /**
      * get edit child len
      * param edit {object} edit object
      */
-    this._getEditChildLen = function (edit) {
+    _getEditChildLen(edit) {
         var fid = _edit.Childs;
         return (edit[fid] == null) ? 0 : edit[fid].length;
-    };
+    }
 
     /**
      * getRowsByJson -> jsonGetRows
@@ -409,26 +477,26 @@ function CrudE(edits) {
      * @param {any} json
      * @returns
      */
-    this.jsonGetRows = function (json) {
+    jsonGetRows(json) {
         return (json == null || json[_edit.Rows] == null)
             ? null
             : json[_edit.Rows];
-    };
+    }
 
     //get child json
     //_getChildJson -> getChildJson
-    this.getChildJson = function (upJson, childIdx) {
+    getChildJson(upJson, childIdx) {
         var childs = _edit.Childs;
         return (upJson[childs] == null || upJson[childs].length <= childIdx)
             ? null
             : upJson[childs][childIdx];
-    };
+    }
 
     //get child rows
-    this.getChildRows = function (upJson, childIdx) {
+    getChildRows(upJson, childIdx) {
         var child = this.getChildJson(upJson, childIdx);
         return this.jsonGetRows(child);
-    };
+    }
 
     /**
      * set child rows
@@ -437,7 +505,7 @@ function CrudE(edits) {
      * param rows {jsons}
      * return {json} child object
      */
-    this.setChildRows = function (upJson, childIdx, rows) {
+    setChildRows(upJson, childIdx, rows) {
         var fid = _edit.Childs;
         if (upJson == null)
             upJson = {};
@@ -449,39 +517,39 @@ function CrudE(edits) {
         var child = upJson[fid][childIdx];
         child[_edit.Rows] = rows;
         return child;
-    };
+    }
 
     /**
      * 將目前畫面資料轉變為新資料
      */
-    this.editToNew = function () {
+    editToNew() {
         var fun = EstrFun.Create;
         this.setEditStatus(fun);
-        this.edit0.resetKey();
+        this._edit0.resetKey();
         _prog.setPath(fun);
-    };
+    }
 
     //=== move from _edit.js start
     /**
      * get old value 
      * param obj {object} input jquery object
      * return {string}
-    this.getOld = function (obj) {
+    getOld(obj) {
         return obj.data(_edit.DataOld);
-    };
+    }
     */
 
     /**
      * set old value
      * param obj {object} input jquery object
      * param value {int/string}
-    this.setOld = function (obj, value) {
+    setOld(obj, value) {
         obj.data(_edit.DataOld, value);
-    };
+    }
      */
 
     /*
-    zz_loadRowByArg = function (box, row, fidTypes) {
+    zz_loadRowByArg(box, row, fidTypes) {
         _form.loadRow(box, row);
 
         //set old value for each field
@@ -491,7 +559,7 @@ function CrudE(edits) {
             var obj = _obj.get(fid, box);
             obj.data(_edit.DataOld, row[fid]);
         }
-    };
+    }
     */
 
     /**
@@ -503,10 +571,10 @@ function CrudE(edits) {
      * param box {object} form object
      * return json row
      */
-    this.getUpdRow = function (kid, fidTypes, box) {
+    getUpdRow(kid, fidTypes, box) {
         //case new return row
         var row = _form.toRow(box);
-        if (_edit.isNewRow(row))
+        if (_edit.isNewRow(row, kid))
             return row;
         /*
         var key = _input.get(kid, box);
@@ -546,7 +614,7 @@ function CrudE(edits) {
 
         result[kid] = _input.get(kid, box);
         return result;
-    };
+    }
 
     /**
      * getServerFid -> getFileSid
@@ -555,9 +623,9 @@ function CrudE(edits) {
      * param fid {string} ui file id
      * return {string} format: Table_Fid
      */
-    this.getFileSid = function (levelStr, fid) {
+    getFileSid(levelStr, fid) {
         return 't' + levelStr + '_' + fid;
-    };
+    }
 
     /**
      * formData set fileJson field
@@ -565,7 +633,7 @@ function CrudE(edits) {
      * param fileJson {json}
      * return void
      */
-    this.dataSetFileJson = function (data, fileJson) {
+    dataSetFileJson(data, fileJson) {
         if (_json.isEmpty(fileJson))
             return;
 
@@ -575,20 +643,20 @@ function CrudE(edits) {
             fileJson = _json.copy(fileJson, json);
         }
         data.set(fid, fileJson);
-    };
+    }
 
     /**
      * isNewKey(key) -> isNewRow(row)
      * check a new key or not, parseInt(ABC123) will get int, cannot use it!!
      * param key {string}
-    this.isNewRow = function (row) {
+    isNewRow(row) {
         var fid = _edit.IsNew;
         return (row[fid] != null || row[fid] == '1');
-    };
+    }
      */
 
     /*
-    this.isNewKey = function (key) {
+    isNewKey(key) {
         key = key.toString();   //convert to string for checking
         var len = key.length;
         if (len >= 6)
@@ -596,7 +664,7 @@ function CrudE(edits) {
 
         var val = parseInt(key);
         return (!Number.isNaN(val) && (val.toString().length == len));
-    };
+    }
     */
 
     /**
@@ -606,7 +674,7 @@ function CrudE(edits) {
      * param elm {element} link element
      * param key {string} row key
      */
-    this.viewFile = function (table, fid, elm, key) {
+    viewFile(table, fid, elm, key) {
         /*
         if (this.isNewKey(key)) {
             _tool.msg(_BR.NewFileNotView);
@@ -616,7 +684,7 @@ function CrudE(edits) {
             if (_file.isImageExt(ext))
                 _tool.showImage(elm.innerHTML, _str.format('ViewFile?table={0}&fid={1}&key={2}&ext={3}', table, fid, key, ext));
         //}
-    };
+    }
 
     //#region remark code
     /**
@@ -626,7 +694,7 @@ function CrudE(edits) {
      * return json array
      */
     /*
-    getFidTypesByDid = function (box, trFilter) {
+    getFidTypesByDid(box, trFilter) {
         //trFilter = trFilter || 'tr';
         //var trObj = box.find(trFilter + ':first');
 
@@ -638,12 +706,12 @@ function CrudE(edits) {
             fidTypes[j + 1] = _input.getType(obj);
         });
         return fidTypes;
-    };
+    }
     */
 
     /*
     //for EditMany.js
-    getFidTypesById = function (box) {
+    getFidTypesById(box) {
         //return this._getFidTypes(box, '[id]');
         var fidTypes = [];
         box.find('[id]').each(function (i, item) {
@@ -653,7 +721,7 @@ function CrudE(edits) {
             fidTypes[j + 1] = _input.getType(obj);
         });
         return fidTypes;
-    };
+    }
     */
 
     //=== move from _edit.js end
@@ -664,27 +732,27 @@ function CrudE(edits) {
     /**
      * onclick Create button
      */
-    this.onCreate = function() {
+    onCreate() {
         var fun = EstrFun.Create;
-        this._resetForm(this.edit0);   //reset first
+        this._resetForm(this._edit0);   //reset first
         this.setEditStatus(fun);
         this.afterOpen(fun, null);
-    };
+    }
 
     /**
      * onclick Update button
      * param key {string} row key
      * return {bool}
      */
-    this.onUpdateA = async function(key) {
-        _edit.removeIsNew(this.edit0.eform);    //移除_IsNew隱藏欄位
+    async onUpdateA(key) {
+        //_edit.removeIsNew(this._edit0.eform);    //移除_IsNew隱藏欄位
         return await this._updateOrViewA(EstrFun.Update, key);
-    };
+    }
 
     //return { bool }
-    this.onViewA = async function(key) {
+    async onViewA(key) {
         return await this._updateOrViewA(EstrFun.View, key);
-    };
+    }
 
     /**
      * table onclick openModal button(link)
@@ -694,44 +762,53 @@ function CrudE(edits) {
      * param required {bool}
      * param maxLen {int} 
      */
-    this.onOpenModal = function(title, fid, required, maxLen) {
+    onOpenModal(title, fid, required, maxLen) {
         var tr = _fun.getMe(true).closest('tr');
         _tool.showArea(title, _itext.get(fid, tr), this.isEditMode(), function(result) {
             _itext.set(fid, result, tr);
         });
-    };
+    }
 
     /**
      * on click save, when upload file, server side file variable is t(n)_FieldName
      * below variables are sent to backend
      *   key, row(包含_childs, _deletes, _fileNo), files
      */
-    this.onSaveA = async function() {
+    async onSaveA() {
         //validate all input & system error(will show error msg)
         if (!this.validAll()) {
             _tool.alert(_BR.InputWrong);
             return;
         }
 
-        //call fnWhenSave if existed
-        var edit0 = this.edit0;
-        if (_fun.hasValue(edit0.fnWhenSave)) {
-            var error = edit0.fnWhenSave();
+        //call fnWhenSave if existed, 此時還沒有產生 updated json, 可以修改欄位內容
+        if (_fun.hasValue(_me.fnWhenSave)) {
+            var error = _me.fnWhenSave(this._nowFun);
             if (_str.notEmpty(error)) {
                 _tool.msg(error);
                 return;
             }
         }
 
-        //get saving row
+        //get saving json
         var formData = new FormData();  //for upload files if need
-        var row = this._getUpdJson(formData);
-        if (_json.isEmpty(row)) {
+        var json = this._getUpdJson(formData);
+        if (_json.isEmpty(json)) {
             _tool.msg(_BR.SaveNone);
             return;
         }
 
+        //call fnWhenSave2 if existed, 此時已經產生 updated json
+        if (_fun.hasValue(_me.fnWhenSave2)) {
+            var error = _me.fnWhenSave2(this._nowFun, json);
+            if (_str.notEmpty(error)) {
+                _tool.msg(error);
+                return;
+            }
+        }
+
         //save rows, call backend Save action
+        var edit0 = this._edit0;
         var isNew = edit0.isNewRow();
         var action = isNew ? 'Create' : 'Update';
         var data = null;
@@ -739,27 +816,30 @@ function CrudE(edits) {
         if (this._hasFile()) {
             //has files, use formData
             data = formData;
-            data.append('json', _json.toStr(row));
+            data.append('json', _json.toStr(json));
             if (!isNew)
                 data.append('key', edit0.getKey());
+            //考慮多個編輯畫面
+            if (this._multiEdit)
+                data.append('editNo', this._nowEditNo);
 
             await _ajax.getJsonByFdA(action, data, function(result) {
                 me.afterSave(result);
             });
         } else {
             //no file, use json
-            data = { json: _json.toStr(row) };
+            data = { json: _json.toStr(json) };
             if (!isNew)
                 data.key = edit0.getKey();
+            //考慮多個編輯畫面
+            if (this._multiEdit)
+                data.editNo = this._nowEditNo;
 
             await _ajax.getJsonA(action, data, function(result) {
                 me.afterSave(result);
             });
         }
-    };
+    }
     //=== event end ===
-
-    //call last
-    this._init();
 
 }//class

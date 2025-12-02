@@ -45,7 +45,7 @@
 
         //on open import modal
         onOpenImport: function () {
-            _modal.showO(_me.modalImport);
+            _modal.show(_me.modalImport);
         },
 
         //on run import
@@ -61,7 +61,7 @@
             var formData = new FormData();
             formData.append('file', file);
             await _ajax.getJsonByFdA('Import', formData, function (data) {
-                _modal.hideO(modal);
+                _modal.hide(modal);
                 _tool.msg(_str.format('@R["ImportDone"]', data.OkCount, data.FailCount));
                 _me.dt.reload();
             });

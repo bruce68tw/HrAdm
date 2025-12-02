@@ -30,7 +30,7 @@
 
     //on open select user modal
     onOpenUser: function () {
-        _modal.showO(_me.modalUser);
+        _modal.show(_me.modalUser);
     },
 
     //onclick find user
@@ -85,7 +85,7 @@
 
         //remove checked for next usage, hide modal
         _me.modalUser.find(':checkbox:checked').prop('checked', false);
-        _modal.hideO(_me.modalUser);
+        _modal.hide(_me.modalUser);
     },
 
 }; //class
