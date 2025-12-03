@@ -1,7 +1,7 @@
 ﻿/**
  * 改為非靜態類別, 控制 CRUD 查詢(含編輯)畫面
  * 說明:
- *   允許不同編輯畫面共用查詢畫面, 參考 MyCrud
+ *   允許不同編輯畫面共用查詢畫面, 參考 Crud/Read.cshtml
  *   前端使用固定 filter: #divRead、#formRead、#formRead2、#tableRead
  *   後端固定呼叫 GetPage action
  * 寫入 _me 屬性:
@@ -20,11 +20,11 @@ class CrudR {
 
     /**
      * initial crud read & edit
-     * param1 dtConfig {Object} datatables config
-     * param edits {EditOne/EditMany Array} for edit form
+     * @param dtConfig {Object} datatables config
+     * @param edits {EditOne/EditMany Array} for edit form
      *   1.null: means one table, get eform
      *   2.many edit object, if ary0 is null, then call new EditOne()
-     * param updName {string} update name, default to _BR.Update
+     * @param updName {string} update name, default to _BR.Update
      */
     //this._init = function(dtConfig, edits, updName) {
     constructor(dtConfig, edits, updName) {
@@ -34,6 +34,7 @@ class CrudR {
 
         //1.set instance variables
         this.divRead = $('#divRead');
+        this.rform = null;
         var hasRead = (this.divRead.length > 0);
         if (hasRead) {
             this.rform = $('#formRead');
@@ -65,14 +66,40 @@ class CrudR {
 
         //set _me
         _me.crudR = this;
+        _me.rform = this.rform;
         _me.hasRead = hasRead;
         _me.divRead = this.divRead;
     }
 
     /**
+     * onclick viewFile
+     * @param table {string} table name
+     * @param fid {string}
+     * @param elm {element} link element
+     * @param key {string} row key
+     */
+    viewFile(table, fid, key, fileName) {
+        var ext = _file.getFileExt(fileName);
+        if (_file.isImageExt(ext))
+            _tool.showImage(fileName, _str.format('ViewFile?table={0}&fid={1}&key={2}&ext={3}', table, fid, key, ext));
+    }
+
+    /**
+     * button html string
+     * @param id {string}
+     * @param label {string}
+     * @param fnOnclick {string}
+     * @param fnArgs {string} 多個時逗號分隔
+     * @returns button html string
+     */ 
+    dtBtn(id, label, fnOnclick) {
+        return `<button type="button" class="btn btn-outline-secondary btn-sm" data-onclick="${fnOnclick}" data-args="${id}">${label}</button>`;
+    }
+
+    /**
      * checkbox for multiple select
-     * param value {string} [1] checkbox value
-     * param editable {bool} [true]
+     * @param value {string} [1] checkbox value
+     * @param editable {bool} [true]
      * //param fid {string} [_icheck.Check0Id] data-fid value
      */
     dtCheck0(value, editable) {
@@ -104,8 +131,8 @@ class CrudR {
 
     /**
      * set status column(checkbox)
-     * param value {string} checkbox value, will translate to bool
-     * param fnOnClick {string} onclick function, default to this.onSetStatusA
+     * @param value {string} checkbox value, will translate to bool
+     * @param fnOnClick {string} onclick function, default to this.onSetStatusA
      */
     dtSetStatus(key, value, fnOnClick) {
         //TODO: pending
@@ -141,22 +168,25 @@ class CrudR {
 
     /**
      * !! change link to button
+     * 取消參數 fnOnUpdate, fnOnDelete, fnOnView
      * crud functions: update,delete,view
-     * param key {string} row key
-     * param rowName {string} for show row name before delete
-     * param hasUpdate {bool} has update icon or not
-     * param hasDelete {bool} has delete icon or not
-     * param hasView {bool} has view icon or not
+     * @param key {string} row key
+     * @param rowName {string} for show row name before delete
+     * @param hasUpdate {bool} has update icon or not
+     * @param hasDelete {bool} has delete icon or not
+     * @param hasView {bool} has view icon or not
      */
-    dtCrudFun(key, rowName, hasUpdate, hasDelete, hasView,
-        fnOnUpdate, fnOnDelete, fnOnView) {
+    //dtCrudFun(key, rowName, hasUpdate, hasDelete, hasView, fnOnUpdate, fnOnDelete, fnOnView) {
+    dtCrudFun(key, rowName, hasUpdate, hasDelete, hasView, hasCopy) {
         var funs = '';
         if (hasUpdate)
-            funs += `<button type="button" class="btn btn-link" data-onclick="${(fnOnUpdate == null ? '_me.crudE.onUpdateA' : fnOnUpdate)}" data-args="${key}"><i class="ico-pen" title="${_BR.TipUpdate}"></i></button>`;
+            funs += `<button type="button" class="btn btn-link" data-onclick="_me.crudE.onUpdateA" data-args="${key}"><i class="ico-pen" title="${_BR.TipUpdate}"></i></button>`;
         if (hasDelete)
-            funs += `<button type="button" class="btn btn-link" data-onclick="${(fnOnDelete == null ? '_me.crudR.onDeleteA' : fnOnDelete)}" data-args="${key},${rowName}"><i class="ico-delete" title="${_BR.TipDelete}"></i></button>`;
+            funs += `<button type="button" class="btn btn-link" data-onclick="_me.crudR.onDeleteA" data-args="${key},${rowName}"><i class="ico-delete" title="${_BR.TipDelete}"></i></button>`;
         if (hasView)
-            funs += `<button type="button" class="btn btn-link" data-onclick="${(fnOnView == null ? '_me.crudE.onViewA' : fnOnView)}" data-args="${key}"><i class="ico-eye" title="${_BR.TipView}"></i></button>`;
+            funs += `<button type="button" class="btn btn-link" data-onclick="_me.crudE.onViewA" data-args="${key}"><i class="ico-eye" title="${_BR.TipView}"></i></button>`;
+        if (hasCopy)
+            funs += `<button type="button" class="btn btn-link" data-onclick="_me.crudE.onCopyA" data-args="${key}"><i class="ico-copy" title="${_BR.TipCopy}"></i></button>`;
         return funs;
     }
 
@@ -177,7 +207,7 @@ class CrudR {
     /**
      * 移除參數 nowDiv, fnCallback
      * change newDiv to active
-     * param toRead {bool} show divRead or not
+     * @param toRead {bool} show divRead or not
      * //param nowDiv {object} (default _me.divEdit) now div to show
      * //param fnCallback {function} (optional) callback function
      */
@@ -258,7 +288,7 @@ class CrudR {
      * 移除參數 fnCallback
      * to edit(U/V) mode
      * XpFlowSign Read.cshtml 待處理!! 
-     * param {any} fun
+     * @param {any} fun
      * //param {any} fnCallback
      */
     //toEditMode = function(fun, data) {
@@ -278,7 +308,7 @@ class CrudR {
 
     /**
      * call fnAfterSwap if existed
-     * param toRead {bool} to read mode or not
+     * @param toRead {bool} to read mode or not
      */
     /*
     _afterSwap(toRead) {
@@ -347,7 +377,7 @@ class CrudR {
     /**
      * call _me.crudE
      * onclick Update button
-     * param key {string} row key
+     * @param key {string} row key
      */
     /*
     async onUpdateA(key) {
@@ -360,7 +390,7 @@ class CrudR {
     /**
      * call _me.crudE
      * onclick View button
-     * param key {string} row key
+     * @param key {string} row key
      */
     /*
     async onViewA(key) {
@@ -385,9 +415,9 @@ class CrudR {
     /**
      * TODO: need test
      * onclick check all, check/uncheck box all checkbox of fid field
-     * param me {string} row key
-     * param box {string} row key
-     * param fid {string} fid
+     * @param me {string} row key
+     * @param box {string} row key
+     * @param fid {string} fid
      */
     //onCheckAll(me, box, fid) {
     onCheckAll(me, box) {
