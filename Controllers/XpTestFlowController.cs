@@ -14,7 +14,7 @@ namespace HrAdm.Controllers
     {
         public async Task<ActionResult> Read()
         {
-            var locale = _Locale.GetLocale();
+            var locale = _Locale.GetLocaleNoDash();
             await using var db = new Db();
             ViewBag.Flows = await _XpCode.FlowsA(db);
 			ViewBag.FlowStatuses = await _XpCode.FlowStatusesA(locale, db);

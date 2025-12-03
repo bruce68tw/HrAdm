@@ -170,9 +170,9 @@ order by Sort";
         }
         */
 
-        public static string GetValue(XpCode row, string locale)
+        public static string GetValue(XpCode row, string locale0)
         {
-            var name = "Name_" + locale;
+            var name = "Name_" + locale0;
             //return _Linq.FnGetValue<XpCode>(name).ToString();
             return _Model.GetValue<XpCode>(row, name)!.ToString()!;
         }

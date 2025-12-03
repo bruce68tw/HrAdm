@@ -16,7 +16,7 @@ namespace HrAdm.Controllers
         {
             //for edit view
             await using var db = new Db();
-            var locale = _Locale.GetLocale();
+            var locale = _Locale.GetLocaleNoDash();
             ViewBag.Users = await _XpCode.UsersA(db);
             ViewBag.AuthRanges = await _XpCode.AuthRangesA(locale, db);
             ViewBag.Depts = await _XpCode.DeptsA(db);

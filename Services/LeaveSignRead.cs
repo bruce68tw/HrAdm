@@ -9,7 +9,7 @@ namespace HrAdm.Services
     {
         private ReadDto GetDto()
         {
-            var locale = _Locale.GetLocale();
+            var locale = _Locale.GetLocaleNoDash();
             return new ReadDto()
             {
                 ReadSql = $@"

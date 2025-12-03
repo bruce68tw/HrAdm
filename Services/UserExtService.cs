@@ -57,7 +57,7 @@ namespace HrAdm.Services
                 .ToList();
 
             string langLevel = "LangLevel";
-            var locale = _Locale.GetLocale();
+            var locale = _Locale.GetLocaleNoDash();
             var userLangs = (from a in db.UserLang
                              join c1 in db.XpCode on new { Type = langLevel, Value = a.ListenLevel.ToString() } equals new { c1.Type, c1.Value }
                              join c2 in db.XpCode on new { Type = langLevel, Value = a.SpeakLevel.ToString() } equals new { c2.Type, c2.Value }

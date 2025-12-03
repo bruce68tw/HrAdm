@@ -13,7 +13,7 @@ namespace HrAdm.Controllers
     {
         public async Task<ActionResult> Read()
         {
-            var locale = _Locale.GetLocale();
+            var locale = _Locale.GetLocaleNoDash();
             await using var db = new Db();
             ViewBag.Depts = await _XpCode.DeptsA(db);
 			ViewBag.LangLevels = await _XpCode.LangLevelsA(locale, db);

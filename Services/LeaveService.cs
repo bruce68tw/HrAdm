@@ -8,7 +8,7 @@ namespace HrAdm.Services
     {
         public List<SignRowDto> GetSignRows(string id)
         {
-            var locale = _Locale.GetLocale();
+            var locale = _Locale.GetLocaleNoDash();
             var db = _Xp.GetDb();
             return (from s in db.XpFlowSign
                     join f in db.XpFlow on s.FlowId equals f.Id

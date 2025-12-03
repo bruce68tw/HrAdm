@@ -11,7 +11,7 @@ namespace HrAdm.Services
 
         override public EditDto GetDto()
         {
-            var locale = _Locale.GetLocale();
+            var locale = _Locale.GetLocaleNoDash();
             return new EditDto
             {
                 FnAfterSaveA = FnAfterSaveA,

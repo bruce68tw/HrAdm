@@ -14,7 +14,7 @@ namespace HrAdm.Controllers
         public async Task<ActionResult> Read()
         {
             //for edit view
-            var locale = _Locale.GetLocale();
+            var locale = _Locale.GetLocaleNoDash();
             await using var db = new Db();
             ViewBag.Roles = await _XpCode.RolesA(db);
             ViewBag.AuthRanges = await _XpCode.AuthRangesA(locale, db);

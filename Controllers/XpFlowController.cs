@@ -13,7 +13,7 @@ namespace HrAdm.Controllers
     {
         public async Task<ActionResult> Read()
         {
-            await _XgFlow.ReadSetViewBagA(ViewBag, _Locale.GetLocale());
+            await _XgFlow.ReadSetViewBagA(ViewBag, _Locale.GetLocaleNoDash());
             return View();
         }
 

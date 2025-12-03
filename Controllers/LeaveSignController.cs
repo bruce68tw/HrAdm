@@ -14,7 +14,7 @@ namespace HrAdm.Controllers
         public async Task<ActionResult> Read()
         {
             //for read view
-            var locale = _Locale.GetLocale();
+            var locale = _Locale.GetLocaleNoDash();
             ViewBag.SignStatuses2 = await _XpCode.SignStatuses2A(locale);
             return View();
         }

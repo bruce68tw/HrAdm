@@ -15,7 +15,7 @@ namespace HrAdm.Services
         override public EditDto GetDto()
         {
             string sql = "";
-            var locale = _Locale.GetLocale();
+            var locale = _Locale.GetLocaleNoDash();
             if (_flowCode == "Leave")
             {
                 sql = $@"
