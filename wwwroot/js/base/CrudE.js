@@ -1,5 +1,5 @@
 ﻿/**
- * 控制 CRUD 編輯畫面
+ * 控制 CRUD 編輯畫面, 可以有多個編輯區域
  * 說明:
  *   前端使用固定 filter: #divEdit
  * 寫入 _me 屬性:
@@ -20,78 +20,50 @@ class CrudE {
     /**
      * @param edits {object Array} for edit form
      *   1.null: means one table, get eform
-     *   2.many edit object, if ary0 is null, then call new EditOne()
-     *   3.如果是 DtoEdit list, 表示多個編輯畫面
+     *   2.many edit object, if ary0 is null, then call new EditOne(), 表示多個編輯"區域"
+     *   3.如果是 DtoEdit list, 表示多個編輯"畫面"
      */
     constructor(edits) {
         this._nowFun = '';    //now fun of edit0 form
         //this.updName = updName;
 
-        //多個編輯畫面時利用這個變數來切換, 顯示Read時會重設為null
+        //for _multiEdit only, 多個編輯畫面時利用這個變數來切換, 顯示Read時會重設為null
         this._multiEdit = false;
+        this._dtoEdits = [];
         this._nowEditNo = 0;
 
-        this._divEdit = $('#divEdit');
-        var hasEdit = (this._divEdit.length > 0);
+        //divEdit = $('#divEdit');
+        //var hasEdit = (divEdit.length > 0);
 
-        //set _me, 以下與 editNo 無關
+        //set _me(crudE, hasEdit, divEdit(_multiEdit = false only)), 以下與 editNo 無關
         _me.crudE = this;
-        _me.hasEdit = hasEdit;
 
-        if (hasEdit) {
-            //var Childs = _edit.Childs;  //constant
-            //var edit0 = null;  //master edit object
-            if (edits == null) {
-                edits = [new EditOne()];
-            } else {
-                if (edits[0] instanceof DtoEdit) {
-                    //如果傳入 DtoEdit[], 表示有2個以上的編輯畫面
-                    this._multiEdit = true;
-                    //this._edits = edits;
-                    //this.setEditNo(0);
-                    for (var i = 0; i < edits.length; i++) {
-                        var dto = edits[i];
-                        if (dto.divEdit == null)
-                            dto.divEdit = this._divEdit;
-                        this._initEdit0(dto.edits);
-                        /*
-                        if (dto.edits[0] == null)
-                            dto.edits[0] = new EditOne();
-                        this._initForm(dto.edits[0]);
-                        */
-                    }
-                } else {
-                    //this._initEdit0(edits);
-                    /*
-                    if (edits[0] == null) {
-                        edits[0] = new EditOne();
-                    }
-                    */
-                }
+        //_me.divEdit = divEdit;
+        //_me.hasEdit = hasEdit;
 
-                /*
-                //ary0 是master, 把2nd以的edit寫入Childs欄位
-                var edit0 = edits[0];
-                edit0[Childs] = [];
-                for (var i = 1; i < edits.length; i++)
-                    edit0[Childs][i - 1] = edits[i];
-                */
+        if (edits && edits[0] instanceof DtoEdit) {
+            //如果傳入 DtoEdit[], 表示有2個以上的編輯畫面, divEdit為動態讀取
+            this._multiEdit = true;
+            this._dtoEdits = edits;
+            _me.hasEdit = true;
+            for (var i = 0; i < edits.length; i++) {
+                var dto = edits[i];
+                this._initEdit0(dto.edits);    //此時dto.edits不為空白
             }
-            if (!this._multiEdit)
-                this._initEdit0(edits);
-
-            this._edits = edits;
-            //this._hasChild = (_fun.hasValue(this._edit0[Childs]) && this._edit0[Childs].length > 0);
-            //this.editLen = this.edits.length;
-            /*
-            if (!this._multiEdit) {
-                this._edit0 = edits[0];
-                this._initForm(this._edit0);
-            }
-            */
 
             //set now edit no & _me & related variables
-            this.setEditNo(0);
+            this.mEditSetEditNo(0);
+        } else {
+            var divEdit = $('#divEdit');
+            _me.hasEdit = (divEdit.length > 0);
+            _me.divEdit = divEdit;
+            if (_me.hasEdit) {
+                if (edits == null || edits.length == 0)
+                    edits = [new EditOne()]
+                this._initEdit0(edits);
+                _me.edit0 = edits[0];
+                _me.eform0 = _me.edit0.eform;
+            }
         }
 
         //for xgOpenModal
@@ -99,28 +71,17 @@ class CrudE {
 
         //3.initial forms(recursive)
         //_prog.init();   //prog path
-
-        /*
-        //與 editNo 有關
-        if (this._multiEdit) {
-            this.setEditNo(0);
-        } else {
-            _me.divEdit = this._divEdit;
-            _me.edit0 = this._edit0;
-            _me.eform0 = _me.edit0.eform;
-        }
-        */
     }
 
-    //set _edit0、Childs and initForm
+    //set edits[0], Childs and initForm
     _initEdit0(edits) {
         var edit0 = edits[0];
         if (edit0 == null) {
             edit0 = new EditOne();
-            edits[0] = edit0;   //寫回
+            edits[0] = edit0;   //必須寫回, 來源才能更新
         }
 
-        //set edit0.Childs
+        //ary0 是master, 把2nd以後的edit寫入Childs欄位
         const childs = _edit.Childs;    //fid
         edit0[childs] = [];
         for (var i = 1; i < edits.length; i++)
@@ -138,48 +99,45 @@ class CrudE {
 
         _idate.init(edit.eform);  //init all date inputs
         edit.validator = _valid.init(edit.eform);   //set valid variables for _ihtml.js !!
-        var childLen = this._getEditChildLen(edit);
+        var childLen = this._editGetChildLen(edit);
         for (var i = 0; i < childLen; i++)
-            this._initForm(this._getEditChild(edit, i));
+            this._initForm(this._editGetChild(edit, i));
     }
 
-    getDivEdit() {
+    /**
+     * getDivEdit -> mEditGetDivEdit
+     * @returns
+     */
+    mEditGetDivEdit() {
         return this._multiEdit
-            ? this._edits[this._nowEditNo].divEdit || _me.divEdit
+            ? this._dtoEdits[this._nowEditNo].divEdit
             : _me.divEdit;
     }
 
     /**
+     * setEditNo -> mEditSetEditNo
      * set now editNo, base 0
      */ 
-    setEditNo(editNo) {
+    mEditSetEditNo(editNo) {
         if (this._multiEdit) {
+            //設定 instance variables
             this._nowEditNo = editNo;
 
-            //設定 instance variables
-            var dto = this._edits[editNo];
-            this._divEdit = dto.divEdit;;
-            this._edit0 = dto.edits[0];
-        } else {
-            this._edit0 = this._edits[0];
+            //設定 _me 屬性
+            var dto = this._dtoEdits[editNo];
+            _me.divEdit = dto.divEdit;
+            _me.edit0 = dto.edits[0];
+            _me.eform0 = _me.edit0.eform;
         }
-
-        //設定 _me 屬性
-        _me.divEdit = this._divEdit;
-        _me.edit0 = this._edit0;
-        _me.eform0 = _me.edit0.eform;
     }
 
-    getEditNo() {
+    /**
+     * getEditNo -> mEditGetEditNo
+     * @returns
+     */
+    mEditGetEditNo() {
         return this._nowEditNo;
     }
-
-    /*
-    //get master edit form
-    getEform0() {
-        return this._edit0.eform;
-    }
-    */
 
     /**
      * _loadJson -> loadJson
@@ -187,14 +145,14 @@ class CrudE {
      */
     loadJson(json) {
         //load master(single) row
-        var edit = this._edit0;
+        var edit = _me.edit0;
         edit.loadRow(json);
         edit.dataJson = json;
 
         //load childs rows(只需載入第一層)
-        var childLen = this._getEditChildLen(edit);
+        var childLen = this._editGetChildLen(edit);
         for (var i = 0; i < childLen; i++) {
-            var edit2 = this._getEditChild(edit, i);
+            var edit2 = this._editGetChild(edit, i);
             edit2.dataJson = this.getChildJson(json, i);
             edit2.loadRowsBySys(this.jsonGetRows(edit2.dataJson));
         }
@@ -232,26 +190,32 @@ class CrudE {
         //if (!run)
         //    return;
 
-        var box = this.getDivEdit();
-        var eform = this._edit0.eform;
-        var items = box.find('input, textarea, select, button');
+        var box = this.mEditGetDivEdit();
+        //var items = box.find('input, textarea, select, button');
+        var items = box.find('[data-edit]');    //元素有這個屬性
+        _obj.setEdit(items, false);
         if (fun == EstrFun.View) {
             //_edit.removeIsNew(eform);
-            items.prop('disabled', true)
-            box.find('#btnToRead').prop('disabled', false);
+            //items.prop('disabled', true)
+            _obj.setEdit(box.find('#btnToRead'), true);
+            //box.find('#btnToRead').prop('disabled', false);
             _ihtml.setEdits(box, '', false);
         } else if (fun == EstrFun.Create) {
             //_edit.addIsNew(eform);    //增加_IsNew隱藏欄位
-            var dataEdit = '[data-edit=U]';
-            items.prop('disabled', false)
-            items.filter(dataEdit).prop('disabled', true)
+            _obj.setEdit(items.filter('button'), true);     //C/U不控制button
+            var dataEdit = '[data-edit=""],[data-edit*=C]';
+            //items.prop('disabled', true)
+            _obj.setEdit(items.filter(dataEdit), true);     //正向表列
+            //items.filter(dataEdit).prop('disabled', false)  //正向表列
             _ihtml.setEdits(box, '', true);
             _ihtml.setEdits(box, dataEdit, false);
         } else if (fun == EstrFun.Update) {
             //_edit.removeIsNew(eform);
-            var dataEdit = '[data-edit=C]';
-            items.prop('disabled', false)
-            items.filter(dataEdit).prop('disabled', true)
+            _obj.setEdit(items.filter('button'), true);     //C/U不控制button
+            var dataEdit = '[data-edit=""],[data-edit*=U]';    //包含U
+            //items.prop('disabled', true)
+            _obj.setEdit(items.filter(dataEdit), true);     //正向表列
+            //items.filter(dataEdit).prop('disabled', false)  //正向表列
             _ihtml.setEdits(box, '', true);
             _ihtml.setEdits(box, dataEdit, false);
         }
@@ -268,13 +232,13 @@ class CrudE {
      * check has upload file or not
      */
     _hasFile() {
-        var edit = this._edit0;
+        var edit = _me.edit0;
         if (edit.hasFile)
             return true;
 
-        var childLen = this._getEditChildLen(edit);
+        var childLen = this._editGetChildLen(edit);
         for (var i = 0; i < childLen; i++) {
-            var edit2 = this._getEditChild(edit, i);
+            var edit2 = this._editGetChild(edit, i);
             if (edit2.hasFile)
                 return true;
         }
@@ -290,7 +254,7 @@ class CrudE {
      */
     _getUpdJson(formData) {
         //load master(single) row
-        var edit0 = this._edit0;
+        var edit0 = _me.edit0;
         var row = edit0.getUpdRow();
         var key = edit0.getKey();
         //var isNew = edit0.isNewRow();
@@ -304,9 +268,9 @@ class CrudE {
         //load child(multiple) rows
         var hasChild = false;
         var childs = [];
-        var childLen = this._getEditChildLen(edit0);
+        var childLen = this._editGetChildLen(edit0);
         for (var i = 0; i < childLen; i++) {
-            var edit2 = this._getEditChild(edit0, i);
+            var edit2 = this._editGetChild(edit0, i);
 
             //file
             if (edit2.hasFile) {
@@ -353,21 +317,23 @@ class CrudE {
      */
     validAll() {
         //check system error
-        var edit = this._edit0;
+        var edit = _me.edit0;
         if (_str.notEmpty(edit.systemError)) {
             _tool.msg(edit.systemError);
             return false;
         }
 
-        //validate
+        //use jquery validator
         if (!edit.eform.valid())
             return false;
 
+        //custom valid
+
         //check child Edit
-        var childLen = this._getEditChildLen(edit);
+        var childLen = this._editGetChildLen(edit);
         for (var i = 0; i < childLen; i++) {
             //check system error
-            var edit2 = this._getEditChild(edit, i);
+            var edit2 = this._editGetChild(edit, i);
             if (_str.notEmpty(edit2.systemError)) {
                 _tool.msg(edit2.systemError);
                 return false;
@@ -389,8 +355,8 @@ class CrudE {
     afterSave(data) {
         //debugger;
         //call fnAfterSave if need
-        if (_fun.hasValue(this._edit0.fnAfterSave))
-            this._edit0.fnAfterSave();
+        if (_fun.hasValue(_me.edit0.fnAfterSave))
+            _me.edit0.fnAfterSave();
 
         //save no rows
         if (data.Value === '0') {
@@ -416,9 +382,9 @@ class CrudE {
         edit.reset();
 
         //reset childs
-        var childLen = this._getEditChildLen(edit);
+        var childLen = this._editGetChildLen(edit);
         for (var i = 0; i < childLen; i++) {
-            var edit2 = this._getEditChild(edit, i);
+            var edit2 = this._editGetChild(edit, i);
             edit2.reset();
 
             //如果為1對1, 把row設為新增
@@ -439,7 +405,7 @@ class CrudE {
 
         var me = this;
         var data = { key: key };
-        //如果多個編輯畫面, 傳入目前編輯序號, 後端個別method必須配合修改
+        //如果多個編輯畫面, 傳入目前編輯序號(base 0), 後端個別method必須配合修改
         if (this._multiEdit)
             data.editNo = this._nowEditNo;
         var act = (fun == EstrFun.Update)
@@ -459,7 +425,7 @@ class CrudE {
      * @param {int} childIdx - child index, base 0
      * @returns {EditMany}
      */
-    _getEditChild(edit, childIdx) {
+    _editGetChild(edit, childIdx) {
         return edit[_edit.Childs][childIdx];
     }
 
@@ -467,7 +433,7 @@ class CrudE {
      * get edit child len
      * @param edit {object} edit object
      */
-    _getEditChildLen(edit) {
+    _editGetChildLen(edit) {
         var fid = _edit.Childs;
         return (edit[fid] == null) ? 0 : edit[fid].length;
     }
@@ -484,7 +450,7 @@ class CrudE {
             : json[_edit.Rows];
     }
 
-    //get child json
+    //upJson get child json
     //_getChildJson -> getChildJson
     getChildJson(upJson, childIdx) {
         var childs = _edit.Childs;
@@ -493,14 +459,14 @@ class CrudE {
             : upJson[childs][childIdx];
     }
 
-    //get child rows
+    //upJson get child rows
     getChildRows(upJson, childIdx) {
         var child = this.getChildJson(upJson, childIdx);
         return this.jsonGetRows(child);
     }
 
     /**
-     * set child rows
+     * upJson set child rows
      * @param upJson {json}
      * @param childIdx {int}
      * @param rows {jsons}
@@ -529,13 +495,13 @@ class CrudE {
         this.setEditStatus(fun);
 
         //reset master key
-        var edit = this._edit0;
+        var edit = _me.edit0;
         edit.resetKey();
 
         //reset childs key
-        var childLen = this._getEditChildLen(edit);
+        var childLen = this._editGetChildLen(edit);
         for (var i = 0; i < childLen; i++) {
-            var edit2 = this._getEditChild(edit, i);
+            var edit2 = this._editGetChild(edit, i);
             edit2.rowsToNew();
         }
     }
@@ -648,7 +614,7 @@ class CrudE {
      */
     onCreate() {
         var fun = EstrFun.Create;
-        this._resetForm(this._edit0);   //reset main/child
+        this._resetForm(_me.edit0);   //reset main/child
         this.setEditStatus(fun);
         this.afterOpen(fun, null);
     }
@@ -659,7 +625,6 @@ class CrudE {
      * @returns {bool}
      */
     async onUpdateA(key) {
-        //_edit.removeIsNew(this._edit0.eform);    //移除_IsNew隱藏欄位
         return await this._updateOrViewA(EstrFun.Update, key);
     }
 
@@ -728,8 +693,9 @@ class CrudE {
         }
 
         //save rows, call backend Save action
-        var edit0 = this._edit0;
-        var isNew = edit0.isNewRow();
+        var edit0 = _me.edit0;
+        //var isNew = edit0.isNewRow();
+        var isNew = (this._nowFun == EstrFun.Create);
         var action = isNew ? 'Create' : 'Update';
         var data = null;
         var me = this;

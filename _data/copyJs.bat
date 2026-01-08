@@ -16,7 +16,7 @@ rem set toDirs=DbAdm Mantis TplMvc BaoAdm BaoCust
 rem set toDirs=Mantis TplMvc BaoAdm BaoCust
 rem(常用) 
 rem set toDirs=DbAdm GroupProg AdoptAdm TplMvc
-set toDirs=AdoptAdm
+set toDirs=GroupProg
 
 set baseDir=d:\_project
 rem set fromDir=%baseDir%\HrAdm\wwwroot

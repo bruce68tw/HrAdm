@@ -1,6 +1,6 @@
 ﻿
 //for textarea input
-var _itextarea = $.extend({}, _ibase, {
+var _inum = $.extend({}, _ibase, {
 
     /*
     getO: function (obj) {

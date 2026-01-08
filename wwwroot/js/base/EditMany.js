@@ -413,7 +413,7 @@ class EditMany {
      */
     idToRowBox(id) {
         var filter = _input.fidFilter(this.kid) + `[value='${id}']`;
-        return this.eform.find(filter).parent();
+        return this.eform.find(filter).closest(this.rowFilter);
     }
 
     /**
@@ -501,12 +501,14 @@ class EditMany {
             var fid, ftype, value, obj;
             for (var j = 0; j < me.fidTypes.length; j = j + 2) {
                 //skip read only input !!
-                ftype = me.fidTypes[j + 1];
-                if (ftype === 'read')
-                    continue;
-
                 fid = me.fidTypes[j];
                 obj = _obj.get(fid, box);
+                if (obj.hasClass('xi-unsave'))
+                    continue;
+                //if (ftype === 'read')
+                //    continue;
+
+                ftype = me.fidTypes[j + 1];
                 value = _input.getO(obj, box, ftype);
                 //if totally compare, string is not equal to numeric !!
                 if (value != _edit.getOld(obj)) {
@@ -735,7 +737,7 @@ class EditMany {
         }
 
         //kid和IsNew必須放在同一層 !!
-        var box2 = _obj.get(this.kid, box).parent();
+        var box2 = _obj.get(this.kid, box).closest(this.rowFilter);
         _itext.set(this.kid, newId, box2);
         //_edit.addIsNew(box2);    //增加_IsNew隱藏欄位
         return newId;

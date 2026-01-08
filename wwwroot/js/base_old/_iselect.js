@@ -72,19 +72,19 @@ var _iselect = $.extend({}, _ibase, {
         var obj = _obj.get(fid, box);
         _iselect.setItemsO(obj, items);
     },
-    setItemsF: function (filter, items, box) {
-        var obj = _obj.getF(filter, box);
-        _iselect.setItemsO(obj, items);
-    },
     //by object
     setItemsO: function (obj, items) {
         obj.find('option').remove();
-        if (items === null)
-            return;
-
+        if (items === null) return;
         for (var i = 0; i < items.length; i++)
             obj.append($('<option></option>').attr('value', items[i].Id).text(items[i].Str));
     },
+    /*
+    setItemsF: function (filter, items, box) {
+        var obj = _obj.getByFt(filter, box);
+        _iselect.setItemsO(obj, items);
+    },
+    */
 
     //get all options
     //getIdStrExts -> getExts
@@ -107,8 +107,7 @@ var _iselect = $.extend({}, _ibase, {
         var filter = '#' + fid;
         var obj = box ? box.find(filter) : $(filter);
         obj.find('option').remove();
-        if (items == null)
-            return;
+        if (items == null) return;
         for (var i = 0; i < items.length; i++)
             obj.append(_str.format("<option data-ext='{0}' value='{1}'>{2}</option>", items[i].Ext, items[i].Id, items[i].Str));
     },
@@ -156,9 +155,9 @@ var _iselect = $.extend({}, _ibase, {
      * param action {stirng} 後端action讀取來源, 固定傳入parentId
      * param isEdit {bool} true(編輯畫面), false(查詢畫面)
      */
-    changeParent: function (parentFid, childFid, childId, action, isEdit) {
+    changeParent: function (upFid, childFid, childId, action, isEdit) {
         var box = isEdit ? _me.divEdit : _me.divRead; 
-        var thisId = _iselect.get(parentFid, box);
+        var thisId = _iselect.get(upFid, box);
         _ajax.getJsonA(action, { parentId: thisId }, (rows) => {
             _iselect.setItems(childFid, rows, box);
             if (_str.notEmpty(childId)) {

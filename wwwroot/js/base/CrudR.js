@@ -8,6 +8,8 @@
  *   crudR
  *   divRead
  *   hasRead
+ *   rform
+ *   rform2
  * 自動呼叫 _me 函數:
  *   fnAfterFind(result):
  *   void fnAfterSwap(toRead):
@@ -34,19 +36,20 @@ class CrudR {
 
         //1.set instance variables
         this.divRead = $('#divRead');
-        this.rform = null;
+        var rform = null;
+        var rform2 = null;
         var hasRead = (this.divRead.length > 0);
         if (hasRead) {
-            this.rform = $('#formRead');
-            if (this.rform.length === 0)
-                this.rform = null;
-            this.rform2 = $('#formRead2');
-            if (this.rform2.length === 0)
-                this.rform2 = null;
-            if (this.rform != null)
-                _idate.init(this.rform);
-            if (this.rform2 != null)
-                _idate.init(this.rform2);
+            rform = $('#formRead');
+            if (rform.length === 0)
+                rform = null;
+            rform2 = $('#formRead2');
+            if (rform2.length === 0)
+                rform2 = null;
+            if (rform != null)
+                _idate.init(rform);
+            if (rform2 != null)
+                _idate.init(rform2);
 
             //4.Create Datatable object
             //傳入 _me.fnAfterFind if any !!
@@ -55,7 +58,7 @@ class CrudR {
             }
         }
 
-        this._edits = edits;
+        //this._edits = edits;
         this._updName = updName;
 
         //2.init edit
@@ -66,7 +69,8 @@ class CrudR {
 
         //set _me
         _me.crudR = this;
-        _me.rform = this.rform;
+        _me.rform = rform;
+        _me.rform2 = rform2;
         _me.hasRead = hasRead;
         _me.divRead = this.divRead;
     }
@@ -159,7 +163,7 @@ class CrudR {
         return (value == '1') ? _BR.Yes : '';
     }
 
-    //顯示紅色
+    //顯示紅色文字 by status
     dtRed(text, status) {
         return status
             ? '<span class="text-danger">' + text + '</span>'
@@ -178,15 +182,16 @@ class CrudR {
      */
     //dtCrudFun(key, rowName, hasUpdate, hasDelete, hasView, fnOnUpdate, fnOnDelete, fnOnView) {
     dtCrudFun(key, rowName, hasUpdate, hasDelete, hasView, hasCopy) {
+        const preStr = `button type="button" class="btn btn-link"`;
         var funs = '';
         if (hasUpdate)
-            funs += `<button type="button" class="btn btn-link" data-onclick="_me.crudE.onUpdateA" data-args="${key}"><i class="ico-pen" title="${_BR.TipUpdate}"></i></button>`;
+            funs += `<${preStr} data-onclick="_me.crudE.onUpdateA" data-args="${key}"><i class="ico-pen" title="${_BR.TipUpdate}"></i></button>`;
         if (hasDelete)
-            funs += `<button type="button" class="btn btn-link" data-onclick="_me.crudR.onDeleteA" data-args="${key},${rowName}"><i class="ico-delete" title="${_BR.TipDelete}"></i></button>`;
+            funs += `<${preStr} data-onclick="_me.crudR.onDeleteA" data-args="${key},${rowName}"><i class="ico-delete" title="${_BR.TipDelete}"></i></button>`;
         if (hasView)
-            funs += `<button type="button" class="btn btn-link" data-onclick="_me.crudE.onViewA" data-args="${key}"><i class="ico-eye" title="${_BR.TipView}"></i></button>`;
+            funs += `<${preStr} data-onclick="_me.crudE.onViewA" data-args="${key}"><i class="ico-eye" title="${_BR.TipView}"></i></button>`;
         if (hasCopy)
-            funs += `<button type="button" class="btn btn-link" data-onclick="_me.crudE.onCopyA" data-args="${key}"><i class="ico-copy" title="${_BR.TipCopy}"></i></button>`;
+            funs += `<${preStr} data-onclick="_me.crudE.onCopyA" data-args="${key}"><i class="ico-copy" title="${_BR.TipCopy}"></i></button>`;
         return funs;
     }
 
@@ -194,11 +199,11 @@ class CrudR {
      * get Find condition
      */
     _getFindCond() {
-        if (this.rform == null)
+        if (_me.rform == null)
             return null;
 
-        var row = _form.toRow(this.rform);
-        var find2 = this.rform2;
+        var row = _form.toRow(_me.rform);
+        var find2 = _me.rform2;
         if (find2 !== null && _obj.isShow(find2))
             _json.copy(_form.toRow(find2), row);
         return row;
@@ -225,7 +230,7 @@ class CrudR {
         */
 
         //考慮多個編輯畫面
-        var divEdit = _me.crudE.getDivEdit();
+        var divEdit = _me.crudE.mEditGetDivEdit();
         var oldDiv, newDiv;
         if (toRead) {
             oldDiv = divEdit;
@@ -251,7 +256,7 @@ class CrudR {
 
         //還原 nowEditNo
         if (toRead)
-            _me.crudE.setEditNo(0);
+            _me.crudE.mEditSetEditNo(0);
 
         /*
         // fadeOut 用 d-none 隱藏
@@ -330,7 +335,7 @@ class CrudR {
      * onclick find2 button for show/hide find2 form
      */
     onFind2() {
-        var find2 = this.rform2;
+        var find2 = _me.rform2;
         if (find2 == null)
             return;
         else if (_obj.isShow(find2))
@@ -343,9 +348,9 @@ class CrudR {
      * onclick reset find form
      */
     onResetFind() {
-        _form.reset(this.rform);
-        if (this.rform2 != null)
-            _form.reset(this.rform2);
+        _form.reset(_me.rform);
+        if (_me.rform2 != null)
+            _form.reset(_me.rform2);
     }
 
     /**
@@ -468,8 +473,5 @@ class CrudR {
         });
     }
     //=== event end ===
-
-    //call last
-    //this._init();
 
 }//class

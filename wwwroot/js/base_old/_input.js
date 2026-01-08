@@ -21,27 +21,27 @@ var _input = {
     getO: function (obj, box, type) {
         type = type || _input.getType(obj);
         switch (type) {
-            case 'text':
+            case EstrInputType.Text:
                 return _itext.getO(obj);
-            case 'textarea':
+            case EstrInputType.Textarea:
                 return _itextarea.getO(obj);
-            case 'check':
+            case EstrInputType.Check:
                 return _icheck.getO(obj);
-            case 'radio':
+            case EstrInputType.Radio:
                 return _iradio.getO(obj, box);
-            case 'select':
+            case EstrInputType.Select:
                 return _iselect.getO(obj);
-            case 'date':
+            case EstrInputType.Date:
                 return _idate.getO(obj);
-            case 'dt':
+            case EstrInputType.DateTime:
                 return _idt.getO(obj);
-            case 'file':
+            case EstrInputType.File:
                 return _ifile.getO(obj);
-            case 'html':
+            case EstrInputType.Html:
                 return _ihtml.getO(obj);
-            case 'read':
+            case EstrInputType.Read:
                 return _iread.getO(obj);
-            case 'link':
+            case EstrInputType.Link:
                 return _ilink.getO(obj);
             default:
                 //text, textarea
@@ -57,6 +57,7 @@ var _input = {
      * set input value by object
      * param obj {object}
      * param value {object}
+     * param box {object} for radio
      * param type {string} optional, data-type
      */ 
     setO: function (obj, value, box, type) {
@@ -65,40 +66,40 @@ var _input = {
 
         type = type || _input.getType(obj);
         switch (type) {
-            case 'text':
+            case EstrInputType.Text:
                 _itext.setO(obj, value);
                 break;
-            case 'check':
+            case EstrInputType.Check:
                 _icheck.setO(obj, value);
                 break;
-            case 'radio':
+            case EstrInputType.Radio:
                 //此時 obj 為 array
                 value = value || '0';
                 _iradio.setO(obj, value, box);
                 break;
-            case 'select':
+            case EstrInputType.Select:
                 _iselect.setO(obj, value);
                 break;
-            case 'date':
+            case EstrInputType.Date:
                 return _idate.setO(obj, value);
-            case 'dt':
+            case EstrInputType.DateTime:
                 return _idt.setO(obj, value);
-            case 'file':
+            case EstrInputType.File:
                 _ifile.setO(obj, value);
                 break;
-            case 'textarea':
+            case EstrInputType.Textarea:
                 _itextarea.setO(obj, value);
                 break;
-            case 'html':
+            case EstrInputType.Html:
                 _ihtml.setO(obj, value);
                 break;
-            case 'read':
+            case EstrInputType.Read:
                 var format = obj.data('format');
                 if (_str.notEmpty(format) && _str.notEmpty(_BR[format]))
                     value = _date.dtsToFormat(value, _BR[format]);
                 _iread.setO(obj, value);
                 break;
-            case 'link':
+            case EstrInputType.Link:
                 return _ilink.setO(obj, value);
             default:
                 //text
@@ -123,7 +124,7 @@ var _input = {
      */
     getObj: function (fid, box, ftype) {
         ftype = ftype || _input.getType(_obj.get(fid, box));
-        return (ftype === 'radio') ? _iradio.getObj(fid, box) : _obj.get(fid, box);
+        return (ftype === EstrInputType.Radio) ? _iradio.getObj(fid, box) : _obj.get(fid, box);
     },
 
     /**
@@ -162,7 +163,7 @@ var _input = {
         //label欄位設定文字內容
         var filter = '[data-id2=' + fid + _fun.errTail + ']';
         //先找parent下
-        //var label = _obj.getF(filter, box);
+        //var label = _obj.getByFt(filter, box);
         var parent = obj.parent();
         var label = parent.find(filter);
         if (label.length == 0)

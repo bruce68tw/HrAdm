@@ -19,12 +19,13 @@ var _iradio = $.extend({}, _ibase, {
 
     //get checked object
     getObj: function (fid, box) {
-        return _obj.getF('[name=' + fid + ']:checked', box);
+        return _obj.getByFt('[name=' + fid + ']:checked', box);
     },
 
     //get data-value by checked name
     _getByName: function (name, box) {
-        return _iradio.getObj(name, box).data('value');
+        var obj = _iradio.getObj(name, box);
+        return _obj.isEmpty(obj) ? '' : obj.data('value');
     },
 
     //=== set ===
@@ -40,7 +41,7 @@ var _iradio = $.extend({}, _ibase, {
 
     //set checked status by name & data-value
     _setByName: function (name, value, box) {
-        var obj = _obj.getF('[name=' + name + '][data-value=' + value + ']', box);
+        var obj = _obj.getByFt('[name=' + name + '][data-value=' + value + ']', box);
         if (obj != null) 
             obj.prop('checked', true);
     },

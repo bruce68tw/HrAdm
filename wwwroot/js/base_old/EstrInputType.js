@@ -1,4 +1,4 @@
-﻿//輸入欄位種類, 對應 Base InputTypeEstr 
+﻿//輸入欄位種類, 對應 Base EstrInputType.js
 var EstrInputType = {
     Check: "check",
     Date: "date",
@@ -12,7 +12,8 @@ var EstrInputType = {
     Modal: "modal",
     Password: "pwd",
     Radio: "radio",
-    ReadOnly: "read",
+    //ReadOnly -> Read
+    Read: "read",
     Select: "select",
     Sort: "sort",
     Text: "text",
