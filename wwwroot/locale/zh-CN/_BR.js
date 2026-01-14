@@ -32,6 +32,7 @@ var _BR = {
     TipUpdate: '修改这笔资料',
     TipDelete: '删除这笔资料',
     TipView: '检视这笔资料',
+    TipCopy: '复制这笔资料并且进入新增模式',
 
     //message-upload file
     UploadFileNotBig: '上传档案不可大于{0}M !',
@@ -39,6 +40,7 @@ var _BR = {
     NewFileNotView: '新档案尚未上传, 无法检视。 ',
 
     //message-others
+    PlsSelect: '-請選取-',
     PlsSelectDeleted: '请选取要删除的资料。 ',
     PlsSelectRows: '请先选取资料。 ',
     SureDeleteRow: '是否确定删除这笔资料?',
