@@ -21,74 +21,24 @@ builder.SetBuilder(config.AllowOrigins);
 
 #region set services
 var multiLang = true;
-//1.config MVC
-//資安: controller 防止 CSRF
 var services = builder.Services;
 services.SetServices(multiLang);
-/*
-services.AddControllersWithViews(opts => { opts.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()); })
-    //view Localization
-    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-    //use pascal for newtonSoft json
-    .AddNewtonsoftJson(opts => { opts.UseMemberCasing(); })
-    //use pascal for MVC json
-    .AddJsonOptions(opts => { opts.JsonSerializerOptions.PropertyNamingPolicy = null; });
 
-//2.set Resources path
-services.AddLocalization(opts => opts.ResourcesPath = "Resources");
-
-//3.http context
-services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-*/
-
-//4.user info for base component
-services.AddSingleton<IBaseUserSvc, MyBaseUserService>();
-
-//5.ado.net for mssql
-services.AddTransient<DbConnection, SqlConnection>();
+services.AddSingleton<IBaseUserSvc, MyBaseUserService>();   //user info for base component
+services.AddTransient<DbConnection, SqlConnection>();   //ado.net for mssql
 services.AddTransient<DbCommand, SqlCommand>();
 
 //cache server
-//services.AddDistributedMemoryCache();   //AddDistributedRedisCache is old
 services.AddMemoryCache();
-//services.AddStackExchangeRedisCache(opts => { opts.Configuration = config.Redis; });
 services.AddSingleton<ICacheSvc, CacheMemSvc>();
 #endregion
 
 #region set app
-//initial & set locale
 var app = builder.Build();
 var isDev = app.Environment.IsDevelopment();
 _Fun.Init(isDev, app.Services, DbTypeEnum.MSSql, AuthTypeEnum.Row, multiLang);
 await _Locale.SetCultureA(_Fun.Config.Locale);
 
 app.SetApp(isDev);
-/*
-// Configure the HTTP request pipeline.
-if (isDev)
-{
-    //app.UseMigrationsEndPoint();
-    app.UseDeveloperExceptionPage();
-}
-else
-{
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();  //for https, default HSTS 30 days. for change see https://aka.ms/aspnetcore-hsts.
-}
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
-app.UseCors(); //加上後會套用到全域
-app.UseAuthentication();    //認証
-app.UseAuthorization();     //授權
-//app.UseSession();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Login}/{id?}");
-*/
-
-app.SetAppSafe();   //資安設定, 參考WebExt.cs
 app.Run();
 #endregion
