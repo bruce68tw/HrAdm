@@ -10,7 +10,7 @@ namespace HrAdm.Services
     {
         //public const string SiteVer = "20201228f";     //for my.js/css
         public static string MyVer = _Date.NowSecStr(); //for my.js/css
-        public const string LibVer = "20250221a";       //for lib.js/css
+        public const string LibVer = "20260312a";       //for lib.js/css
 
         //public static string NoImagePath = _Fun.DirRoot + "/wwwroot/image/noImage.jpg";
 
@@ -59,33 +59,33 @@ namespace HrAdm.Services
         }
 
         #region get file content
-        public static async Task<FileResult?> ViewLeaveA(string fid, string key, string ext)
+        public static FileResult? ViewLeave(string fid, string key, string ext)
         {
-            return await ViewFileA(DirLeave, fid, key, ext);
+            return ViewFile(DirLeave, fid, key, ext);
         }
         
-        public static async Task<FileResult?> ViewUserExtA(string fid, string key, string ext)
+        public static FileResult? ViewUserExt(string fid, string key, string ext)
         {
             //return _WebFile.EchoImage(PathUserExt(key));
-            return await ViewFileA(DirUserExt, fid, key, ext);
+            return ViewFile(DirUserExt, fid, key, ext);
         }
-        public static async Task<FileResult?> ViewUserLicenseA(string fid, string key, string ext)
+        public static FileResult? ViewUserLicense(string fid, string key, string ext)
         {
-            return await ViewFileA(DirUserLicense, fid, key, ext);
+            return ViewFile(DirUserLicense, fid, key, ext);
         }
-        public static async Task<FileResult?> ViewCmsTypeA(string fid, string key, string ext, string cmsType)
+        public static FileResult? ViewCmsType(string fid, string key, string ext, string cmsType)
         {
-            return await ViewFileA(DirCmsType(cmsType), fid, key, ext);
+            return ViewFile(DirCmsType(cmsType), fid, key, ext);
         }
-        public static async Task<FileResult?> ViewCustInputA(string fid, string key, string ext)
+        public static FileResult? ViewCustInput(string fid, string key, string ext)
         {
-            return await ViewFileA(DirCustInput, fid, key, ext);
+            return ViewFile(DirCustInput, fid, key, ext);
         }
 
-        private static async Task<FileResult?> ViewFileA(string dir, string fid, string key, string ext)
+        private static FileResult? ViewFile(string dir, string fid, string key, string ext)
         {
             var path = $"{dir}{fid}_{key}.{ext}";
-            return await _HttpFile.ViewFileA(path, $"{fid}.{ext}");
+            return _HttpFile.ViewFile(path, $"{fid}.{ext}");
         }
 
         #endregion

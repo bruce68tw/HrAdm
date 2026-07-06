@@ -54,7 +54,7 @@ where l.Id=@Id
         {
             _inputRow = _Json.GetRows0(json)!;
             var service = EditSvc();
-            var result = await service.CreateA(json);
+            var result = await service.CreateA(json, GetDto());
             if (_Valid.ResultStatus(result))
                 await _HttpFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.DirLeave, t0_FileName, nameof(t0_FileName));
             return result;
@@ -63,7 +63,7 @@ where l.Id=@Id
         public async Task<ResultDto> UpdateA(string key, JObject json, IFormFile t0_FileName)
         {
             var service = EditSvc();
-            var result = await service.UpdateA(key, json);
+            var result = await service.UpdateA(key, json, GetDto());
             if (_Valid.ResultStatus(result))
                 await _HttpFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.DirLeave, t0_FileName, nameof(t0_FileName));
             return result;
@@ -76,7 +76,7 @@ where l.Id=@Id
             if (!isNew) return "";
 
             var newKey = _Str.ReadNewKeyJson(newKeyJson);
-            return await _XgFlow.CreateSignRowsA(_inputRow!, "UserId", "Leave", newKey, false, db);
+            return await _XgFlow.CreateSignA(isNew, _inputRow!, crudEditSvc.GetNow(), "UserId", "Leave", "Leave", newKey, "開始", false, db);
         }
 
     } //class

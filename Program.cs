@@ -5,8 +5,6 @@ using Base.Services;
 using BaseApi.Services;
 using BaseWeb.Services;
 using HrAdm.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Razor;
 using System.Data.Common;
 using System.Data.SqlClient;
 
@@ -22,9 +20,12 @@ builder.SetBuilder(config.AllowOrigins);
 #endregion
 
 #region set services
+var multiLang = true;
 //1.config MVC
 //資安: controller 防止 CSRF
 var services = builder.Services;
+services.SetServices(multiLang);
+/*
 services.AddControllersWithViews(opts => { opts.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()); })
     //view Localization
     .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
@@ -38,6 +39,7 @@ services.AddLocalization(opts => opts.ResourcesPath = "Resources");
 
 //3.http context
 services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+*/
 
 //4.user info for base component
 services.AddSingleton<IBaseUserSvc, MyBaseUserService>();
@@ -57,10 +59,11 @@ services.AddSingleton<ICacheSvc, CacheMemSvc>();
 //initial & set locale
 var app = builder.Build();
 var isDev = app.Environment.IsDevelopment();
-_Fun.Init(isDev, app.Services, DbTypeEnum.MSSql, AuthTypeEnum.Row, true);
+_Fun.Init(isDev, app.Services, DbTypeEnum.MSSql, AuthTypeEnum.Row, multiLang);
 await _Locale.SetCultureA(_Fun.Config.Locale);
 
-
+app.SetApp(isDev);
+/*
 // Configure the HTTP request pipeline.
 if (isDev)
 {
@@ -84,7 +87,8 @@ app.UseAuthorization();     //授權
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Login}/{id?}");
+*/
 
-app.SetApp();   //資安設定, 參考WebExt.cs
+app.SetAppSafe();   //資安設定, 參考WebExt.cs
 app.Run();
 #endregion

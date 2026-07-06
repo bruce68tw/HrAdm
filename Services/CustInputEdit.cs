@@ -43,7 +43,7 @@ namespace HrAdm.Services
         public async Task<ResultDto> CreateA(JObject json, IFormFile t0_FldFile)
         {
             var service = EditSvc();
-            var result = await service.CreateA(json);
+            var result = await service.CreateA(json, GetDto());
             if (_Valid.ResultStatus(result))
                 await _HttpFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.DirCustInput, t0_FldFile, nameof(t0_FldFile));
             return result;
@@ -54,7 +54,7 @@ namespace HrAdm.Services
         public async Task<ResultDto> UpdateA(string key, JObject json, IFormFile t0_FldFile)
         {
             var service = EditSvc();
-            var result = await service.UpdateA(key, json);
+            var result = await service.UpdateA(key, json, GetDto());
             if (_Valid.ResultStatus(result))
                 await _HttpFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.DirCustInput, t0_FldFile, nameof(t0_FldFile));
             return result;

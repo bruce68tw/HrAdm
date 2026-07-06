@@ -70,12 +70,12 @@ namespace HrAdm.Controllers
 
         //TODO: add your code
         //get file/image
-        public async Task<FileResult?> ViewFile(string table, string fid, string key, string ext)
+        public FileResult? ViewFile(string table, string fid, string key, string ext)
         {
             //for testing exception
             //_Fun.Except();
 
-            return await _Xp.ViewCustInputA(fid, key, ext);
+            return _Xp.ViewCustInput(fid, key, ext);
         }
 
         [HttpPost]

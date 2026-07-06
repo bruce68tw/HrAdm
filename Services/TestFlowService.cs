@@ -22,7 +22,7 @@ namespace HrAdm.Services
             var newId = _Str.NewId();
             await using var db = new Db();
             await db.BeginTranA();
-            var error = await _XgFlow.CreateSignRowsA(row, userFid, flowCode, newId, true, db);
+            var error = await _XgFlow.CreateSignA(true, row, DateTime.Now, userFid, flowCode, flowCode, newId, "開始", true, db);
 
             //create source row
             if (string.IsNullOrEmpty(error))

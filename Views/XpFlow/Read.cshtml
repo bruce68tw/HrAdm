@@ -7,6 +7,7 @@
 }
 
 <style nonce="@_Fun.Nonce">
+    /* ?? */
     .xu-prog {
         height: 100%;
         width: 98%;
@@ -14,6 +15,7 @@
         /*padding: 2px;*/
     }
 
+        /* ?? */
         .xu-prog.xu-hide {
             border: none !important;
             margin: 0;
@@ -24,17 +26,22 @@
         margin: 15px !important;
     }
 
+    /* override */
+    .x-prog {
+        padding: 0;
+    }
     #divEdit {
-        width: 100%;
-        height: 100%;
+        position: relative; /* eform 才能定位 */
+        /*width: 100%;
+        height: 100%;*/
         /*margin: 10px 30px;*/
         /*border-radius: 3px;*/
     }
 
     #eform {
         position: absolute;
-        top: 45px;
-        left: 12px;
+        top: 0;
+        left: 0;
         z-index: 1;
     }
 
@@ -43,14 +50,17 @@
         margin: 5px;
     }
 
+    /* ?? */
     .xu-fun {
         border: solid 1px #c3c3c3;
     }
 
+    /* ?? */
     .xu-col2 {
         width: 49%;
     }
 
+    /* ?? */
     .xu-col3 {
         width: 32%;
     }
@@ -69,8 +79,8 @@
     <div class="col-md-6">
         <vc:xg-prog-path />
     </div>
-    <div class="col-md-6 d-none pt-2" id="divEditTbar">
-        <vc:xg-save-back align="right me-3" />
+    <div class="col-md-6 d-none" id="divEditTbar">
+        <vc:xg-save-back align="right me-3 pt-1" />
     </div>
 </div>
 
@@ -101,7 +111,7 @@
         </table>
     </div>
 
-    <!-- edit form -->
+    <!-- edit form, 流程編輯區域由 XpFlow.js 建立, 位此區域內 -->
     <div id="divEdit" class="d-none">
         <!-- eform 在 flowMany 下面, 使用 z-index無效, 改用 width -->
         <form id='eform' class='x-form x-w100'>
@@ -120,12 +130,10 @@
         </form>
 
         <!-- flowNodes editMany -->
-        <form id='eformNodes' class='d-none'>
-        </form>
+        <form id='eformNodes' class='d-none'></form>
 
         <!-- flowLines editMany -->
-        <form id='eformLines' class='d-none'>
-        </form>
+        <form id='eformLines' class='d-none'></form>
     </div>
 
     <div id="divFlowTest" class="d-none">
@@ -133,8 +141,8 @@
     </div>
 </div>
 
-<!-- context menu for node & line, xf means flow -->
-<ul class='xf-menu'>
+<!-- context menu for node & line, xf means flow, show/hide 使用統一方式 d-none !! -->
+<ul class='xf-menu d-none'>
     <li data-onclick="_me.flowMany.onMenuEdit" class="xd-edit">Edit</li>
     <li data-onclick="_me.flowMany.onMenuDelete" class="xd-delete">Delete</li>
     <li data-onclick="_me.flowMany.onMenuView" class="xd-view">View</li>
@@ -185,11 +193,11 @@
 
 <!-- node property modal -->
 <div id="modalNodeProp" class="modal fade x-modal" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog x-w500">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title">@R["NodeProp"]</div>
-                <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal x-form pt-1 pe-5">
@@ -202,8 +210,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@br.BtnCancel</button>
-                <button type="button" class="btn btn-primary" data-onclick="_me.flowMany.onModalNodeOk">@br.BtnYes</button>
+                <button type="button" class="btn x-btn-cancel" data-bs-dismiss="modal">@br.BtnCancel<i class='ico-delete'></i></button>
+                <button type="button" class="btn x-btn1" data-onclick="_me.flowMany.onModalNodeOk">@br.BtnYes<i class='ico-checked'></i></button>
             </div>
         </div>
     </div>
@@ -211,11 +219,11 @@
 
 <!-- line property modal -->
 <div id="modalLineProp" class="modal fade x-modal" role="dialog">
-    <div class="modal-dialog w-50">
+    <div class="modal-dialog x-w600">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title">流程線屬性設定</div>
-                <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal x-form pe-2">
@@ -225,29 +233,27 @@
                     <vc:xi-select dto='new() { Title = "起點位置" + " :", Fid = "FromType", Rows = ViewBag.LineFromTypes, Cols = "4,4" }' />
                     @*Html.XiNum("Sort", "", "Run Order :", true, cols, new PropNumModel() { IsDigit = true, MaxValue = 10, Width = "80px" })*@
                     @*Html.XiRadios("LineType", "0", "Run Type :", ViewBag.LineTypes, 9)*@
-                    <div class="row">
-                        <div class="col-md-12">
-                            @R["RunCond"]
-                            <button type="button" class="btn btn-sm btn-primary" data-onclick="_me.flowMany.onAddLineCond">@br.BtnAddRow</button>
-                        </div>
-                        <table class="table x-table" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th width="104px" class="text-center"></th>
-                                    <th>@R["FieldName"]</th>
-                                    <th width="103px">@R["Op"]</th>
-                                    <th width="85px">@R["FieldValue"]</th>
-                                    <th width="85px"></th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
+                    <div class="m-1">
+                        @R["RunCond"]
+                        <button type="button" class="btn btn-sm btn-primary" data-onclick="_me.flowMany.onAddLineCond">@br.BtnAddRow</button>
                     </div>
+                    <table class="table x-table" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th width="104px" class="text-center"></th>
+                                <th>@R["FieldName"]</th>
+                                <th width="103px">@R["Op"]</th>
+                                <th width="85px">@R["FieldValue"]</th>
+                                <th width="85px"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@br.BtnCancel</button>
-                <button type="button" class="btn btn-primary" data-onclick="_me.flowMany.onModalLineOk">@br.BtnYes</button>
+                <button type="button" class="btn x-btn-cancel" data-bs-dismiss="modal">@br.BtnCancel<i class='ico-delete'></i></button>
+                <button type="button" class="btn x-btn1" data-onclick="_me.flowMany.onModalLineOk">@br.BtnYes<i class='ico-checked'></i></button>
             </div>
         </div>
     </div>

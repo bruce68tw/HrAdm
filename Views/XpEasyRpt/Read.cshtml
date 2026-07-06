@@ -44,6 +44,6 @@
             @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R0["Status"].Value, Fid = "Status", Label = R0["Active"].Value })
         </form>
 
-        @await Component.InvokeAsync("XgSaveBack")
+        <vc:xg-save2 />
     </div>
 </div>

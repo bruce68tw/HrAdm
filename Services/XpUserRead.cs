@@ -18,8 +18,8 @@ order by u.Name
 ",
             TableAs = "u",
             Items = [
-                new() { Fid = "Account", Op = ItemOpEstr.Like },
-                new() { Fid = "Name", Op = ItemOpEstr.Like },
+                new() { Fid = "Account", Op = QitemOpEstr.Like },
+                new() { Fid = "Name", Op = QitemOpEstr.Like },
                 new() { Fid = "DeptId" },
             ],
         };

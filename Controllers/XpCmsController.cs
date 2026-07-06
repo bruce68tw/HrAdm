@@ -52,9 +52,9 @@ namespace HrAdm.Controllers
         }
 
         //by cmsType
-        public async Task<FileResult?> ViewFile(string table, string fid, string key, string ext)
+        public FileResult? ViewFile(string table, string fid, string key, string ext)
         {
-            return await _Xp.ViewCmsTypeA(fid, key, ext, CmsType);
+            return _Xp.ViewCmsType(fid, key, ext, CmsType);
         }
 
         [HttpPost]

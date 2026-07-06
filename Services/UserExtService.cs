@@ -31,10 +31,6 @@ namespace HrAdm.Services
 
             #region 2.read row/rows by Linq
             var db = _Xp.GetDb();
-            var user = db.XpUser
-                .Select(a => a)
-                .FirstOrDefault(a => a.Id == userId);
-
             var userJobs = db.UserJob
                 .Where(a => a.UserId == userId)
                 .Select(a => a)
@@ -79,14 +75,23 @@ namespace HrAdm.Services
                 .Where(a => a.UserId == userId)
                 .Select(a => a)
                 .ToList();
+
+            var user = db.XpUser
+                .Where(a => a.Id == userId)
+                .Select(a => new {
+                    a.Id,
+                    a.Name,
+                    a.Account,
+                    a.PhotoFile,
+                    _childs = new List<dynamic>()
+                    {
+                        userJobs, userSchools, userLicenses,
+                        userLangs, userSkills
+                    },
+                })
+                .FirstOrDefault();
             #endregion
 
-            //3.put rows into childs property(IEnumerable type !!)
-            var childs = new List<dynamic>() 
-            {
-                userJobs, userSchools, userLicenses, 
-                userLangs, userSkills
-            };
 
             //4.prepare image list
             List<WordImageDto>? images = null;
@@ -98,7 +103,7 @@ namespace HrAdm.Services
 
             //5.call public method
             //if (!_HttpWord.OutputTplA2())
-            if (!await _HttpWord.OutputTplA(tplPath, "UserExt.docx", user, childs, images))
+            if (!await _HttpWord.OutputTplRowA(tplPath, "UserExt.docx", user, images))
                 return false;
 
             //case of ok

@@ -68,7 +68,7 @@
         <form id='formRead' class='x-form mb-2'>
             <div class="row">
                 <div class="col-md-2 x-label">@R["SignTime"]</div>
-                <div class="col-md-10 x-input">
+                <div class="col-md-10 x-input x-hbox">
                     @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "SignTime", InRow = true })
                     <span>～</span>
                     @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "SignTime2", InRow = true })

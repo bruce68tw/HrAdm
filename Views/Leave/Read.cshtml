@@ -20,7 +20,7 @@
         <form id='formRead' class='x-form'>
             <div class="row">
                 <div class="col-md-2 x-label">@R["StartTime"]</div>
-                <div class="col-md-10 x-input">
+                <div class="col-md-10 x-input x-hbox">
                     @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "StartTime", InRow = true })
                     <span>～</span>
                     @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "StartTime2", Value = today, InRow = true })
@@ -81,6 +81,6 @@
                 <div class="col-md-8 x-input" id="divSignRows"></div>
             </div>
         </form>
-        @await Component.InvokeAsync("XgSaveBack")
+        <vc:xg-save2 />
     </div>
 </div>

@@ -3,6 +3,9 @@
     padding-top: 7px;
     min-height: 43px;
 }
+/* 輸入欄位後面文字 */
+.x-input-note{    
+}
 
 @media (max-width:768px) {
     .x-input {
@@ -17,17 +20,18 @@
     margin: 20px 0 8px;
 }
 
-/* Label + Icon */
-.x-group-label {
+/* Title + Icon */
+.x-group-title {
     /*font-weight: 600;
     color: #0d6efd;*/
+    cursor: pointer;
     white-space: nowrap;
     display: flex;
     align-items: center;
     margin-right: 10px;
 }
 
-    .x-group-label i {
+    .x-group-title i {
         margin-left: 6px;
         /*font-size: 0.9rem;
         color: #0d6efd;*/

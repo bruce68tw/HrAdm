@@ -48,11 +48,11 @@ namespace HrAdm.Controllers
 
         //TODO: add your code
         //get file/image
-        public async Task<FileResult?> ViewFile(string table, string fid, string key, string ext)
+        public FileResult? ViewFile(string table, string fid, string key, string ext)
         {
             return (fid == "PhotoFile")
-                ? await _Xp.ViewUserExtA(fid, key, ext)
-                : await _Xp.ViewUserLicenseA(fid, key, ext);
+                ? _Xp.ViewUserExt(fid, key, ext)
+                : _Xp.ViewUserLicense(fid, key, ext);
         }
 
         [HttpPost]

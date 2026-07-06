@@ -55,14 +55,14 @@ namespace HrAdm.Controllers
         [HttpPost]
         public async Task<JsonResult> SignRow(string id, string status, string note)
         {
-            return Json(await _XgFlow.SignRowA(id, (status == "Y"), note, "Leave", false, FlowBackTypeEnum.ToPrev));
+            return Json(await _XgFlow.SignRowA(id, (status == "Y"), note, false));
         }
 
         //TODO: add your code
         //get file/image
-        public async Task<FileResult?> ViewFile(string table, string fid, string key, string ext)
+        public FileResult? ViewFile(string table, string fid, string key, string ext)
         {
-            return await _Xp.ViewLeaveA(fid, key, ext);
+            return _Xp.ViewLeave(fid, key, ext);
         }
 
     }//class

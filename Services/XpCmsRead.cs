@@ -27,7 +27,7 @@ where CmsType='{_cmsType}'
 order by Id desc
 ",
                 Items = new QitemDto[] {
-                    new() { Fid = "Title", Op = ItemOpEstr.Like },
+                    new() { Fid = "Title", Op = QitemOpEstr.Like },
                 },
             };
         }

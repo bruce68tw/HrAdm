@@ -40,15 +40,15 @@ namespace HrAdm.Controllers
         /// </summary>
         /// <param name="file">file name</param>
         /// <returns>file</returns>
-        public async Task<FileResult?> Template()
+        public FileResult? Template()
         {
-            return await _HttpFile.ViewFileA(TplPath);  //use this instead of PhysicalFile()
+            return _HttpFile.ViewFile(TplPath);  //use this instead of PhysicalFile()
         }
 
         //download source import file
-        public async Task<FileResult?> GetSource(string id, string name)
+        public FileResult? GetSource(string id, string name)
         {
-            return await GetFile(id, name);
+            return GetFile(id, name);
             /*
             var file = GetFile(id, name);
             return (file == null)
@@ -57,15 +57,15 @@ namespace HrAdm.Controllers
         }
 
         //download failed import file
-        public async Task<FileResult?> GetFail(string id, string name)
+        public FileResult? GetFail(string id, string name)
         {
-            return await GetFile(id + "_fail", name);
+            return GetFile(id + "_fail", name);
         }
 
         //download import file
-        private async Task<FileResult?> GetFile(string realFileStem, string downFileName)
+        private FileResult? GetFile(string realFileStem, string downFileName)
         {
-            return await _HttpFile.ViewFileA($"{DirUpload}/{realFileStem}.xlsx", downFileName);
+            return _HttpFile.ViewFile($"{DirUpload}/{realFileStem}.xlsx", downFileName);
         }
 
     }//class
