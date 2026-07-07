@@ -16,7 +16,7 @@ var config = new ConfigDto();
 builder.Configuration.GetSection("FunConfig").Bind(config);
 _Fun.Config = config;
 
-builder.SetBuilder(config.AllowOrigins);
+builder.SetBuilder();
 #endregion
 
 #region set services

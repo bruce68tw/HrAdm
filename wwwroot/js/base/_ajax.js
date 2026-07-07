@@ -85,9 +85,76 @@ var _ajax = {
     },
 
     /**
+     * 使用fetch, 將來考慮取代jquery ajax
+     * GET ok, 但是 POST 有問題(所以用GET) !!
+     * param url {string} action url
+     * param data {json} 傳入參數
+     * param elm {element} 如果是XiFile欄位則此參數為必要
+     * param fnOk {function} 目前無作用
+     * return {file/string(錯誤訊息)/空白(檔案不存在)}
+     */
+    getFileA: async function (url, data, elm, fnOk) {
+        var args = new URLSearchParams(data);
+        var resp = await fetch(`${url}?${args}`);
+        if (resp.ok) {
+            //blob
+            var blob = await resp.blob();
+            var contentType = resp.headers.get('Content-Type');
+            var isImage = contentType && contentType.startsWith('image/');
+
+            //get下載檔名 if any
+            var downName = 'download';
+            if (elm == null) {
+                var disposition = resp.headers.get('Content-Disposition');
+                if (disposition) {
+                    //1.優先抓 filename* (RFC 5987, UTF-8)
+                    let match = disposition.match(/filename\*\s*=\s*UTF-8''([^;]+)/i);
+                    if (match && match[1]) {
+                        downName = decodeURIComponent(match[1]);
+                    } else {
+                        //2.fallback: filename=
+                        match = disposition.match(/filename\s*=\s*"?([^\";]+)"?/i);
+                        if (match && match[1]) {
+                            downName = match[1];
+                        }
+                    }
+                }
+            } else {
+                downName = elm.innerText;
+            }
+
+            //圖檔直接顯示, 其他則下載
+            if (isImage) {
+                var url = URL.createObjectURL(blob);
+                _tool.showImage(downName, url);
+            } else {
+                var a = document.createElement('a');
+                var downUrl = URL.createObjectURL(blob);
+
+                a.href = downUrl;
+                a.download = downName;
+                document.body.appendChild(a);
+                a.click();
+
+                //清理
+                a.remove();
+                URL.revokeObjectURL(downUrl);
+            }
+        } else {
+            //無錯誤訊息表示檔案不存在(後端傳回null)
+            var error = await resp.text();
+            if (_var.isEmpty(error)) {
+                error = _BR.NoFile;
+            }            
+            _tool.msg(error);
+        }
+    },
+
+    /**
      * ajax return image file
      * return {bool/file}
      */
+    /*
     getImageFileA: async function (url, data, block) {
         var json = {
             url: url,
@@ -97,6 +164,7 @@ var _ajax = {
         };
         return await _ajax._rpcA(json, null, block);
     },
+    */
 
     /**
      * ajax upload file

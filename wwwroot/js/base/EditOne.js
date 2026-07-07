@@ -8,10 +8,13 @@
  * 公用屬性
  *   kid:
  *   eform:
+ *   is1to1: default false, true表示1對1, 利用 setIs1to1()設定 
  *   systemError:
- *   dataJson: 載入資料後(update/view)在CrudE.js自動設定
+ *   dataJson: (只記在edit0)載入資料後(update/view)在CrudE.js自動設定, 個別程式可以自行使用, 例如: DbAdm GenCrud.js
  *   hasFile
  *   validator: jquery vallidation object (EditMany同), 在 _me.crudE.js _initForm() 設定
+ *   fidTypes: 在 _edit.initVar() 設定
+ *   fidRadios: 在 _edit.initVar() 設定, 目前用於 EditMany
  * 自定函數 called by _me.crudE.js
  *   //void fnAfterLoadJson(json)
  *   //void fnAfterOpenEdit(fun, json): called after open edit form
@@ -25,20 +28,21 @@ class EditOne {
 
     /**
      * @constructor
-     * initial & and instance variables (this.validator is by _valid.init())
+     * 只能有一個 constructor, initial & and instance variables (this.validator is by _valid.init())
      * @param kid {string} (default 'Id') pkey field id for getKey value & getUpdRow,
      *   must existed or will set systemError variables !!
      * @param eformId {string} (default 'eform') must existed or will set systemError variables !!
      * note!! if these two parameters not Id/eform, must new EditOne() and set them !!
      */
-    constructor(kid, eformId) {
+    constructor(kid, eformId, childs) {
         //private
-        this[_edit.Childs] = null;
+        this[_edit.Childs] = childs;
 
         this.kid = kid || 'Id';
         eformId = eformId || 'eform';
         this.eform = $('#' + eformId);     //multiple rows container object
-        this.dataJson = null;
+        this.is1to1 = false;
+        this.dataJson = null;   //只記在edit0
 
         //check input & alert error if wrong
         this.systemError = '';
@@ -55,17 +59,38 @@ class EditOne {
     }
 
     /**
+     * 顯示自訂錯誤, EditMany作法不同
+     * @param json {json} key: fid, value: msg
+     * @returns {void}
+     */ 
+    showErrors(json) {
+        this.validator.showErrors(json);
+    }
+
+	//setChild -> setIs1to1
+    setIs1to1() {
+        this.is1to1 = true;
+    }
+
+    //reset and set new row for 1對1 only
+    //清空UI, 設為new row(key=-1)
+    _resetAndNew(init) {
+        _form.reset(this.eform, init);
+        _itext.set(this.kid, -1, this.eform);
+    }
+
+    /**
      * validate form
      */
     valid() {
-        var edit = this._edit0;
-        if (_str.notEmpty(edit.systemError)) {
-            _tool.msg(edit.systemError);
+        //var edit = this._edit0;
+        if (_str.notEmpty(this.systemError)) {
+            _tool.msg(this.systemError);
             return false;
         }
 
         //use jquery validator
-        if (!edit.eform.valid()) return false;
+        if (!this.eform.valid()) return false;
 
         return (this.fnValid) ? this.fnValid() : true;
     }
@@ -99,22 +124,38 @@ class EditOne {
      * @param row {json}
      */
     loadRow(row) {
-        _edit.loadRow(this, this.eform, row);
+        if (this.is1to1 && _json.isEmpty(row))
+            this._resetAndNew();
+        else
+            _edit.loadRow(this, this.eform, row);
     }
 
     /**
+     * 改傳回json, 不含 _rows 欄位 !!
      * get updated row, 包含 _childs
+     * @param upKey {string} 上一層key for is1to1=true only !!
      * @returns {json} different column only
      */
-    getUpdRow() {
-        return _edit.getUpdRow(this, this.eform);
+    getUpdRow(upKey) {
+        var row = _edit.getUpdRow(this, this.eform);
+        if (this.is1to1 && row != null) {
+            row[_edit.DataFkeyFid] = upKey;
+            //return { [_edit.Rows]: [row] }
+            return row;
+        } else {
+            return row;
+        }
     }
 
     /**
      * reset UI and edited variables
+     * param init {bool} 是否填入初始值, default false
      */
-    reset() {
-        _form.reset(this.eform);
+    reset(init) {
+        if (this.is1to1)
+            this._resetAndNew(init);
+        else
+            _form.reset(this.eform, init);
     }
 
     /**
@@ -154,15 +195,21 @@ class EditOne {
     }
 
     /**
-     * onViewFile -> viewFile
+     * viewFile -> onViewFile
+     * 實作步驟：
+     *   1.Read.cshtml onViewFile
+     *   2.Edit.cshtml 是否需要傳入 table name
+     *   3.Controller ViewFile
+     * 實際有event動作, 在此函數讀取 _fun.getMeElm(), 簡化外部呼叫函數
      * onclick viewFile
      * @param table {string} table name
      * @param fid {string}
-     * @param elm {element} link element
      */
-    viewFile(table, fid, elm) {
+    //viewFile(table, fid, elm) {
+    async onViewFile(table, fid) {
+        var elm = _fun.getMeElm();
         var key = this.getKey();
-        _edit.viewFile(table, fid, elm, key);
+        await _edit.viewFileA(table, fid, elm, key);
     }
 
 }//class

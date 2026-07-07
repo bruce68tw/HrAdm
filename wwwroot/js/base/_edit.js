@@ -12,8 +12,10 @@ var _edit = {
 
     //constant with underline
     Rows: '_rows',
-    Childs: '_childs',      //同時用在資料、EditOne/EditMany(表達下層物件)
+    Childs: '_childs',      //注意: 同時用在json資料、EditOne/EditMany(表達下層物件)
     Deletes: '_deletes',
+
+    DataFkeyFid: '_fkeyfid',  //data field for fkey fid, lowercase
 
     //server side fid for file input collection, must pre '_'
     //key-value of file serverFid vs row key
@@ -29,6 +31,64 @@ var _edit = {
     //ModeBase: 'Base',
     //ModeUR: 'UR',   //user role mode
 
+    /**
+     * get rows of json 
+     * @param {any} json
+     * @returns
+     */
+    jsonGetRows: function (json) {
+        return (json == null || json[_edit.Rows] == null)
+            ? null
+            : json[_edit.Rows];
+    },
+    jsonGetRows0: function (json) {
+        var rows = _edit.jsonGetRows(json);
+        return (rows == null || rows.length == 0)
+            ? null
+            : rows[0];
+    },
+
+    //upJson get child json
+    //_getChildJson -> getChildJson
+    getChildJson: function (upJson, childIdx) {
+        var childs = _edit.Childs;
+        return (upJson == null || upJson[childs] == null || upJson[childs].length <= childIdx)
+            ? null
+            : upJson[childs][childIdx];
+    },
+
+    //upJson get child rows
+    getChildRows: function (upJson, childIdx) {
+        var child = _edit.getChildJson(upJson, childIdx);
+        return _edit.jsonGetRows(child);
+    },
+
+    getChildRows0: function (upJson, childIdx) {
+        var rows = _edit.getChildRows(upJson, childIdx);
+        return (rows == null || rows.length == 0)
+            ? null : rows[0];
+    },
+
+    /**
+     * upJson set child rows
+     * @param upJson {json}
+     * @param childIdx {int}
+     * @param rows {jsons}
+     * @returns {json} child object
+     */
+    setChildRows: function (upJson, childIdx, rows) {
+        var fid = _edit.Childs;
+        if (upJson == null)
+            upJson = {};
+        if (upJson[fid] == null)
+            upJson[fid] = [];
+        if (upJson[fid].length <= childIdx)
+            upJson[fid][childIdx] = {};
+
+        var child = upJson[fid][childIdx];
+        child[_edit.Rows] = rows;
+        return child;
+    },
 
     /**
      * setFidTypeVars + setFileVars -> initVars
@@ -39,14 +99,20 @@ var _edit = {
      */
     initVars: function (edit, box) {
         var fidTypes = [];
+        var fidRadios = []
         box.find(_input.fidFilter()).each(function (i, item) {
             var obj = $(item);
             var j = i * 2;
-            fidTypes[j] = _input.getFid(obj);
-            fidTypes[j + 1] = _input.getType(obj);
+            var fid = _input.getFid(obj);
+            var ftype = _input.getType(obj);
+            fidTypes[j] = fid;
+            fidTypes[j + 1] = ftype;
+            if (ftype == 'radio')
+                fidRadios[fidRadios.length] = fid;
         });
         edit.fidTypes = fidTypes;
         edit.fidTypeLen = edit.fidTypes.length;
+        edit.fidRadios = [...new Set(fidRadios)];   //移除重複元素, ES6語法 !!
 
         edit.fileFids = [];      //upload file fid array
         box.find('[data-type=file]').each(function (index, item) {
@@ -54,6 +120,10 @@ var _edit = {
         });
         edit.fileLen = edit.fileFids.length;
         edit.hasFile = edit.fileFids.length > 0; //has input file or not
+    },
+
+    isEditOne: function (edit) {
+        return (edit instanceof EditOne);
     },
 
     /**
@@ -95,7 +165,7 @@ var _edit = {
     },
 
     /**
-     * check is new key or not
+     * check is new key or not, key為空值或是小於0都視為new key
      * param key {string}
      * return {bool}
      */
@@ -174,11 +244,10 @@ var _edit = {
             //if (ftype === 'link' || ftype === 'read')
             //    continue;
 
-            //obj = (ftype === 'radio') ? _iradio.getObj(fid, box) : _obj.get(fid, box);
+            //radio如果沒有選取會傳回null !!
             obj = _input.getObj(fid, box, ftype);
-            //value = _input.getO(obj, box, ftype);
+            old = obj ? _obj.getData(obj, _edit.DataOld) : '';
             value = row[fid];
-            old = obj.data(_edit.DataOld);
             //if fully compare, string will not equal numeric !!
             if (value != old) {
                 //date/dt old value has more length
@@ -200,20 +269,34 @@ var _edit = {
 
     /**
      * onclick viewFile
+     * 雖然直接開啟(pdf,docx...)比較方便, 但是各瀏覽器行為不同, 最後只有圖檔直接開啟, 其他則下載
+     * window.open(url, "_blank") 會出現小方塊, 故不採用
      * @param table {string} table name
      * @param fid {string}
      * @param elm {element} link element
      * @param key {string} row key
      */
-    viewFile: function(table, fid, elm, key) {
+    viewFileA: async function (table, fid, elm, key) {
         /*
         if (this.isNewKey(key)) {
             _tool.msg(_BR.NewFileNotView);
         } else {
         */
-        var ext = _file.getFileExt(elm.innerText);
+        var data = {
+            table: table,
+            fid: fid,
+            key: key,
+            ext: _file.getFileExt(elm.innerText),
+        };
+        await _ajax.getFileA('ViewFile', data, elm);
+
+        /*
+        //var url = _str.format('ViewFile?table={0}&fid={1}&key={2}&ext={3}', table, fid, key, ext);
         if (_file.isImageExt(ext))
-            _tool.showImage(elm.innerHTML, _str.format('ViewFile?table={0}&fid={1}&key={2}&ext={3}', table, fid, key, ext));
+            _tool.showImage(elm.innerHTML, url);
+        else
+            window.location = url;
+        */
     },
 
     /**
