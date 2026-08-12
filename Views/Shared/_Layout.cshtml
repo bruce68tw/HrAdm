@@ -44,7 +44,7 @@
     }
 }
 
-<style nonce="@_Fun.Nonce">
+<style nonce="@_Fun3.Nonce">
     .xu-logo {
         height: 36px;
         width: auto;
@@ -66,32 +66,32 @@
     @RenderSection("styles", required: false)
 
     <!-- 2.load lib js -->
-    <script nonce="@_Fun.Nonce" src="~/js/lib@(min).js?v=@libVer"></script>
-    <script nonce="@_Fun.Nonce" src="~/js/summernote-bs5.min-bruce.js?v=@libVer"></script>
+    <script nonce="@_Fun3.Nonce" src="~/js/lib@(min).js?v=@libVer"></script>
+    <script nonce="@_Fun3.Nonce" src="~/js/summernote-bs5.min-bruce.js?v=@libVer"></script>
 
     <!-- 3.load my site js(debug/production mode) !! -->
     <environment include="Production">
         <link rel="stylesheet" href="~/my@(min).css?v=@myVer" />
-        <script nonce="@_Fun.Nonce" src="~/my@(min).js?v=@myVer"></script>
+        <script nonce="@_Fun3.Nonce" src="~/my@(min).js?v=@myVer"></script>
     </environment>
     <environment include="Development">
         <!-- tail ver will load failed !! -->
         <link rel="stylesheet" asp-href-include="~/css/icomoon.css" />
         <link rel="stylesheet" asp-href-include="~/css/base/*.css" />
-        <script nonce="@_Fun.Nonce" asp-src-include="~/js/base/*.js"></script>
-        <script nonce="@_Fun.Nonce" asp-src-include="~/js/view/_*.js"></script>
+        <script nonce="@_Fun3.Nonce" asp-src-include="~/js/base/*.js"></script>
+        <script nonce="@_Fun3.Nonce" asp-src-include="~/js/view/_*.js"></script>
     </environment>
     <!-- 加上id for 動態載入 -->
     <link rel="stylesheet" asp-href-include="~/css/view/_themeLight.css" />
     <link id="xgTheme" rel="stylesheet" asp-href-include="~/css/view/_xgBlue.css" />
 
     <!-- 4.load local js -->
-    <script nonce="@_Fun.Nonce" src="~/locale/@(locale+min).js?v=@myVer"></script>
+    <script nonce="@_Fun3.Nonce" src="~/locale/@(locale+min).js?v=@myVer"></script>
 
     @RenderSection("scripts", required: false)
 
     <!-- 5.initial -->
-    <script nonce="@_Fun.Nonce">
+    <script nonce="@_Fun3.Nonce">
         $(function () {
             _fun.init('@locale');
             _fun.pageRows = 20;

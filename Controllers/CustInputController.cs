@@ -95,7 +95,7 @@ namespace HrAdm.Controllers
         public async Task<string> SetHtmlImage(IFormFile file)
         {
             var subDir = "image/CustInput";
-            var fileName = await _HttpFile.SaveFileByNewIdA(file, $"{_FunApi.DirWeb}{subDir}");
+            var fileName = await _HttpFile.SaveFileByNewIdA(file, $"{_Fun2.DirWeb}{subDir}");
             return _Fun.GetHtmlImageUrl($"{subDir}/{fileName}");
         }
 

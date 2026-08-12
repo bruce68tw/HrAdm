@@ -1,5 +1,5 @@
-﻿//resource for js base component
-var _BR = {
+//resource for js base component
+_BR = {
 
     //=== moment.js convert these to UI format ===
     MmUiDateFmt: 'YYYY/MM/DD',

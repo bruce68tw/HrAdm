@@ -12,19 +12,19 @@ namespace HrAdm.Services
         #region master table to codes
         public static async Task<List<IdStrDto>?> ProjectsA(Db? db = null)
         {
-            return await _Db.TableToCodesA("Project", db);
+            return await _Code.TableToCodesA("Project", db);
         }
         public static async Task<List<IdStrDto>?> UsersA(Db? db = null)
         {
-            return await _Db.TableToCodesA("XpUser", db);
+            return await _Code.TableToCodesA("XpUser", db);
         }
         public static async Task<List<IdStrDto>?> DeptsA(Db? db = null)
         {
-            return await _Db.TableToCodesA("XpDept", db);
+            return await _Code.TableToCodesA("XpDept", db);
         }
         public static async Task<List<IdStrDto>?> RolesA(Db? db = null)
         {
-            return await _Db.TableToCodesA("XpRole", db);
+            return await _Code.TableToCodesA("XpRole", db);
         }
 
         /*
@@ -43,35 +43,35 @@ order by p.Sort";
 
         public static async Task<List<IdStrDto>?> FlowsA(Db? db = null)
         {
-            return await _Db.TableToCodesA("XpFlow", db);
+            return await _Code.TableToCodesA("XpFlow", db);
         }
         #endregion
 
         #region get from XpCode table
         public static async Task<List<IdStrDto>?> LineFromTypesA(string locale0, Db? db = null)
         {
-            return await _Db.TypeToCodesA("LineFromType", db, locale0);
+            return await _Code.TypeToCodesA("LineFromType", db, locale0);
         }
         public static async Task<List<IdStrDto>?> AuthRangesA(string locale0, Db? db = null)
         {
-            return await _Db.TypeToCodesA("AuthRange", db, locale0);
+            return await _Code.TypeToCodesA("AuthRange", db, locale0);
         }
         public static async Task<List<IdStrDto>?> LangLevelsA(string locale0, Db? db = null)
         {
-            return await _Db.TypeToCodesA("LangLevel", db, locale0);
+            return await _Code.TypeToCodesA("LangLevel", db, locale0);
         }
         public static async Task<List<IdStrDto>?> LeaveTypesA(string locale0, Db? db = null)
         {
-            return await _Db.TypeToCodesA("LeaveType", db, locale0);
+            return await _Code.TypeToCodesA("LeaveType", db, locale0);
         }
         //all xpCode rows
         public static async Task<List<IdStrDto>?> FlowStatusesA(string locale0, Db? db = null)
         {
-            return await _Db.TypeToCodesA("FlowStatus", db, locale0);
+            return await _Code.TypeToCodesA("FlowStatus", db, locale0);
         }
         public static async Task<List<IdStrDto>?> SignStatusesA(string locale0, Db? db = null)
         {
-            return await _Db.TypeToCodesA("SignStatus", db, locale0);
+            return await _Code.TypeToCodesA("SignStatus", db, locale0);
         }
         //ext=1 only for FlowSign Form
         public static async Task<List<IdStrDto>?> SignStatuses2A(string locale0, Db? db = null)
@@ -83,26 +83,26 @@ from dbo.XpCode
 where Type='SignStatus'
 and Ext='1'
 order by Sort";
-            return await _Db.SqlToCodesA(sql, null, db);
+            return await _Code.SqlToCodesA(sql, db);
         }
         #endregion
 
         #region for flow
         public static async Task<List<IdStrDto>?> NodeTypesA(string locale, Db? db = null)
         {
-            return await _Db.TypeToCodesA("NodeType", db, locale);
+            return await _Code.TypeToCodesA("NodeType", db, locale);
         }
         public static async Task<List<IdStrDto>?> SignerTypesA(string locale, Db? db = null)
         {
-            return await _Db.TypeToCodesA("SignerType", db, locale);
+            return await _Code.TypeToCodesA("SignerType", db, locale);
         }
         public static async Task<List<IdStrDto>?> AndOrsA(string locale, Db? db = null)
         {
-            return await _Db.TypeToCodesA("AndOr", db, locale);
+            return await _Code.TypeToCodesA("AndOr", db, locale);
         }
         public static async Task<List<IdStrDto>?> LineOpsA(string locale, Db? db = null)
         {
-            return await _Db.TypeToCodesA("LineOp", db, locale);
+            return await _Code.TypeToCodesA("LineOp", db, locale);
         }
 
         /*

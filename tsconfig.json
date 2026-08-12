@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    //"baseUrl": ".",
+    "rootDir": ".",
+    "outDir": "_srcOut", //如果執行 npx tsc 會輸出到此目錄
+    "module": "ESNext", // ES Module
+    "target": "ES2019", // 編譯版本
+    "moduleResolution": "Bundler", // Vite相容解析
+    //"moduleResolution": "node", // Vite相容解析
+    "ignoreDeprecations": "6.0",
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "strict": false, // 舊JS轉TS較容易
+    "skipLibCheck": false, // 忽略第三方型別
+    "allowUmdGlobalAccess": true, //UMD套件如 moment
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    //加入有@types的套件做為全域變數
+    "types": [ "jquery", "bootstrap", "jquery.validation", "datatables.net", "mustache", "bootstrap-datepicker" ],
+    "paths": {
+      "@base/*": [ "./_src/tsBase/*" ]
+      //"@baseJs": [ "./_src/forBoth.ts" ]
+    }
+  },
+  "include": [
+    "./_src/forEdit.d.ts", //建立全域變數 for tsBase
+    "./_src/forEdit2.d.ts", //建立全域變數 for tsView
+    "./_src/tsBase/**/*.ts",
+    "./_src/tsView/*.ts"
+  ],
+  "exclude": [
+    "node_modules" //排除 npm 套件
+  ]
+}
